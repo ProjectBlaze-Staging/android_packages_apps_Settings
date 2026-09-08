@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2026 The BlazeAOSP Project
+     SPDX-License-Identifier: Apache-2.0
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <!-- BlazeHouse Main -->
+    <string name="blazehouse_title">BlazeHouse</string>
+    <string name="blazehouse_summary">Get Amazed with Blaze !!!</string>
+    <string name="blazehouse_info_title">About BlazeHouse</string>
+    <string name="blazehouse_info_dialog_message">ProjectBlaze 2.0 / BlazeAOSP (Android 17)\n\nDeveloped with passion by DarkMorpheus &amp; The Blaze Team.\n\nGet Amazed with Blaze !!!</string>
+    <string name="connectivity_category_title">Connectivity</string>
+    <string name="personalize_category_title">Personalize</string>
+
+    <!-- Categories -->
+    <string name="status_bar_title">Status bar</string>
+    <string name="status_bar_summary">Clock, battery styles, network traffic and icons</string>
+    <string name="quick_settings_title">Quick settings</string>
+    <string name="quick_settings_summary">Tiles layout, brightness slider and panel options</string>
+    <string name="lock_screen_title">Lock screen</string>
+    <string name="lock_screen_summary">Lockscreen clock styles and items</string>
+    <string name="power_menu_title">Power menu</string>
+    <string name="power_menu_summary">Advanced reboot and power menu options</string>
+    <string name="themes_title">Themes</string>
+    <string name="themes_summary">Fonts, icon pack, signal and Wi-Fi icon styles</string>
+    <string name="miscellaneous_title">Miscellaneous</string>
+    <string name="miscellaneous_summary">Spoofing, screenshot protections, FPS unlock and bypasses</string>
+
+    <!-- Power Menu -->
+    <string name="advanced_reboot_title">Advanced restart</string>
+    <string name="advanced_reboot_summary">Show options for rebooting to recovery, bootloader, and fastboot in power menu</string>
+
+    <!-- Status Bar: Clock -->
+    <string name="status_bar_clock_title">Clock &amp; date</string>
+    <string name="status_bar_clock_summary">Customize clock position, seconds, and date style</string>
+    <string name="status_bar_clock_position_title">Clock position</string>
+    <string name="status_bar_clock_position_left">Left</string>
+    <string name="status_bar_clock_position_center">Center</string>
+    <string name="status_bar_clock_position_right">Right</string>
+    <string name="status_bar_clock_seconds_title">Show seconds</string>
+    <string name="status_bar_clock_seconds_summary">Display seconds next to clock</string>
+    <string name="status_bar_clock_auto_hide_title">Auto-hide clock</string>
+    <string name="status_bar_clock_auto_hide_summary">Hide clock when launcher is visible</string>
+    <string name="status_bar_clock_date_title">Date</string>
+    <string name="status_bar_clock_date_style">Date style</string>
+    <string name="status_bar_clock_date_position">Date position</string>
+    <string name="status_bar_clock_date_format">Date format</string>
+
+    <!-- Status Bar: Network Traffic -->
+    <string name="network_traffic_title">Network traffic monitor</string>
+    <string name="network_traffic_summary">Display current network upload and download speeds in status bar</string>
+    <string name="network_traffic_state_title">Network traffic</string>
+    <string name="network_traffic_mode_title">Display mode</string>
+    <string name="network_traffic_dynamic">Dynamic (Upload &amp; Download)</string>
+    <string name="network_traffic_combined">Combined</string>
+    <string name="network_traffic_autohide_title">Auto hide</string>
+    <string name="network_traffic_autohide_summary">Hide traffic monitor when inactive</string>
+    <string name="network_traffic_autohide_threshold_title">Inactivity threshold</string>
+    <string name="network_traffic_units_title">Traffic measurement units</string>
+    <string name="network_traffic_hidearrow_title">Hide traffic arrows</string>
+    <string name="network_traffic_hidearrow_summary">Hide upload and download activity indicator arrows</string>
+
+    <!-- Volume Settings -->
+    <string name="volume_settings_title">Volume Settings</string>
+    <string name="volbtn_music_controls_title">Playback control</string>
+    <string name="volbtn_music_controls_summary">When the screen is off, long-pressing volume keys will skip music tracks</string>
+    <string name="volume_wake_screen_title">Volume wake</string>
+    <string name="volume_wake_screen_summary">Wake your device up by pressing the volume keys</string>
+    <string name="haptic_feedback_title">Haptic feedback</string>
+    <string name="haptic_feedback_summary">Vibrate when performing a back gesture</string>
+
+    <!-- Spoofing Options -->
+    <string name="spoofing_options_title">Spoofing Options</string>
+    <string name="photos_spoof_title">Unlimited Photos storage</string>
+    <string name="photos_spoof_summary">Spoof your device as Pixel XL for Google Photos app only to provide unlimited storage for backup</string>
+    <string name="games_fps_spoof_title">Unlock higher FPS in games</string>
+    <string name="games_fps_spoof_summary">Spoof your device as different model for specific games to unlock higher FPS</string>
+    <string name="netflix_spoof_title">Netflix spoof</string>
+    <string name="netflix_spoof_summary">Spoof your device as different model for Netflix</string>
+
+    <!-- Miscellaneous / Power Features -->
+    <string name="window_ignore_secure_title">Allow screenshots in all apps</string>
+    <string name="window_ignore_secure_summary">Ignore FLAG_SECURE to allow taking screenshots and screen recordings in protected apps (banking, DRM, etc.)</string>
+    <string name="window_block_screenshot_detection_title">Block screenshot detection</string>
+    <string name="window_block_screenshot_detection_summary">Prevent applications from detecting when you take a screenshot</string>
+    <string name="window_block_screenrecord_detection_title">Block screen recording detection</string>
+    <string name="window_block_screenrecord_detection_summary">Prevent applications from detecting active screen recording</string>
+    <string name="bypass_low_target_sdk_block_title">Bypass minimum target SDK limitation</string>
+    <string name="bypass_low_target_sdk_block_summary">Allow installing older applications and games built for legacy Android versions without ADB</string>
+    <string name="pixel_props_system_spoof_title">Pixel feature spoofing</string>
+    <string name="pixel_props_system_spoof_summary">Spoof modern Pixel device to enable Pixel exclusive features in Google apps</string>
+    <!-- Miscellaneous Categories -->
+    <string name="miscellaneous_screen_capture_category">Screen security &amp; protections</string>
+    <string name="miscellaneous_system_bypass_category">System &amp; app compatibility</string>
+
+    <!-- Quick Settings & Gestures -->
+    <string name="quick_settings_interface_category">Interface &amp; gestures</string>
+    <string name="status_bar_quick_qs_pulldown_title">Quick pulldown</string>
+    <string name="status_bar_quick_qs_pulldown_summary">%1$s edge of the status bar pulls down Quick Settings</string>
+    <string name="status_bar_quick_qs_pulldown_off">Off</string>
+    <string name="status_bar_quick_qs_pulldown_left">Left</string>
+    <string name="status_bar_quick_qs_pulldown_right">Right</string>
+    <string name="status_bar_double_tap_to_sleep_title">Double-tap to sleep</string>
+    <string name="status_bar_double_tap_to_sleep_summary">Double-tap on status bar to put device to sleep</string>
+
+    <!-- Lockscreen -->
+    <string name="lock_screen_gestures_category">Gestures &amp; display</string>
+    <string name="lockscreen_battery_info_title">Charging information</string>
+    <string name="lockscreen_battery_info_summary">Show battery charging information when charging on lock screen</string>
+
+    <!-- About Phone Blaze Redesign -->
+    <string name="blaze_about_device_name_label">Device name</string>
+    <string name="blaze_about_version_label">Version</string>
+    <string name="blaze_about_version_value">Blaze Version 5 (Comeback)</string>
+    <string name="blaze_about_device_title">About device</string>
+    <string name="blaze_about_firmware_title">Blaze firmware</string>
+    <string name="blaze_about_firmware_version">Blaze Version 5 (Comeback)</string>
+    <string name="blaze_about_chipset">Chipset</string>
+    <string name="blaze_about_resolution">Resolution</string>
+    <string name="blaze_about_codename">Codename</string>
+    <string name="blaze_about_state">State</string>
+    <string name="blaze_about_official">OFFICIAL</string>
+    <string name="blaze_about_tab_about">About</string>
+    <string name="blaze_about_tab_blazehouse">BlazeHouse</string>
+
+    <!-- Lockscreen Styles -->
+    <string name="lockscreen_styles_category">Lockscreen Styles</string>
+    <string name="custom_clock_style_title">Lock screen clock style</string>
+    <string name="custom_clock_style_summary">Choose from 13 Google Pixel clock styles</string>
+    <string name="depth_wallpaper_title">Depth Wallpaper</string>
+    <string name="depth_wallpaper_summary">Enable iOS-inspired depth wallpaper. Requires a subject image.</string>
+
+    <!-- Themes -->
+    <string name="theme_customization_category">Monet &amp; styles</string>
+    <string name="theme_customization_summary">Customize system theme accents and styles</string>
+
+    <!-- Brightness Slider -->
+    <string name="status_bar_brightness_category">Brightness</string>
+    <string name="status_bar_brightness_slider_title">Brightness slider</string>
+    <string name="status_bar_brightness_slider_summary">Adjust brightness from the Quick Settings</string>
+    <string name="status_bar_brightness_slider_auto_title">Auto brightness</string>
+    <string name="status_bar_brightness_slider_auto_summary">Show toggle for adaptive brightness near the slider</string>
+    <string name="status_bar_brightness_slider_show_never">Never show</string>
+    <string name="status_bar_brightness_slider_show_expanded">Show when expanded</string>
+    <string name="status_bar_brightness_slider_show_always">Show always</string>
+    <string name="status_bar_brightness_slider_position_title">Brightness slider position</string>
+    <string name="status_bar_brightness_slider_position_top">Top</string>
+    <string name="status_bar_brightness_slider_position_bottom">Bottom</string>
+
+    <!-- Battery Style -->
+    <string name="status_bar_battery_title">Battery status style</string>
+    <string name="status_bar_battery_style_title">Battery style</string>
+    <string name="status_bar_battery_style_icon_portrait">Icon portrait</string>
+    <string name="status_bar_battery_style_circle">Circle</string>
+    <string name="status_bar_battery_style_dotted_circle">Dotted circle</string>
+    <string name="status_bar_battery_style_text">Text</string>
+    <string name="status_bar_battery_percentage_title">Battery percentage</string>
+    <string name="status_bar_battery_percentage_default">Hidden</string>
+    <string name="status_bar_battery_percentage_text_inside">Inside the icon</string>
+    <string name="status_bar_battery_percentage_text_next">Next to the icon</string>
+
+    <!-- LineageOS Compatibility -->
+    <string name="backup_transport_setting_label">Change backup provider</string>
+
+    <!-- Status Bar Gestures -->
+    <string name="status_bar_gestures_category">Gestures</string>
+    <string name="status_bar_brightness_control_title">Status bar brightness control</string>
+    <string name="status_bar_brightness_control_summary">Adjust brightness by sliding across the status bar</string>
+
+    <!-- Hardware Gestures -->
+    <string name="torch_long_press_power_gesture_title">Long press power for torch</string>
+    <string name="torch_long_press_power_gesture_summary">Toggle flashlight by long pressing the power button while screen is off</string>
+
+    <!-- Phase 2: App Lock -->
+    <string name="app_lock_title">App lock</string>
+    <string name="app_lock_summary">Protect apps with device PIN or biometrics. Locked apps require authentication before launching and their notifications are hidden.</string>
+    <string name="app_lock_applications_title">Protected applications</string>
+    <string name="app_lock_authentication_dialog_reason">Authenticate to access App Lock settings</string>
+    <string name="app_lock_set_screen_lock_first">Please set up a screen lock (PIN, pattern or password) first</string>
+    <string name="app_lock_toggle_failed">Failed to change App Lock state</string>
+
+    <!-- Phase 2: Smart Charging Protection -->
+    <string name="charging_control_category">Battery health &amp; charging</string>
+    <string name="charging_control_title">Smart charging protection</string>
+    <string name="charging_control_summary">Stop charging at a set percentage to extend battery lifespan</string>
+    <string name="charging_control_limit_title">Charging limit</string>
+    <string name="charging_control_limit_summary">Stop charging when battery level reaches %s</string>
+
+    <!-- Phase 2: Pocket Mode -->
+    <string name="proximity_on_wake_title">Pocket mode</string>
+    <string name="proximity_on_wake_summary">Prevent accidental wake-ups and touches when device is in a pocket or bag</string>
+
+    <!-- Phase 3: Blaze Game Space & Performance -->
+    <string name="gamespace_title">Blaze Game Space</string>
+    <string name="gamespace_summary">Boost gaming performance, block interruptions, and optimize touch responsiveness</string>
+    <string name="gamespace_enabled_title">Enable Game Space</string>
+    <string name="gamespace_enabled_summary">Automatically optimize system performance and suppress interruptions during gaming</string>
+
+    <string name="gamespace_category_management_title">Game Library</string>
+    <string name="gamespace_app_list_title">Manage games</string>
+    <string name="gamespace_app_list_summary">Add or remove games and applications from Game Space</string>
+    <string name="gamespace_app_list_empty_summary">No games added yet</string>
+    <string name="gamespace_app_list_count_summary">%d game(s) configured</string>
+    <string name="gamespace_installed_apps_title">Installed applications</string>
+
+    <string name="gamespace_category_notifications_title">Notifications &amp; Calls</string>
+    <string name="gamespace_suppress_notifications_title">Block heads-up notifications</string>
+    <string name="gamespace_suppress_notifications_summary">Suppress floating notification banners while playing games (notifications still appear in the shade)</string>
+    <string name="gamespace_suppress_calls_title">Block incoming call banners</string>
+    <string name="gamespace_suppress_calls_summary">Prevent incoming phone calls from popping up over your game</string>
+
+    <string name="gamespace_category_performance_title">Performance &amp; Hardware</string>
+    <string name="gamespace_performance_mode_title">Power HAL Game Mode</string>
+    <string name="gamespace_performance_mode_summary">Engage high-performance CPU/GPU frequency scaling and low latency scheduler</string>
+    <string name="gamespace_high_touch_polling_title">High touch polling rate</string>
+    <string name="gamespace_high_touch_polling_summary">Increase touchscreen sampling rate for ultra-responsive controls during gameplay</string>
+
+    <string name="gamespace_category_controls_title">Gesture Protection</string>
+    <string name="gamespace_lock_gestures_title">Lock navigation gestures</string>
+    <string name="gamespace_lock_gestures_summary">Prevent accidental back-edge swipe triggers and multi-finger exits while in-game</string>
+
+    <!-- Phase 4: Battery & Deep Sleep Optimization -->
+    <string name="deep_sleep_optimization_category">Deep sleep &amp; battery saver</string>
+    <string name="aggressive_idle_title">Aggressive idle (Deep sleep)</string>
+    <string name="aggressive_idle_summary">Put the device into deep sleep quickly after screen off to maximize battery standby time</string>
+</resources>

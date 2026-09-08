@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2026 The BlazeAOSP Project
+     SPDX-License-Identifier: Apache-2.0
+-->
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:settings="http://schemas.android.com/apk/res-auto"
+    android:title="@string/miscellaneous_title">
+
+    <!-- Haptic feedback on gesture -->
+    <com.blaze.house.preferences.SystemSettingSwitchPreference
+        android:key="haptic_feedback_enabled"
+        android:title="@string/haptic_feedback_title"
+        android:summary="@string/haptic_feedback_summary"
+        android:defaultValue="true" />
+
+    <!-- Blaze Game Space & Performance -->
+    <PreferenceCategory
+        android:title="@string/gamespace_title">
+
+        <Preference
+            android:key="blaze_gamespace_entry"
+            android:title="@string/gamespace_title"
+            android:summary="@string/gamespace_summary"
+            android:fragment="com.blaze.house.fragments.GameSpaceSettings" />
+
+    </PreferenceCategory>
+
+    <!-- Volume Settings -->
+    <PreferenceCategory
+        android:title="@string/volume_settings_title">
+
+        <com.blaze.house.preferences.LineageSystemSettingSwitchPreference
+            android:key="volbtn_music_controls"
+            android:title="@string/volbtn_music_controls_title"
+            android:summary="@string/volbtn_music_controls_summary"
+            android:defaultValue="true" />
+
+        <com.blaze.house.preferences.LineageSystemSettingSwitchPreference
+            android:key="volume_wake_screen"
+            android:title="@string/volume_wake_screen_title"
+            android:summary="@string/volume_wake_screen_summary"
+            android:defaultValue="false" />
+
+        <com.blaze.house.preferences.LineageSystemSettingSwitchPreference
+            android:key="torch_long_press_power_gesture"
+            android:title="@string/torch_long_press_power_gesture_title"
+            android:summary="@string/torch_long_press_power_gesture_summary"
+            android:defaultValue="false" />
+
+    </PreferenceCategory>
+
+    <!-- Spoofing Options -->
+    <PreferenceCategory
+        android:title="@string/spoofing_options_title">
+
+        <com.blaze.house.preferences.SecureSettingSwitchPreference
+            android:key="pi_photos_spoof"
+            android:title="@string/photos_spoof_title"
+            android:summary="@string/photos_spoof_summary"
+            android:defaultValue="true" />
+
+        <com.blaze.house.preferences.GlobalSettingSwitchPreference
+            android:key="game_props_unlimited_fps"
+            android:title="@string/games_fps_spoof_title"
+            android:summary="@string/games_fps_spoof_summary"
+            android:defaultValue="true" />
+
+        <com.blaze.house.preferences.GlobalSettingSwitchPreference
+            android:key="netflix_spoof"
+            android:title="@string/netflix_spoof_title"
+            android:summary="@string/netflix_spoof_summary"
+            android:defaultValue="false" />
+
+        <com.blaze.house.preferences.SecureSettingSwitchPreference
+            android:key="pi_pp_spoof"
+            android:title="@string/pixel_props_system_spoof_title"
+            android:summary="@string/pixel_props_system_spoof_summary"
+            android:defaultValue="true" />
+
+    </PreferenceCategory>
+
+    <!-- Screen Security & Protections -->
+    <PreferenceCategory
+        android:title="@string/miscellaneous_screen_capture_category">
+
+        <com.blaze.house.preferences.GlobalSettingSwitchPreference
+            android:key="window_ignore_secure"
+            android:title="@string/window_ignore_secure_title"
+            android:summary="@string/window_ignore_secure_summary"
+            android:defaultValue="false" />
+
+        <com.blaze.house.preferences.GlobalSettingSwitchPreference
+            android:key="window_block_screenshot_detection"
+            android:title="@string/window_block_screenshot_detection_title"
+            android:summary="@string/window_block_screenshot_detection_summary"
+            android:defaultValue="false" />
+
+        <com.blaze.house.preferences.GlobalSettingSwitchPreference
+            android:key="window_block_screenrecord_detection"
+            android:title="@string/window_block_screenrecord_detection_title"
+            android:summary="@string/window_block_screenrecord_detection_summary"
+            android:defaultValue="false" />
+
+    </PreferenceCategory>
+
+    <!-- App & System Compatibility -->
+    <PreferenceCategory
+        android:title="@string/miscellaneous_system_bypass_category">
+
+        <com.blaze.house.preferences.GlobalSettingSwitchPreference
+            android:key="bypass_low_target_sdk_block"
+            android:title="@string/bypass_low_target_sdk_block_title"
+            android:summary="@string/bypass_low_target_sdk_block_summary"
+            android:defaultValue="false" />
+
+    </PreferenceCategory>
+
+    <!-- Smart Charging Protection -->
+    <PreferenceCategory
+        android:title="@string/charging_control_category">
+
+        <com.blaze.house.preferences.LineageSystemSettingSwitchPreference
+            android:key="charging_control_enabled"
+            android:title="@string/charging_control_title"
+            android:summary="@string/charging_control_summary"
+            android:defaultValue="false" />
+
+        <com.blaze.house.preferences.LineageSystemSettingListPreference
+            android:key="charging_control_charging_limit"
+            android:title="@string/charging_control_limit_title"
+            android:summary="@string/charging_control_limit_summary"
+            android:entries="@array/charging_control_limit_entries"
+            android:entryValues="@array/charging_control_limit_values"
+            android:defaultValue="80"
+            android:dependency="charging_control_enabled" />
+
+    </PreferenceCategory>
+
+    <!-- Battery & Deep Sleep Optimization -->
+    <PreferenceCategory
+        android:title="@string/deep_sleep_optimization_category">
+
+        <com.blaze.house.preferences.AggressiveDozeSwitchPreference
+            android:key="aggressive_idle_enabled"
+            android:title="@string/aggressive_idle_title"
+            android:summary="@string/aggressive_idle_summary"
+            android:defaultValue="false" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

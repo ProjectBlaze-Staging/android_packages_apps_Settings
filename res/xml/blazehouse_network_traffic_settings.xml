@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2026 The BlazeAOSP Project
+     SPDX-License-Identifier: Apache-2.0
+-->
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:settings="http://schemas.android.com/apk/res-auto"
+    android:title="@string/network_traffic_title">
+
+    <PreferenceCategory
+        android:title="@string/network_traffic_title">
+
+        <com.blaze.house.preferences.SystemSettingSwitchPreference
+            android:key="network_traffic_enabled"
+            android:title="@string/network_traffic_state_title"
+            android:summary="@string/network_traffic_summary"
+            android:defaultValue="false" />
+
+        <com.blaze.house.preferences.SystemSettingListPreference
+            android:key="network_traffic_mode"
+            android:title="@string/network_traffic_mode_title"
+            android:entries="@array/network_traffic_mode_entries"
+            android:entryValues="@array/network_traffic_mode_values"
+            android:defaultValue="0"
+            android:dependency="network_traffic_enabled" />
+
+        <com.blaze.house.preferences.SystemSettingSwitchPreference
+            android:key="network_traffic_autohide"
+            android:title="@string/network_traffic_autohide_title"
+            android:summary="@string/network_traffic_autohide_summary"
+            android:defaultValue="false"
+            android:dependency="network_traffic_enabled" />
+
+        <com.blaze.house.preferences.SystemSettingSeekBarPreference
+            android:key="network_traffic_autohide_threshold"
+            android:title="@string/network_traffic_autohide_threshold_title"
+            android:max="10"
+            settings:min="0"
+            settings:units="kB/s"
+            android:defaultValue="1"
+            android:dependency="network_traffic_autohide" />
+
+        <com.blaze.house.preferences.SystemSettingListPreference
+            android:key="network_traffic_units"
+            android:title="@string/network_traffic_units_title"
+            android:entries="@array/network_traffic_units_entries"
+            android:entryValues="@array/network_traffic_units_values"
+            android:defaultValue="0"
+            android:dependency="network_traffic_enabled" />
+
+        <com.blaze.house.preferences.SystemSettingSwitchPreference
+            android:key="network_traffic_hidearrow"
+            android:title="@string/network_traffic_hidearrow_title"
+            android:summary="@string/network_traffic_hidearrow_summary"
+            android:defaultValue="false"
+            android:dependency="network_traffic_enabled" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

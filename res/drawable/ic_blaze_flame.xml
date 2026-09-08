@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2026 The BlazeAOSP Project
+     SPDX-License-Identifier: Apache-2.0
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="72dp"
+    android:height="72dp"
+    android:viewportWidth="100"
+    android:viewportHeight="100">
+    <path
+        android:fillColor="@color/blaze_flame_color"
+        android:pathData="M 50,8 C 51,18 43,26 40,36 C 36,46 41,53 45,51 C 41,58 35,60 33,68 C 30,78 37,88 47,91 C 59,94 71,86 73,74 C 75,61 67,50 63,40 C 60,33 60,25 58,18 C 57,14 53,10 50,8 Z M 48,52 C 53,52 58,58 57,66 C 56,73 50,78 44,77 C 39,76 37,70 39,64 C 41,58 45,52 48,52 Z" />
+</vector>

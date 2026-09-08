@@ -58,6 +58,7 @@
     <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE" />
     <uses-permission android:name="android.permission.MODIFY_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_NUMBERS" />
+    <uses-permission android:name="android.permission.TEST_LOCK_APPS" />
     <uses-permission android:name="android.permission.USE_ICC_AUTH_WITH_DEVICE_IDENTIFIER" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.WRITE_APN_SETTINGS"/>
@@ -285,6 +286,24 @@
             <meta-data
                 android:name="com.android.settings.FRAGMENT_CLASS"
                 android:value="com.android.settings.shortcut.CreateShortcut" />
+        </activity>
+
+        <!-- BlazeHouse Main -->
+        <activity
+            android:name=".Settings$BlazeHouseActivity"
+            android:label="@string/blazehouse_title"
+            android:icon="@drawable/ic_homepage_blaze"
+            android:exported="true">
+            <intent-filter android:priority="1">
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="com.android.settings.SHORTCUT" />
+            </intent-filter>
+            <meta-data
+                android:name="com.android.settings.FRAGMENT_CLASS"
+                android:value="com.blaze.house.BlazeHouse" />
+            <meta-data
+                android:name="com.android.settings.HIGHLIGHT_MENU_KEY"
+                android:value="@string/menu_key_blazehouse" />
         </activity>
 
         <!-- Wireless Controls -->

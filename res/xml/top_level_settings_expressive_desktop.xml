@@ -21,6 +21,30 @@
     android:key="top_level_settings">
 
     <com.android.settingslib.widget.UntitledPreferenceCategory
+        android:order="-160"
+        android:key="top_level_blaze_header_category">
+        <com.android.settings.widget.HomepagePreference
+            android:fragment="com.android.settings.deviceinfo.aboutphone.MyDeviceInfoFragment"
+            android:icon="@drawable/ic_homepage_about"
+            android:key="top_level_about_device"
+            android:order="-20"
+            android:title="@string/about_settings"
+            android:summary="@string/summary_placeholder"
+            settings:highlightableMenuKey="@string/menu_key_about_device"
+            settings:controller="com.android.settings.deviceinfo.aboutphone.TopLevelAboutDevicePreferenceController"/>
+
+        <com.android.settings.widget.HomepagePreference
+            android:fragment="com.blaze.house.BlazeHouse"
+            android:icon="@drawable/ic_homepage_blaze"
+            android:key="top_level_blazehouse"
+            android:order="-10"
+            android:title="@string/blazehouse_title"
+            android:summary="@string/blazehouse_summary"
+            settings:highlightableMenuKey="@string/menu_key_blazehouse"
+            settings:controller="com.blaze.house.TopLevelBlazeHousePreferenceController"/>
+    </com.android.settingslib.widget.UntitledPreferenceCategory>
+
+    <com.android.settingslib.widget.UntitledPreferenceCategory
         android:order="-140"
         android:key="top_level_account_category"/>
 
@@ -146,15 +170,7 @@
             android:summary="@string/system_dashboard_summary"
             settings:highlightableMenuKey="@string/menu_key_system"/>
 
-        <com.android.settings.widget.HomepagePreference
-            android:fragment="com.android.settings.deviceinfo.aboutphone.MyDeviceInfoFragment"
-            android:icon="@drawable/ic_homepage_about"
-            android:key="top_level_about_device"
-            android:order="-10"
-            android:title="@string/about_settings"
-            android:summary="@string/summary_placeholder"
-            settings:highlightableMenuKey="@string/menu_key_about_device"
-            settings:controller="com.android.settings.deviceinfo.aboutphone.TopLevelAboutDevicePreferenceController"/>
+
     </com.android.settingslib.widget.UntitledPreferenceCategory>
 
     <com.android.settingslib.widget.UntitledPreferenceCategory

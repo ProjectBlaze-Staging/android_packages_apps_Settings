@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2026 The BlazeAOSP Project
+     SPDX-License-Identifier: Apache-2.0
+-->
+<resources>
+    <color name="homepage_blaze_background">#FFEA580C</color>
+    <color name="homepage_blaze_foreground">#FFFFFFFF</color>
+
+    <color name="blaze_floating_tab_bar_bg_color">#FFFFFFFF</color>
+    <color name="blaze_floating_tab_bar_stroke_color">#1A000000</color>
+    <color name="blaze_tab_selected_pill_color">#25EA580C</color>
+    <color name="blaze_tab_selected_text_color">#FFC2410C</color>
+    <color name="blaze_tab_unselected_icon_color">#FF71717A</color>
+
+    <!-- About Phone Colors -->
+    <color name="blaze_about_badge_bg">#FFBA2A06</color>
+    <color name="blaze_flame_color">#FFFFFFFF</color>
+    <color name="blaze_about_card_bg">#FFF3E9E5</color>
+    <color name="blaze_about_card_subtext">#FFBA2A06</color>
+
+    <!-- Concept Colors -->
+    <color name="blaze_specs_card_background">#FFF4EFEB</color>
+    <color name="blaze_logo_card_background">#FFEBE5E0</color>
+    <color name="blaze_specs_label_color">#FF666666</color>
+    <color name="blaze_firmware_accent_color">#FFD84315</color>
+    <color name="blaze_bottom_bar_bg">#FFEBECEF</color>
+    <color name="blaze_bottom_pill_active">#FFCFD3DC</color>
+    <color name="blaze_bottom_tab_text">#FF1A1C24</color>
+</resources>

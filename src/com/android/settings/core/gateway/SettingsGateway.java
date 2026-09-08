@@ -432,6 +432,15 @@ public class SettingsGateway {
             SummarizationPreferenceFragment.class.getName(),
             SafetyCenterFragment.class.getName(),
             SafetyCenterQsFragment.class.getName(),
+            com.blaze.house.BlazeHouse.class.getName(),
+            com.blaze.house.fragments.StatusBar.class.getName(),
+            com.blaze.house.fragments.StatusBarClock.class.getName(),
+            com.blaze.house.fragments.NetworkTrafficSettings.class.getName(),
+            com.blaze.house.fragments.QuickSettings.class.getName(),
+            com.blaze.house.fragments.LockScreen.class.getName(),
+            com.blaze.house.fragments.PowerMenu.class.getName(),
+            com.blaze.house.fragments.Miscellaneous.class.getName(),
+            com.blaze.house.fragments.Themes.class.getName(),
     };
 
     public static final String[] SETTINGS_FOR_RESTRICTED = {

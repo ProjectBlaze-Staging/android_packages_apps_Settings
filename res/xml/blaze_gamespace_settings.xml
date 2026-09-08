@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2026 The BlazeAOSP Project
+     SPDX-License-Identifier: Apache-2.0
+-->
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:settings="http://schemas.android.com/apk/res-auto"
+    android:title="@string/gamespace_title">
+
+    <com.blaze.house.preferences.SystemSettingPrimarySwitchPreference
+        android:key="gamespace_enabled"
+        android:title="@string/gamespace_enabled_title"
+        android:summary="@string/gamespace_enabled_summary"
+        android:defaultValue="true" />
+
+    <PreferenceCategory
+        android:key="gamespace_category_management"
+        android:title="@string/gamespace_category_management_title">
+
+        <Preference
+            android:key="gamespace_app_list_pref"
+            android:title="@string/gamespace_app_list_title"
+            android:summary="@string/gamespace_app_list_summary"
+            android:fragment="com.blaze.house.fragments.GameSpaceAppListFragment" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="gamespace_category_notifications"
+        android:title="@string/gamespace_category_notifications_title">
+
+        <com.blaze.house.preferences.SystemSettingSwitchPreference
+            android:key="gamespace_suppress_notifications"
+            android:title="@string/gamespace_suppress_notifications_title"
+            android:summary="@string/gamespace_suppress_notifications_summary"
+            android:defaultValue="false" />
+
+        <com.blaze.house.preferences.SystemSettingSwitchPreference
+            android:key="gamespace_suppress_calls"
+            android:title="@string/gamespace_suppress_calls_title"
+            android:summary="@string/gamespace_suppress_calls_summary"
+            android:defaultValue="false" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="gamespace_category_performance"
+        android:title="@string/gamespace_category_performance_title">
+
+        <com.blaze.house.preferences.SystemSettingSwitchPreference
+            android:key="gamespace_performance_mode"
+            android:title="@string/gamespace_performance_mode_title"
+            android:summary="@string/gamespace_performance_mode_summary"
+            android:defaultValue="true" />
+
+        <com.blaze.house.preferences.SystemSettingSwitchPreference
+            android:key="gamespace_high_touch_polling"
+            android:title="@string/gamespace_high_touch_polling_title"
+            android:summary="@string/gamespace_high_touch_polling_summary"
+            android:defaultValue="false" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="gamespace_category_controls"
+        android:title="@string/gamespace_category_controls_title">
+
+        <com.blaze.house.preferences.SystemSettingSwitchPreference
+            android:key="gamespace_lock_gestures"
+            android:title="@string/gamespace_lock_gestures_title"
+            android:summary="@string/gamespace_lock_gestures_summary"
+            android:defaultValue="false" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

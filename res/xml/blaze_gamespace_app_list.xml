@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2026 The BlazeAOSP Project
+     SPDX-License-Identifier: Apache-2.0
+-->
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:settings="http://schemas.android.com/apk/res-auto"
+    android:title="@string/gamespace_app_list_title">
+
+    <PreferenceCategory
+        android:key="gamespace_category_apps"
+        android:title="@string/gamespace_installed_apps_title" />
+
+</PreferenceScreen>

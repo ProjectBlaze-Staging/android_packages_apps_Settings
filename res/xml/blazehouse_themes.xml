@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2026 The BlazeAOSP Project
+     SPDX-License-Identifier: Apache-2.0
+-->
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:settings="http://schemas.android.com/apk/res-auto"
+    android:title="@string/themes_title">
+
+    <PreferenceCategory
+        android:title="@string/theme_customization_category">
+
+        <Preference
+            android:key="wallpaper_and_style_settings"
+            android:title="@string/style_and_wallpaper_settings_title"
+            android:summary="@string/theme_customization_summary">
+            <intent
+                android:action="android.intent.action.SET_WALLPAPER" />
+        </Preference>
+
+        <com.blaze.house.preferences.SecureSettingSwitchPreference
+            android:key="themed_icon_enabled"
+            android:title="Themed icons"
+            android:summary="Apply dynamic wallpaper theme colors to app icons"
+            android:defaultValue="false" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

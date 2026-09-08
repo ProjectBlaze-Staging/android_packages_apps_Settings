@@ -23,9 +23,9 @@
 
     <com.android.settingslib.widget.LayoutPreference
         android:key="my_device_info_header"
-        android:layout="@layout/settings_entity_header"
+        android:layout="@layout/blaze_about_device_header"
         android:selectable="false"
-        settings:isPreferenceVisible="false"/>
+        settings:isPreferenceVisible="true"/>
 
     <PreferenceCategory
         android:key="basic_info_category"
@@ -38,6 +38,7 @@
             android:order="1"
             android:title="@string/my_device_info_device_name_preference_title"
             android:summary="@string/summary_placeholder"
+            settings:isPreferenceVisible="false"
             settings:controller="com.android.settings.deviceinfo.DeviceNamePreferenceController"
             settings:enableCopying="true"/>
 

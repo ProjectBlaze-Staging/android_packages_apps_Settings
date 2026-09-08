@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2026 The BlazeAOSP Project
+     SPDX-License-Identifier: Apache-2.0
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <!-- BlazeHouse Main -->
+    <string name="blazehouse_title">BlazeHouse</string>
+    <string name="blazehouse_summary">Get Amazed with Blaze !!!</string>
+    <string name="blazehouse_info_title">BlazeHouse Hakkında</string>
+    <string name="blazehouse_info_dialog_message">ProjectBlaze 2.0 / BlazeAOSP (Android 17)\n\nDarkMorpheus ve Blaze Ekibi tarafından tutkuyla geliştirildi.\n\nBlaze ile Hayran Kalın !!!</string>
+    <string name="connectivity_category_title">Bağlantı</string>
+    <string name="personalize_category_title">Kişiselleştirme</string>
+
+    <!-- Categories -->
+    <string name="status_bar_title">Durum çubuğu</string>
+    <string name="status_bar_summary">Saat, pil stilleri, ağ trafiği ve simgeler</string>
+    <string name="quick_settings_title">Hızlı ayarlar</string>
+    <string name="quick_settings_summary">Panel düzeni, parlaklık çubuğu ve panel seçenekleri</string>
+    <string name="lock_screen_title">Kilit ekranı</string>
+    <string name="lock_screen_summary">Kilit ekranı saat stilleri ve öğeleri</string>
+    <string name="power_menu_title">Güç menüsü</string>
+    <string name="power_menu_summary">Gelişmiş yeniden başlatma ve güç seçenekleri</string>
+    <string name="themes_title">Temalar</string>
+    <string name="themes_summary">Yazı tipleri, simge paketi, sinyal ve Wi-Fi simge stilleri</string>
+    <string name="miscellaneous_title">Gelişmiş ve Çeşitli</string>
+    <string name="miscellaneous_summary">Aldatma, ekran görüntüsü korumaları, FPS kilidi ve kısıtlama kaldırma</string>
+
+    <!-- Power Menu -->
+    <string name="advanced_reboot_title">Gelişmiş yeniden başlatma</string>
+    <string name="advanced_reboot_summary">Güç menüsünde recovery, bootloader ve fastboot seçeneklerini göster</string>
+
+    <!-- Status Bar: Clock -->
+    <string name="status_bar_clock_title">Saat ve tarih</string>
+    <string name="status_bar_clock_summary">Saat konumu, saniye ve tarih stilini özelleştir</string>
+    <string name="status_bar_clock_position_title">Saat konumu</string>
+    <string name="status_bar_clock_position_left">Sol</string>
+    <string name="status_bar_clock_position_center">Orta</string>
+    <string name="status_bar_clock_position_right">Sağ</string>
+    <string name="status_bar_clock_seconds_title">Saniyeleri göster</string>
+    <string name="status_bar_clock_seconds_summary">Saatin yanında saniyeyi göster</string>
+    <string name="status_bar_clock_auto_hide_title">Saati otomatik gizle</string>
+    <string name="status_bar_clock_auto_hide_summary">Ana ekrandayken saati gizle</string>
+    <string name="status_bar_clock_date_title">Tarih</string>
+    <string name="status_bar_clock_date_style">Tarih stili</string>
+    <string name="status_bar_clock_date_position">Tarih konumu</string>
+    <string name="status_bar_clock_date_format">Tarih biçimi</string>
+
+    <!-- Status Bar: Network Traffic -->
+    <string name="network_traffic_title">Ağ trafiği göstergesi</string>
+    <string name="network_traffic_summary">Durum çubuğunda anlık indirme ve yükleme hızını göster</string>
+    <string name="network_traffic_state_title">Ağ trafiği</string>
+    <string name="network_traffic_mode_title">Görüntüleme modu</string>
+    <string name="network_traffic_dynamic">Dinamik (Yükleme ve İndirme)</string>
+    <string name="network_traffic_combined">Birleşik</string>
+    <string name="network_traffic_autohide_title">Otomatik gizle</string>
+    <string name="network_traffic_autohide_summary">Etkinlik olmadığında göstergeyi gizle</string>
+    <string name="network_traffic_autohide_threshold_title">Etkinsizlik eşiği</string>
+    <string name="network_traffic_units_title">Trafik ölçüm birimi</string>
+    <string name="network_traffic_hidearrow_title">Trafik oklarını gizle</string>
+    <string name="network_traffic_hidearrow_summary">Yükleme ve indirme etkinlik göstergesi oklarını gizle</string>
+
+    <!-- Volume Settings -->
+    <string name="volume_settings_title">Ses Ayarları</string>
+    <string name="volbtn_music_controls_title">Parça kontrolü</string>
+    <string name="volbtn_music_controls_summary">Ekran kapalıyken ses tuşlarına uzun basıldığında müzik parçaları atlanır</string>
+    <string name="volume_wake_screen_title">Ses tuşuyla uyandırma</string>
+    <string name="volume_wake_screen_summary">Ses tuşlarına basarak cihazınızı uyandırın</string>
+    <string name="haptic_feedback_title">Dokunsal geri bildirim</string>
+    <string name="haptic_feedback_summary">Geri hareketini gerçekleştirirken titret</string>
+
+    <!-- Spoofing Options -->
+    <string name="spoofing_options_title">Aldatma Seçenekleri</string>
+    <string name="photos_spoof_title">Sınırsız Fotoğraflar depolaması</string>
+    <string name="photos_spoof_summary">Yedekleme için sınırsız depolama sağlamak amacıyla cihazınızı yalnızca Google Fotoğraflar uygulamasına Pixel XL olarak tanıtın</string>
+    <string name="games_fps_spoof_title">Oyunlarda yüksek FPS kilidini aç</string>
+    <string name="games_fps_spoof_summary">Daha yüksek FPS kilidini açmak için belirli oyunlara cihazınızı farklı bir model olarak tanıtın</string>
+    <string name="netflix_spoof_title">Netflix kimlik aldatması</string>
+    <string name="netflix_spoof_summary">Netflix için cihazınızı farklı bir model olarak tanıtın</string>
+
+    <!-- Miscellaneous / Power Features -->
+    <string name="window_ignore_secure_title">Tüm uygulamalarda ekran görüntüsüne izin ver</string>
+    <string name="window_ignore_secure_summary">Korumalı uygulamalarda (banka, DRM vb.) ekran görüntüsü ve kaydı alabilmek için FLAG_SECURE kısıtlamasını yok say</string>
+    <string name="window_block_screenshot_detection_title">Ekran görüntüsü tespitini engelle</string>
+    <string name="window_block_screenshot_detection_summary">Ekran görüntüsü alındığında uygulamaların bunu tespit etmesini ve bildirim almasını engelle</string>
+    <string name="window_block_screenrecord_detection_title">Ekran kaydı tespitini engelle</string>
+    <string name="window_block_screenrecord_detection_summary">Ekran kaydı başlatıldığında uygulamaların bunu tespit etmesini engelle</string>
+    <string name="bypass_low_target_sdk_block_title">Eski SDK sürüm kısıtlamasını kaldır</string>
+    <string name="bypass_low_target_sdk_block_summary">Eski Android sürümleri için geliştirilmiş eski uygulama ve oyunların ADB gerekmeksizin kurulabilmesine izin ver</string>
+    <string name="pixel_props_system_spoof_title">Pixel özellik spoofing\'i</string>
+    <string name="pixel_props_system_spoof_summary">Google uygulamalarında Pixel\'e özel özellikleri açmak için güncel Pixel cihaz modelini spoof et</string>
+    <!-- Miscellaneous Categories -->
+    <string name="miscellaneous_screen_capture_category">Ekran güvenliği ve yakalama</string>
+    <string name="miscellaneous_system_bypass_category">Sistem ve uygulama uyumluluğu</string>
+
+    <!-- Quick Settings & Gestures -->
+    <string name="quick_settings_interface_category">Arayüz ve hareketler</string>
+    <string name="status_bar_quick_qs_pulldown_title">Hızlı aşağı çekme</string>
+    <string name="status_bar_quick_qs_pulldown_summary">Durum çubuğunun %1$s kenarından aşağı kaydırıldığında Hızlı Ayarlar açılır</string>
+    <string name="status_bar_quick_qs_pulldown_off">Kapalı</string>
+    <string name="status_bar_quick_qs_pulldown_left">Sol</string>
+    <string name="status_bar_quick_qs_pulldown_right">Sağ</string>
+    <string name="status_bar_double_tap_to_sleep_title">Uyutmak için çift dokun</string>
+    <string name="status_bar_double_tap_to_sleep_summary">Cihazı uyku moduna geçirmek için durum çubuğuna çift dokunun</string>
+
+    <!-- Lockscreen -->
+    <string name="lock_screen_gestures_category">Hareketler ve ekran</string>
+    <string name="lockscreen_battery_info_title">Şarj bilgileri</string>
+    <string name="lockscreen_battery_info_summary">Kilit ekranında şarj esnasında batarya şarj bilgilerini göster</string>
+
+    <!-- About Phone Blaze Redesign -->
+    <string name="blaze_about_device_name_label">Cihaz adı</string>
+    <string name="blaze_about_version_label">Sürüm</string>
+    <string name="blaze_about_version_value">Blaze Version 5 (Comeback)</string>
+    <string name="blaze_about_device_title">Cihaz hakkında</string>
+    <string name="blaze_about_firmware_title">Blaze donanım yazılımı</string>
+    <string name="blaze_about_firmware_version">Blaze Version 5 (Comeback)</string>
+    <string name="blaze_about_chipset">Yonga seti</string>
+    <string name="blaze_about_resolution">Çözünürlük</string>
+    <string name="blaze_about_codename">Kod adı</string>
+    <string name="blaze_about_state">Durum</string>
+    <string name="blaze_about_official">OFFICIAL</string>
+    <string name="blaze_about_tab_about">Hakkında</string>
+    <string name="blaze_about_tab_blazehouse">BlazeHouse</string>
+
+    <!-- Lockscreen Styles -->
+    <string name="lockscreen_styles_category">Kilit Ekranı Stilleri</string>
+    <string name="custom_clock_style_title">Özel Saat stili</string>
+    <string name="custom_clock_style_summary">Clock IOS</string>
+    <string name="depth_wallpaper_title">Derinlik Duvar Kağıdı</string>
+    <string name="depth_wallpaper_summary">iOS esintili derinlik duvar kağıdını etkinleştir. Bir nesne görüntüsü gerektirir.</string>
+
+    <!-- Themes -->
+    <string name="theme_customization_category">Monet ve stiller</string>
+    <string name="theme_customization_summary">Sistem tema renklerini ve stilleri özelleştirin</string>
+
+    <!-- Parlaklık Çubuğu -->
+    <string name="status_bar_brightness_category">Parlaklık</string>
+    <string name="status_bar_brightness_slider_title">Parlaklık çubuğu</string>
+    <string name="status_bar_brightness_slider_summary">Hızlı Ayarlar\'dan parlaklığı ayarlayın</string>
+    <string name="status_bar_brightness_slider_auto_title">Otomatik parlaklık</string>
+    <string name="status_bar_brightness_slider_auto_summary">Çubuğun yanında uyarlanabilir parlaklık anahtarını göster</string>
+    <string name="status_bar_brightness_slider_show_never">Asla gösterme</string>
+    <string name="status_bar_brightness_slider_show_expanded">Genişletildiğinde göster</string>
+    <string name="status_bar_brightness_slider_show_always">Her zaman göster</string>
+    <string name="status_bar_brightness_slider_position_title">Parlaklık çubuğu konumu</string>
+    <string name="status_bar_brightness_slider_position_top">Üst</string>
+    <string name="status_bar_brightness_slider_position_bottom">Alt</string>
+
+    <!-- Pil Stili -->
+    <string name="status_bar_battery_title">Pil durumu stili</string>
+    <string name="status_bar_battery_style_title">Pil stili</string>
+    <string name="status_bar_battery_style_icon_portrait">Dikey simge</string>
+    <string name="status_bar_battery_style_circle">Daire</string>
+    <string name="status_bar_battery_style_dotted_circle">Noktalı daire</string>
+    <string name="status_bar_battery_style_text">Metin</string>
+    <string name="status_bar_battery_percentage_title">Pil yüzdesi</string>
+    <string name="status_bar_battery_percentage_default">Gizli</string>
+    <string name="status_bar_battery_percentage_text_inside">Simgenin içinde</string>
+    <string name="status_bar_battery_percentage_text_next">Simgenin yanında</string>
+
+    <!-- LineageOS Compatibility -->
+    <string name="backup_transport_setting_label">Yedekleme sağlayıcısını değiştir</string>
+
+    <!-- Durum Çubuğu Hareketleri -->
+    <string name="status_bar_gestures_category">Hareketler</string>
+    <string name="status_bar_brightness_control_title">Durum çubuğu parlaklık kontrolü</string>
+    <string name="status_bar_brightness_control_summary">Durum çubuğunda parmağınızı kaydırarak parlaklığı ayarlayın</string>
+
+    <!-- Donanım Hareketleri -->
+    <string name="torch_long_press_power_gesture_title">Fener için güç tuşuna basılı tutun</string>
+    <string name="torch_long_press_power_gesture_summary">Ekran kapalıyken güç tuşuna basılı tutarak el fenerini açın/kapatın</string>
+
+    <!-- Phase 2: App Lock -->
+    <string name="app_lock_title">Uygulama kilidi</string>
+    <string name="app_lock_summary">Uygulamaları cihaz PIN kodu veya biyometrik ile koruyun. Kilitli uygulamalar açılmadan önce kimlik doğrulaması gerektirir ve bildirimleri gizlenir.</string>
+    <string name="app_lock_applications_title">Korumalı uygulamalar</string>
+    <string name="app_lock_authentication_dialog_reason">Uygulama kilidi ayarlarına erişmek için kimliğinizi doğrulayın</string>
+    <string name="app_lock_set_screen_lock_first">Lütfen önce bir ekran kilidi (PIN, desen veya şifre) ayarlayın</string>
+    <string name="app_lock_toggle_failed">Uygulama kilidi durumu değiştirilemedi</string>
+
+    <!-- Phase 2: Smart Charging Protection -->
+    <string name="charging_control_category">Pil sağlığı ve şarj</string>
+    <string name="charging_control_title">Akıllı şarj koruması</string>
+    <string name="charging_control_summary">Batarya ömrünü uzatmak için belirlenen yüzdeye ulaşıldığında şarjı durdurun</string>
+    <string name="charging_control_limit_title">Şarj sınırı</string>
+    <string name="charging_control_limit_summary">Pil seviyesi %s değerine ulaştığında şarjı kes</string>
+
+    <!-- Phase 2: Pocket Mode -->
+    <string name="proximity_on_wake_title">Cep modu</string>
+    <string name="proximity_on_wake_summary">Cihaz cepte veya çantadayken kazara ekranın açılmasını ve dokunmaları engelleyin</string>
+
+    <!-- Phase 3: Blaze Game Space & Performance -->
+    <string name="gamespace_title">Blaze Oyun Alanı</string>
+    <string name="gamespace_summary">Oyun performansını artırın, bildirim bölünmelerini engelleyin ve dokunmatik tepkisini optimize edin</string>
+    <string name="gamespace_enabled_title">Oyun Alanını Etkinleştir</string>
+    <string name="gamespace_enabled_summary">Oyun oynarken sistem performansını otomatik optimize edin ve bölünmeleri engelleyin</string>
+
+    <string name="gamespace_category_management_title">Oyun Kütüphanesi</string>
+    <string name="gamespace_app_list_title">Oyunları yönet</string>
+    <string name="gamespace_app_list_summary">Oyun Alanına oyun veya uygulama ekleyin ve kaldırın</string>
+    <string name="gamespace_app_list_empty_summary">Henüz oyun eklenmedi</string>
+    <string name="gamespace_app_list_count_summary">%d oyun yapılandırıldı</string>
+    <string name="gamespace_installed_apps_title">Yüklü uygulamalar</string>
+
+    <string name="gamespace_category_notifications_title">Bildirimler ve Aramalar</string>
+    <string name="gamespace_suppress_notifications_title">Açılır bildirimleri engelle</string>
+    <string name="gamespace_suppress_notifications_summary">Oyun oynarken bildirim başlıklarının ekranı bölmesini engelleyin (bildirimler çekmeceye sessizce düşer)</string>
+    <string name="gamespace_suppress_calls_title">Gelen arama başlıklarını engelle</string>
+    <string name="gamespace_suppress_calls_summary">Gelen aramaların oyun ekranının üzerinde açılmasını engelleyin</string>
+
+    <string name="gamespace_category_performance_title">Performans ve Donanım</string>
+    <string name="gamespace_performance_mode_title">Power HAL Oyun Modu</string>
+    <string name="gamespace_performance_mode_summary">Yüksek performanslı CPU/GPU frekans profili ve düşük gecikmeli zamanlayıcıyı devreye sokun</string>
+    <string name="gamespace_high_touch_polling_title">Yüksek dokunmatik örnekleme hızı</string>
+    <string name="gamespace_high_touch_polling_summary">Oyun sırasında ultra hızlı tepki için dokunmatik panel örnekleme hızını maksimuma çıkarın</string>
+
+    <string name="gamespace_category_controls_title">Hareket Koruması</string>
+    <string name="gamespace_lock_gestures_title">Gezinme hareketlerini kilitle</string>
+    <string name="gamespace_lock_gestures_summary">Oyun sırasında kazara kenardan geri kaydırma ve çok parmaklı çıkış hareketlerini engelleyin</string>
+
+    <!-- Phase 4: Battery & Deep Sleep Optimization -->
+    <string name="deep_sleep_optimization_category">Derin uyku ve pil tasarrufu</string>
+    <string name="aggressive_idle_title">Agresif boşta modu (Derin uyku)</string>
+    <string name="aggressive_idle_summary">Pil bekleme süresini maksimuma çıkarmak için ekran kapandıktan kısa süre sonra cihazı derin uyku moduna geçirin</string>
+</resources>

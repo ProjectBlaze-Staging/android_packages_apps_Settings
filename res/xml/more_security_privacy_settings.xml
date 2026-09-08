@@ -70,6 +70,13 @@
         android:order="-1"
         android:key="privacy_category"
         android:title="@string/privacy_header">
+        <!-- App lock -->
+        <Preference
+            android:key="app_lock"
+            android:title="@string/app_lock_title"
+            android:summary="@string/app_lock_summary"
+            android:fragment="com.android.settings.security.applock.AppLockSettingsFragment" />
+
         <!-- Accessibility usage -->
         <Preference
             android:key="privacy_accessibility_usage"

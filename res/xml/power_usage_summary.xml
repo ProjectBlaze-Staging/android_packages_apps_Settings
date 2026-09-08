@@ -77,6 +77,33 @@
             settings:controller="com.android.settings.display.BatteryPercentagePreferenceController" />
     </com.android.settingslib.widget.UntitledPreferenceCategory>
 
+    <com.android.settingslib.widget.UntitledPreferenceCategory
+        android:key="charging_control_category">
+        <com.blaze.house.preferences.LineageSystemSettingSwitchPreference
+            android:key="charging_control_enabled"
+            android:title="@string/charging_control_title"
+            android:summary="@string/charging_control_summary"
+            android:defaultValue="false" />
+
+        <com.blaze.house.preferences.LineageSystemSettingListPreference
+            android:key="charging_control_charging_limit"
+            android:title="@string/charging_control_limit_title"
+            android:summary="@string/charging_control_limit_summary"
+            android:entries="@array/charging_control_limit_entries"
+            android:entryValues="@array/charging_control_limit_values"
+            android:defaultValue="80"
+            android:dependency="charging_control_enabled" />
+    </com.android.settingslib.widget.UntitledPreferenceCategory>
+
+    <com.android.settingslib.widget.UntitledPreferenceCategory
+        android:key="deep_sleep_category">
+        <com.blaze.house.preferences.AggressiveDozeSwitchPreference
+            android:key="aggressive_idle_enabled"
+            android:title="@string/aggressive_idle_title"
+            android:summary="@string/aggressive_idle_summary"
+            android:defaultValue="false" />
+    </com.android.settingslib.widget.UntitledPreferenceCategory>
+
     <com.android.settingslib.widget.FooterPreference
         android:key="power_usage_footer"
         android:title="@string/battery_footer_summary"

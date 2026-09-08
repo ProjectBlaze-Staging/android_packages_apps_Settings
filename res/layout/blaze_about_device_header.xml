@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2026 The BlazeAOSP Project
+     SPDX-License-Identifier: Apache-2.0
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/blaze_about_header_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="16dp">
+
+    <!-- Screen Title: About device -->
+    <TextView
+        android:id="@+id/blaze_about_header_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/blaze_about_device_title"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textSize="28sp"
+        android:textStyle="bold" />
+
+    <!-- 1. Top Hero Card (Terracotta background with device name, codename and render) -->
+    <FrameLayout
+        android:id="@+id/blaze_about_hero_card"
+        android:layout_width="match_parent"
+        android:layout_height="145dp"
+        android:background="@drawable/blaze_hero_card_bg"
+        android:paddingStart="22dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:foreground="?android:attr/selectableItemBackground">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/blaze_about_device_name_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/summary_placeholder"
+                android:textColor="#FFFFFFFF"
+                android:textSize="21sp"
+                android:textStyle="bold"
+                android:maxLines="2"
+                android:ellipsize="end" />
+
+            <TextView
+                android:id="@+id/blaze_about_codename_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/summary_placeholder"
+                android:textColor="#D8FFFFFF"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <!-- Right Side: Device 3D Render Image (Visible in custom builds, GONE in GSI builds) -->
+        <ImageView
+            android:id="@+id/blaze_about_device_render"
+            android:layout_width="140dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="end|center_vertical"
+            android:scaleType="fitCenter"
+            android:visibility="gone"
+            android:contentDescription="@string/blaze_about_device_title" />
+    </FrameLayout>
+
+    <!-- 2. Dual Cards: Blaze Logo Squircle Tile + Blaze Firmware Card -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="135dp"
+        android:layout_marginTop="14dp"
+        android:orientation="horizontal">
+
+        <!-- Left: Official Blaze Logo Squircle Card -->
+        <FrameLayout
+            android:id="@+id/blaze_about_logo_card"
+            android:layout_width="135dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/blaze_logo_squircle_bg"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true">
+
+            <ImageView
+                android:id="@+id/blaze_about_official_logo_img"
+                android:layout_width="92dp"
+                android:layout_height="92dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_blaze_official_logo"
+                android:scaleType="fitCenter"
+                android:contentDescription="@string/blazehouse_title" />
+        </FrameLayout>
+
+        <!-- Right: Firmware Info Card -->
+        <LinearLayout
+            android:id="@+id/blaze_about_firmware_card"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginStart="12dp"
+            android:background="@drawable/blaze_specs_card_bg"
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:paddingStart="18dp"
+            android:paddingEnd="16dp"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/blaze_about_firmware_title"
+                android:textColor="@color/blaze_firmware_accent_color"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/blaze_about_firmware_version_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:text="@string/blaze_about_firmware_version"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:maxLines="2" />
+
+            <TextView
+                android:id="@+id/blaze_about_firmware_edition_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Android 17 • OFFICIAL"
+                android:textColor="@color/blaze_specs_label_color"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- 3. Hardware Specs Card -->
+    <LinearLayout
+        android:id="@+id/blaze_about_specs_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:background="@drawable/blaze_specs_card_bg"
+        android:orientation="vertical"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="18dp"
+        android:paddingBottom="18dp">
+
+        <!-- Row 1: Chipset -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/blaze_about_chipset"
+                android:textColor="@color/blaze_specs_label_color"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/blaze_about_chipset_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/summary_placeholder"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Row 2: Resolution -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/blaze_about_resolution"
+                android:textColor="@color/blaze_specs_label_color"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/blaze_about_resolution_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/summary_placeholder"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Row 3: Codename -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/blaze_about_codename"
+                android:textColor="@color/blaze_specs_label_color"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/blaze_about_codename_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/summary_placeholder"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Row 4: State -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/blaze_about_state"
+                android:textColor="@color/blaze_specs_label_color"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/blaze_about_state_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/blaze_about_official"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- 4. Bottom Floating Pill Bar: (i) About  +  ⚙️ BlazeHouse -->
+    <LinearLayout
+        android:id="@+id/blaze_about_bottom_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/blaze_about_bottom_bar_bg"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="4dp">
+
+        <!-- Tab 1: About (Active) -->
+        <LinearLayout
+            android:id="@+id/blaze_about_tab_about"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/blaze_about_tab_active_bg"
+            android:gravity="center_vertical"
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/ic_info"
+                android:tint="@color/blaze_bottom_tab_text"
+                android:contentDescription="@string/blaze_about_tab_about" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="@string/blaze_about_tab_about"
+                android:textColor="@color/blaze_bottom_tab_text"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Tab 2: BlazeHouse (Clickable -> Opens BlazeHouse) -->
+        <LinearLayout
+            android:id="@+id/blaze_about_tab_blazehouse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackground">
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/ic_blaze_about_gear"
+                android:tint="@color/blaze_specs_label_color"
+                android:contentDescription="@string/blaze_about_tab_blazehouse" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="@string/blaze_about_tab_blazehouse"
+                android:textColor="@color/blaze_specs_label_color"
+                android:textSize="13sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

@@ -203,10 +203,178 @@ public class MyDeviceInfoFragment extends DashboardFragment
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        initHeader();
+    }
+
     private void initHeader() {
-        // TODO: Migrate into its own controller.
         final LayoutPreference headerPreference =
                 getPreferenceScreen().findPreference(KEY_MY_DEVICE_INFO_HEADER);
+        if (headerPreference == null) {
+            return;
+        }
+
+        final View blazeRoot = headerPreference.findViewById(R.id.blaze_about_header_root);
+        if (blazeRoot != null) {
+            headerPreference.setVisible(true);
+
+            // 1. Top Hero Card (Device Name & Codename & Render)
+            final View heroCard = blazeRoot.findViewById(R.id.blaze_about_hero_card);
+            final android.widget.TextView deviceNameView =
+                    blazeRoot.findViewById(R.id.blaze_about_device_name_text);
+            final android.widget.TextView codenameView =
+                    blazeRoot.findViewById(R.id.blaze_about_codename_text);
+            final android.widget.ImageView renderView =
+                    blazeRoot.findViewById(R.id.blaze_about_device_render);
+
+            String deviceName = android.provider.Settings.Global.getString(
+                    getContext().getContentResolver(),
+                    android.provider.Settings.Global.DEVICE_NAME);
+            if (deviceName == null || deviceName.isEmpty()) {
+                deviceName = android.os.Build.MODEL;
+            }
+            if (deviceNameView != null) {
+                deviceNameView.setText(deviceName);
+            }
+            if (codenameView != null) {
+                codenameView.setText(android.os.Build.DEVICE);
+            }
+
+            if (heroCard != null) {
+                heroCard.setOnClickListener(v -> {
+                    com.android.settings.widget.ValidatedEditTextPreference pref =
+                            findPreference("device_name");
+                    if (pref != null) {
+                        pref.performClick();
+                    }
+                });
+            }
+
+            // GSI / Custom Device Render Handling:
+            // For GSI builds, renderView remains View.GONE.
+            // For custom device builds with custom render asset, renderView is shown.
+            if (renderView != null) {
+                boolean isGsi = android.os.SystemProperties.getBoolean("ro.blaze.is_gsi", false)
+                        || android.os.Build.PRODUCT.startsWith("gsi_")
+                        || android.os.Build.PRODUCT.contains("_gsi");
+                int customRenderRes = getContext().getResources().getIdentifier(
+                        "blaze_device_custom", "drawable", getContext().getPackageName());
+                if (!isGsi && customRenderRes != 0) {
+                    renderView.setImageResource(customRenderRes);
+                    renderView.setVisibility(View.VISIBLE);
+                } else {
+                    renderView.setVisibility(View.GONE);
+                }
+            }
+
+            // 2. Dual Cards: Official Blaze Logo & Firmware Card
+            final View logoCard = blazeRoot.findViewById(R.id.blaze_about_logo_card);
+            final View firmwareCard = blazeRoot.findViewById(R.id.blaze_about_firmware_card);
+            final android.widget.TextView firmwareVerView =
+                    blazeRoot.findViewById(R.id.blaze_about_firmware_version_text);
+            final android.widget.TextView firmwareEditionView =
+                    blazeRoot.findViewById(R.id.blaze_about_firmware_edition_text);
+
+            if (logoCard != null) {
+                logoCard.setOnClickListener(v -> {
+                    try {
+                        android.content.Intent easterEgg = new android.content.Intent(android.content.Intent.ACTION_MAIN);
+                        easterEgg.setClassName("android", "com.android.internal.app.PlatLogoActivity");
+                        startActivity(easterEgg);
+                    } catch (Exception e) {
+                        androidx.preference.Preference firmwarePref = findPreference("firmware_version");
+                        if (firmwarePref != null) {
+                            firmwarePref.performClick();
+                        }
+                    }
+                });
+            }
+
+            String displayVersion = getString(R.string.blaze_about_firmware_version);
+            if (firmwareVerView != null) {
+                firmwareVerView.setText(displayVersion);
+            }
+
+            String releaseType = android.os.SystemProperties.get("ro.blaze.releasetype",
+                    android.os.SystemProperties.get("ro.lineage.releasetype", "OFFICIAL"));
+            if (firmwareEditionView != null) {
+                firmwareEditionView.setText("Android 17 • " + releaseType);
+            }
+
+            if (firmwareCard != null) {
+                firmwareCard.setOnClickListener(v -> {
+                    androidx.preference.Preference firmwarePref = findPreference("firmware_version");
+                    if (firmwarePref != null) {
+                        firmwarePref.performClick();
+                    }
+                });
+            }
+
+            // 3. Hardware Specs Card
+            final android.widget.TextView chipsetValue =
+                    blazeRoot.findViewById(R.id.blaze_about_chipset_value);
+            final android.widget.TextView resolutionValue =
+                    blazeRoot.findViewById(R.id.blaze_about_resolution_value);
+            final android.widget.TextView codenameValue =
+                    blazeRoot.findViewById(R.id.blaze_about_codename_value);
+            final android.widget.TextView stateValue =
+                    blazeRoot.findViewById(R.id.blaze_about_state_value);
+
+            if (chipsetValue != null) {
+                String chipset = android.os.SystemProperties.get("ro.soc.model");
+                if (chipset == null || chipset.isEmpty()) {
+                    chipset = android.os.SystemProperties.get("ro.board.platform");
+                }
+                if (chipset == null || chipset.isEmpty()) {
+                    chipset = android.os.Build.HARDWARE;
+                }
+                chipsetValue.setText(chipset);
+            }
+
+            if (resolutionValue != null) {
+                try {
+                    android.view.WindowManager wm = (android.view.WindowManager)
+                            getContext().getSystemService(Context.WINDOW_SERVICE);
+                    android.view.WindowMetrics metrics = wm.getMaximumWindowMetrics();
+                    int width = metrics.getBounds().width();
+                    int height = metrics.getBounds().height();
+                    resolutionValue.setText(width + " x " + height);
+                } catch (Exception e) {
+                    resolutionValue.setText("1080 x 2400");
+                }
+            }
+
+            if (codenameValue != null) {
+                codenameValue.setText(android.os.Build.DEVICE);
+            }
+
+            if (stateValue != null) {
+                stateValue.setText(releaseType);
+            }
+
+            // 4. Bottom Floating Pill Bar (About & BlazeHouse)
+            final View blazeHouseTab = blazeRoot.findViewById(R.id.blaze_about_tab_blazehouse);
+            if (blazeHouseTab != null) {
+                blazeHouseTab.setOnClickListener(v -> {
+                    try {
+                        android.content.Intent intent = new android.content.Intent();
+                        intent.setComponent(new android.content.ComponentName(getContext(),
+                                "com.android.settings.Settings$BlazeHouseActivity"));
+                        startActivity(intent);
+                    } catch (Exception e) {
+                        new com.android.settings.core.SubSettingLauncher(getContext())
+                                .setDestination("com.blaze.house.BlazeHouse")
+                                .setSourceMetricsCategory(getMetricsCategory())
+                                .setTitleRes(R.string.blazehouse_title)
+                                .launch();
+                    }
+                });
+            }
+            return;
+        }
+
         final boolean shouldDisplayHeader = getContext().getResources().getBoolean(
                 R.bool.config_show_device_header_in_device_info);
         headerPreference.setVisible(shouldDisplayHeader);
@@ -245,6 +413,7 @@ public class MyDeviceInfoFragment extends DashboardFragment
         final DeviceNamePreferenceController controller = use(
                 DeviceNamePreferenceController.class);
         controller.updateDeviceName(confirm);
+        initHeader();
     }
 
     @Override

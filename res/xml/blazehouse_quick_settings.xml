@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2026 The BlazeAOSP Project
+     SPDX-License-Identifier: Apache-2.0
+-->
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:settings="http://schemas.android.com/apk/res-auto"
+    android:title="@string/quick_settings_title">
+
+    <PreferenceCategory
+        android:title="@string/quick_settings_interface_category">
+
+        <lineageos.preference.LineageSystemSettingListPreference
+            android:key="qs_quick_pulldown"
+            android:title="@string/status_bar_quick_qs_pulldown_title"
+            android:entries="@array/status_bar_quick_qs_pulldown_entries"
+            android:entryValues="@array/status_bar_quick_qs_pulldown_values"
+            android:defaultValue="0" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/status_bar_brightness_category">
+
+        <lineageos.preference.LineageSecureSettingListPreference
+            android:key="qs_show_brightness_slider"
+            android:title="@string/status_bar_brightness_slider_title"
+            android:dialogTitle="@string/status_bar_brightness_slider_title"
+            android:entries="@array/status_bar_brightness_slider_entries"
+            android:entryValues="@array/status_bar_brightness_slider_values"
+            android:defaultValue="1" />
+
+        <lineageos.preference.LineageSecureSettingListPreference
+            android:key="qs_brightness_slider_position"
+            android:title="@string/status_bar_brightness_slider_position_title"
+            android:dialogTitle="@string/status_bar_brightness_slider_position_title"
+            android:entries="@array/status_bar_brightness_slider_position_entries"
+            android:entryValues="@array/status_bar_brightness_slider_position_values"
+            android:defaultValue="0"
+            android:dependency="qs_show_brightness_slider" />
+
+        <lineageos.preference.LineageSecureSettingSwitchPreference
+            android:key="qs_show_auto_brightness"
+            android:title="@string/status_bar_brightness_slider_auto_title"
+            android:summary="@string/status_bar_brightness_slider_auto_summary"
+            android:defaultValue="true"
+            android:dependency="qs_show_brightness_slider" />
+
+    </PreferenceCategory>
+</PreferenceScreen>
