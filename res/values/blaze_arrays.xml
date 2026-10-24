@@ -53,36 +53,14 @@
         <item>2</item>
     </string-array>
 
-    <!-- Custom Clock Style - All Google Pixel lock screen clock styles -->
+    <!-- Custom Clock Style -->
     <string-array name="custom_clock_style_entries">
-        <item>Default (Double line)</item>
-        <item>Metro</item>
-        <item>Calligraphy</item>
-        <item>Bubble</item>
-        <item>Going Digital (Analog)</item>
-        <item>Flex</item>
-        <item>Weather</item>
-        <item>Bold</item>
-        <item>Handwritten</item>
-        <item>Minimal</item>
-        <item>Stopwatch (Analog)</item>
-        <item>Versus (Analog)</item>
-        <item>Typographic</item>
+        <item>Double line (Large Dynamic)</item>
+        <item>Single line (Compact Minimal)</item>
     </string-array>
     <string-array name="custom_clock_style_values" translatable="false">
         <item>0</item>
         <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-        <item>6</item>
-        <item>7</item>
-        <item>8</item>
-        <item>9</item>
-        <item>10</item>
-        <item>11</item>
-        <item>12</item>
     </string-array>
 
     <!-- Brightness slider -->

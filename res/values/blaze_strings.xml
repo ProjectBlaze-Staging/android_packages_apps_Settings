@@ -126,9 +126,9 @@
     <!-- Lockscreen Styles -->
     <string name="lockscreen_styles_category">Lockscreen Styles</string>
     <string name="custom_clock_style_title">Lock screen clock style</string>
-    <string name="custom_clock_style_summary">Choose from 13 Google Pixel clock styles</string>
-    <string name="depth_wallpaper_title">Depth Wallpaper</string>
-    <string name="depth_wallpaper_summary">Enable iOS-inspired depth wallpaper. Requires a subject image.</string>
+    <string name="custom_clock_style_summary">Choose between dynamic double-line and single-line clock</string>
+    <string name="lockscreen_media_art_title">Lockscreen media art</string>
+    <string name="lockscreen_media_art_summary">Display current media album art as lockscreen wallpaper</string>
 
     <!-- Themes -->
     <string name="theme_customization_category">Monet &amp; styles</string>

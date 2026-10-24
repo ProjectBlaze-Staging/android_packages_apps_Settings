@@ -24,11 +24,11 @@
             android:entryValues="@array/custom_clock_style_values"
             android:defaultValue="1" />
 
-        <com.blaze.house.preferences.SystemSettingSwitchPreference
-            android:key="depth_wallpaper"
-            android:title="@string/depth_wallpaper_title"
-            android:summary="@string/depth_wallpaper_summary"
-            android:defaultValue="false" />
+        <lineageos.preference.LineageSystemSettingSwitchPreference
+            android:key="lockscreen_media_metadata"
+            android:title="@string/lockscreen_media_art_title"
+            android:summary="@string/lockscreen_media_art_summary"
+            android:defaultValue="true" />
 
     </PreferenceCategory>
 
