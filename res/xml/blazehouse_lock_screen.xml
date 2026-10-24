@@ -24,7 +24,7 @@
             android:entryValues="@array/custom_clock_style_values"
             android:defaultValue="1" />
 
-        <lineageos.preference.LineageSystemSettingSwitchPreference
+        <lineageos.preference.LineageSecureSettingSwitchPreference
             android:key="lockscreen_media_metadata"
             android:title="@string/lockscreen_media_art_title"
             android:summary="@string/lockscreen_media_art_summary"
