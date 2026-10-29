@@ -9,7 +9,54 @@
     android:title="@string/themes_title">
 
     <PreferenceCategory
-        android:title="@string/theme_customization_category">
+        android:key="themes_fonts_category"
+        android:title="@string/themes_fonts_category">
+
+        <!-- Font style -->
+        <org.evolution.settings.preferences.FontsPickerPreference
+            android:key="system_font"
+            android:title="@string/font_styles_title"
+            android:summary="@string/font_styles_summary" />
+
+        <!-- Emoji style -->
+        <com.blaze.house.preferences.SystemPropertyListPreference
+            android:key="persist.sys.ax_emoji_style"
+            android:title="@string/emoji_style_title"
+            android:summary="%s"
+            android:entries="@array/emoji_style_entries"
+            android:entryValues="@array/emoji_style_values"
+            android:defaultValue="android" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="themes_monet_colors_category"
+        android:title="@string/themes_monet_colors_category">
+
+        <!-- Monet / Color settings -->
+        <Preference
+            android:key="monet_settings"
+            android:title="@string/themes_monet_title"
+            android:summary="@string/themes_monet_summary"
+            android:fragment="org.evolution.settings.fragments.themes.ColorsSettingsFragment" />
+
+        <com.blaze.house.preferences.SecureSettingSwitchPreference
+            android:key="pitch_black_theme"
+            android:title="@string/pitch_black_theme_title"
+            android:summary="@string/pitch_black_theme_summary"
+            android:defaultValue="false" />
+
+        <com.blaze.house.preferences.SecureSettingSwitchPreference
+            android:key="monet_engine_vibrant"
+            android:title="@string/monet_vibrant_title"
+            android:summary="@string/monet_vibrant_summary"
+            android:defaultValue="false" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="themes_icons_category"
+        android:title="@string/themes_icons_category">
 
         <Preference
             android:key="wallpaper_and_style_settings"
@@ -21,10 +68,68 @@
 
         <com.blaze.house.preferences.SecureSettingSwitchPreference
             android:key="themed_icon_enabled"
-            android:title="Themed icons"
-            android:summary="Apply dynamic wallpaper theme colors to app icons"
+            android:title="@string/themed_icons_title"
+            android:summary="@string/themed_icons_summary"
             android:defaultValue="false" />
 
+        <!-- Icon shape -->
+        <Preference
+            android:key="android.theme.customization.adaptive_icon_shape"
+            android:title="@string/themes_icon_shape_title"
+            android:fragment="org.evolution.settings.fragments.themes.IconShapes"/>
+
+        <!-- Navigation bar icons -->
+        <Preference
+            android:key="android.theme.customization.navbar"
+            android:title="@string/themes_navigation_bar_icons_title"
+            android:summary="@string/themes_navigation_bar_icons_summary"
+            android:fragment="org.evolution.settings.fragments.themes.NavigationBarIcons"/>
+
+        <!-- Udfps icon -->
+        <Preference
+            android:key="udfps_icon"
+            android:title="@string/themes_udfps_icon_title"
+            android:summary="@string/themes_udfps_icon_summary"
+            android:fragment="org.evolution.settings.fragments.themes.UdfpsIconPicker" />
+
     </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="themes_visual_effects_category"
+        android:title="@string/themes_visual_effects_category">
+
+        <!-- Boot animation -->
+        <Preference
+            android:key="boot_animation"
+            android:title="@string/themes_boot_animation_title"
+            android:fragment="org.evolution.settings.fragments.themes.BootAnimation" />
+
+        <!-- Screen off animation -->
+        <com.blaze.house.preferences.SystemSettingListPreference
+            android:key="screen_off_animation"
+            android:title="@string/themes_screen_off_animation_title"
+            android:entries="@array/themes_screen_off_animation_entries"
+            android:entryValues="@array/themes_screen_off_animation_values"
+            android:defaultValue="0" />
+
+        <!-- Udfps animation -->
+        <Preference
+            android:key="udfps_animation"
+            android:title="@string/themes_udfps_animation_title"
+            android:summary="@string/themes_udfps_animation_summary"
+            android:fragment="org.evolution.settings.fragments.themes.UdfpsAnimation" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/volume_panel_category_title">
+
+        <lineageos.preference.LineageSecureSettingSwitchPreference
+            android:key="volume_panel_on_left"
+            android:title="@string/volume_panel_on_left_title"
+            android:summary="@string/volume_panel_on_left_summary"
+            android:defaultValue="false" />
+    </PreferenceCategory>
+
 
 </PreferenceScreen>

@@ -69,6 +69,12 @@ public interface SearchFeatureProvider {
      * @return a package name of settings intelligence.
      */
     default String getSettingsIntelligencePkgName(Context context) {
+        if (Utils.isPackageEnabled(context, "com.google.android.settings.intelligence")) {
+            return "com.google.android.settings.intelligence";
+        }
+        if (Utils.isPackageEnabled(context, "com.android.settings.intelligence")) {
+            return "com.android.settings.intelligence";
+        }
         return context.getString(R.string.config_settingsintelligence_package_name);
     }
 
@@ -87,8 +93,13 @@ public interface SearchFeatureProvider {
             return;
         }
 
+        String intelPkg = getSettingsIntelligencePkgName(activity);
+        boolean hasIntel = Utils.isPackageEnabled(activity, intelPkg)
+                || Utils.isPackageEnabled(activity, "com.google.android.settings.intelligence")
+                || Utils.isPackageEnabled(activity, "com.android.settings.intelligence");
+
         if (!WizardManagerHelper.isDeviceProvisioned(activity)
-                || !Utils.isPackageEnabled(activity, getSettingsIntelligencePkgName(activity))
+                || !hasIntel
                 || WizardManagerHelper.isAnySetupWizard(activity.getIntent())) {
             final ViewGroup parent = (ViewGroup) toolbar.getParent();
             if (parent != null) {

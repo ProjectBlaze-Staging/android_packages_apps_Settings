@@ -74,7 +74,9 @@ public class TopLevelWallpaperPreferenceController extends BasePreferenceControl
     }
 
     public ComponentName getComponentName() {
-        return new ComponentName(mWallpaperPackage, getComponentClassString());
+        String className = getComponentClassString();
+        String pkg = resolvePackageName(className);
+        return new ComponentName(pkg, className);
     }
 
     public String getComponentClassString() {
@@ -106,7 +108,14 @@ public class TopLevelWallpaperPreferenceController extends BasePreferenceControl
                     mContext)) {
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             }
-            preference.getContext().startActivity(intent);
+            try {
+                preference.getContext().startActivity(intent);
+            } catch (Exception e) {
+                // Fallback to implicit action
+                Intent fallback = new Intent(Intent.ACTION_SET_WALLPAPER);
+                fallback.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                preference.getContext().startActivity(fallback);
+            }
             return true;
         }
         return super.handlePreferenceTreeClick(preference);
@@ -118,12 +127,35 @@ public class TopLevelWallpaperPreferenceController extends BasePreferenceControl
                 && canResolveWallpaperComponent(mStylesAndWallpaperClass);
     }
 
-    private boolean canResolveWallpaperComponent(String className) {
-        final ComponentName componentName = new ComponentName(mWallpaperPackage, className);
+    private String resolvePackageName(String className) {
+        if (canResolveWithPackage(mWallpaperPackage, className)) {
+            return mWallpaperPackage;
+        }
+        if (canResolveWithPackage("com.google.android.apps.wallpaper", className)) {
+            return "com.google.android.apps.wallpaper";
+        }
+        if (canResolveWithPackage("com.android.wallpaper", className)) {
+            return "com.android.wallpaper";
+        }
+        return mWallpaperPackage;
+    }
+
+    private boolean canResolveWithPackage(String pkg, String className) {
+        if (TextUtils.isEmpty(pkg) || TextUtils.isEmpty(className)) return false;
+        final ComponentName componentName = new ComponentName(pkg, className);
         final PackageManager pm = mContext.getPackageManager();
         final Intent intent = new Intent().setComponent(componentName);
         final List<ResolveInfo> resolveInfos = pm.queryIntentActivities(intent, 0 /* flags */);
         return resolveInfos != null && !resolveInfos.isEmpty();
+    }
+
+    private boolean canResolveWallpaperComponent(String className) {
+        if (canResolveWithPackage(mWallpaperPackage, className)) return true;
+        if (canResolveWithPackage("com.google.android.apps.wallpaper", className)) return true;
+        if (canResolveWithPackage("com.android.wallpaper", className)) return true;
+        Intent setWpIntent = new Intent(Intent.ACTION_SET_WALLPAPER);
+        List<ResolveInfo> list = mContext.getPackageManager().queryIntentActivities(setWpIntent, 0);
+        return list != null && !list.isEmpty();
     }
 
     private void disablePreferenceIfManaged(RestrictedTopLevelPreference pref) {

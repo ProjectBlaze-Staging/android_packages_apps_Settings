@@ -222,5 +222,26 @@
     <!-- Phase 4: Battery & Deep Sleep Optimization -->
     <string name="deep_sleep_optimization_category">Deep sleep &amp; battery saver</string>
     <string name="aggressive_idle_title">Aggressive idle (Deep sleep)</string>
-    <string name="aggressive_idle_summary">Put the device into deep sleep quickly after screen off to maximize battery standby time</string>
+    <string name="aggressive_idle_summary">Enables aggressive device idle mode and restricts background activity when screen is off to maximize battery life</string>
+    <!-- Blaze Account (Offline) -->
+    <string name="blaze_account_title">Blaze Account</string>
+    <string name="blaze_account_create_title">Create Blaze Account</string>
+    <string name="blaze_account_create_summary">Personalize your profile and customize your device</string>
+    <string name="blaze_account_offline">Offline Device Account</string>
+    <string name="blaze_account_status">Offline Profile • Stored locally on device</string>
+    <string name="blaze_account_name_label">Display Name</string>
+    <string name="blaze_account_name_hint">Enter your name</string>
+    <string name="blaze_account_phone_label">Phone Number</string>
+    <string name="blaze_account_phone_hint">Enter phone number</string>
+    <string name="blaze_account_save">Save Profile</string>
+    <string name="blaze_account_saved_toast">Blaze Account updated</string>
+    <string name="blaze_account_delete">Remove Account</string>
+    <string name="blaze_account_deleted_toast">Blaze Account removed</string>
+    <string name="blaze_account_change_photo">Change Photo</string>
+
+    <!-- Lockscreen Clock Source -->
+    <string name="lockscreen_clock_source_title">Clock style source</string>
+    <string name="lockscreen_clock_source_summary">Choose whether to use the default system/Pixel clock or BlazeHouse custom clocks</string>
+    <string name="lockscreen_clock_source_system">Default System / Pixel Clock</string>
+    <string name="lockscreen_clock_source_custom">BlazeHouse Custom Clocks</string>
 </resources>

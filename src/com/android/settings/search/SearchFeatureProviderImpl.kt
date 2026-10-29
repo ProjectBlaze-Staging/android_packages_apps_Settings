@@ -54,7 +54,7 @@ open class SearchFeatureProviderImpl : SearchFeatureProvider {
         lazySearchIndexableResources
 
     override fun buildSearchIntent(context: Context, pageId: Int): Intent =
-        Intent(Settings.ACTION_APP_SEARCH_SETTINGS)
+        Intent("com.android.settings.action.SETTINGS_SEARCH")
             .setPackage(getSettingsIntelligencePkgName(context))
             .putExtra(Intent.EXTRA_REFERRER, buildReferrer(context, pageId))
 

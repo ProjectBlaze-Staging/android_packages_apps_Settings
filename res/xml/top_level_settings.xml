@@ -21,6 +21,19 @@
     android:key="top_level_settings">
 
     <PreferenceCategory
+        android:order="-180"
+        android:key="top_level_blaze_account_category"
+        android:layout="@layout/settingslib_expressive_untitled_preference_category">
+        <com.android.settings.widget.HomepagePreference
+            android:key="top_level_blaze_account"
+            android:order="-30"
+            android:title="@string/blaze_account_create_title"
+            android:summary="@string/blaze_account_create_summary"
+            android:icon="@drawable/ic_blaze_account_avatar"
+            settings:controller="com.blaze.account.TopLevelBlazeAccountPreferenceController"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:order="-160"
         android:key="top_level_blaze_header_category"
         android:layout="@layout/settingslib_expressive_untitled_preference_category">

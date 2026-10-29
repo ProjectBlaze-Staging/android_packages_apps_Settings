@@ -288,6 +288,15 @@
                 android:value="com.android.settings.shortcut.CreateShortcut" />
         </activity>
 
+        <!-- Blaze Account -->
+        <activity
+            android:name="com.blaze.account.BlazeAccountActivity"
+            android:label="@string/blaze_account_title"
+            android:icon="@drawable/ic_blaze_account_avatar"
+            android:theme="@style/Theme.SubSettings"
+            android:exported="true">
+        </activity>
+
         <!-- BlazeHouse Main -->
         <activity
             android:name=".Settings$BlazeHouseActivity"

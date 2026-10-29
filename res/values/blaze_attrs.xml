@@ -11,4 +11,11 @@
         <attr name="units" format="string|reference" />
         <attr name="continuousUpdates" format="boolean" />
     </declare-styleable>
+
+    <!-- Base attributes available to DeviceConfigSwitchPreference. -->
+    <declare-styleable name="DeviceConfigSwitchPreference">
+        <attr name="deviceConfigNamespace" format="string" />
+        <attr name="deviceConfigFlag" format="string" />
+        <attr name="deviceConfigDefault" format="boolean" />
+    </declare-styleable>
 </resources>

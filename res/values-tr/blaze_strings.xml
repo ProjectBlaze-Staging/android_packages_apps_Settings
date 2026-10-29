@@ -223,4 +223,62 @@
     <string name="deep_sleep_optimization_category">Derin uyku ve pil tasarrufu</string>
     <string name="aggressive_idle_title">Agresif boşta modu (Derin uyku)</string>
     <string name="aggressive_idle_summary">Pil bekleme süresini maksimuma çıkarmak için ekran kapandıktan kısa süre sonra cihazı derin uyku moduna geçirin</string>
+
+    <!-- Dynamic Bar & Battery Bar -->
+    <string name="dynamic_bar">Dinamik Ada (Dynamic Bar)</string>
+    <string name="dynamic_bar_summary">Medya, şarj, kayıt, zamanlayıcı ve bildirimler için akıllı dinamik ada</string>
+    <string name="dynamic_bar_keyguard_enable">Kilit ekranında Dinamik Ada</string>
+    <string name="dynamic_bar_keyguard_enable_summary">Kilit ekranında dinamik ada çipini göster</string>
+    <string name="dynamic_bar_keyguard_battery_chip">Kilit ekranı pil çipi</string>
+    <string name="dynamic_bar_events">Etkinlikler</string>
+    <string name="battery_bar_title">Pil çubuğu</string>
+    <string name="battery_bar_summary">Durum çubuğunun üstünde renkli pil seviyesi çubuğu göster</string>
+    <string name="battery_bar_thickness_title">Çubuk kalınlığı</string>
+    <string name="battery_bar_style_title">Hizalama stili</string>
+    <string name="battery_bar_animate_title">Şarj animasyonu</string>
+    <string name="battery_bar_blend_color_title">Renkleri harmanla</string>
+    <string name="battery_bar_blend_color_summary">Pil yüzdesine göre renkleri dinamik değiştir</string>
+    <string name="battery_bar_blend_color_reverse_title">Renk yönünü tersine çevir</string>
+    <string name="battery_bar_color">Çubuk rengi</string>
+    <string name="battery_bar_charging_color">Şarj rengi</string>
+    <string name="battery_bar_battery_low_color">Düşük pil rengi</string>
+
+    <!-- Quick Settings Customization -->
+    <string name="quick_settings_tiles_category">Hızlı ayarlar kutucukları</string>
+    <string name="quick_settings_tile_shape_title">Kutucuk şekli</string>
+    <string name="quick_settings_tile_icon_shape_title">Kutucuk simge şekli</string>
+    <string name="quick_settings_tile_haptic_title">Dokunulduğunda titret</string>
+    <string name="quick_settings_tile_haptic_summary">Hızlı ayarlar kutucuklarına dokunulduğunda titreşimli geri bildirim ver</string>
+    <string name="quick_settings_tile_label_hide_title">Etiketleri gizle</string>
+    <string name="quick_settings_tile_label_hide_summary">Kutucuklarda yalnızca simge göster</string>
+    <string name="quick_settings_layout_columns_rows_title">Sütunlar ve satırlar</string>
+    <string name="quick_settings_layout_columns_rows_summary">Hızlı Ayarlar sütun ve satır sayılarını özelleştirin</string>
+    <string name="quick_settings_columns_portrait_title">Sütun sayısı (Dikey)</string>
+    <string name="quick_settings_columns_landscape_title">Sütun sayısı (Yatay)</string>
+    <string name="quick_settings_rows_portrait_title">Satır sayısı (Dikey)</string>
+    <string name="quick_settings_rows_landscape_title">Satır sayısı (Yatay)</string>
+    <string name="quick_settings_qqs_rows_portrait_title">Hızlı panel satır sayısı (Dikey)</string>
+    <string name="quick_settings_qqs_rows_landscape_title">Hızlı panel satır sayısı (Yatay)</string>
+
+    <!-- Blaze Account (Offline) -->
+    <string name="blaze_account_title">Blaze Hesabı</string>
+    <string name="blaze_account_create_title">Blaze Hesabı oluşturun</string>
+    <string name="blaze_account_create_summary">Profilinizi kişiselleştirin ve cihazınızı özelleştirin</string>
+    <string name="blaze_account_offline">Çevrim Dışı Cihaz Hesabı</string>
+    <string name="blaze_account_status">Çevrim Dışı Profil • Cihaz içinde yerel olarak saklanır</string>
+    <string name="blaze_account_name_label">Görünen İsim</string>
+    <string name="blaze_account_name_hint">Adınızı ve soyadınızı girin</string>
+    <string name="blaze_account_phone_label">Telefon Numarası</string>
+    <string name="blaze_account_phone_hint">Telefon numaranızı girin</string>
+    <string name="blaze_account_save">Profili Kaydet</string>
+    <string name="blaze_account_saved_toast">Blaze Hesabı güncellendi</string>
+    <string name="blaze_account_delete">Hesabı Kaldır</string>
+    <string name="blaze_account_deleted_toast">Blaze Hesabı kaldırıldı</string>
+    <string name="blaze_account_change_photo">Fotoğrafı Değiştir</string>
+
+    <!-- Lockscreen Clock Source -->
+    <string name="lockscreen_clock_source_title">Saat kaynağı stili</string>
+    <string name="lockscreen_clock_source_summary">Varsayılan sistem/Pixel saatini veya BlazeHouse özel saatlerini kullanmayı seçin</string>
+    <string name="lockscreen_clock_source_system">Varsayılan Sistem / Pixel Saati</string>
+    <string name="lockscreen_clock_source_custom">BlazeHouse Özel Saatleri</string>
 </resources>

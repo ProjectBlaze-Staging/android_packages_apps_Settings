@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2026 The BlazeAOSP Project
+     SPDX-License-Identifier: Apache-2.0
+-->
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:settings="http://schemas.android.com/apk/res-auto"
+    android:title="@string/dynamic_bar">
+
+    <com.blaze.house.preferences.SecureSettingSwitchPreference
+        android:key="ax_dynamic_bar_enabled"
+        android:title="@string/dynamic_bar"
+        android:summary="@string/dynamic_bar_summary"
+        android:defaultValue="false" />
+
+    <com.blaze.house.preferences.SecureSettingSwitchPreference
+        android:key="ax_dynamic_bar_keyguard_enabled"
+        android:title="@string/dynamic_bar_keyguard_enable"
+        android:summary="@string/dynamic_bar_keyguard_enable_summary"
+        android:defaultValue="true"
+        android:dependency="ax_dynamic_bar_enabled" />
+
+    <com.blaze.house.preferences.SecureSettingListPreference
+        android:key="ax_dynamic_bar_keyguard_battery_chip_mode"
+        android:title="@string/dynamic_bar_keyguard_battery_chip"
+        android:entries="@array/dynamic_bar_keyguard_battery_chip_entries"
+        android:entryValues="@array/dynamic_bar_keyguard_battery_chip_values"
+        android:defaultValue="1"
+        android:dependency="ax_dynamic_bar_keyguard_enabled" />
+
+    <PreferenceCategory
+        android:key="dynamic_bar_events_category"
+        android:title="@string/dynamic_bar_events"
+        android:dependency="ax_dynamic_bar_enabled">
+
+        <androidx.preference.SwitchPreferenceCompat
+            android:key="event_audio_recording"
+            android:title="@string/dynamic_bar_event_audio_recording"
+            android:summary="@string/dynamic_bar_event_audio_recording_summary"
+            android:defaultValue="true" />
+
+        <androidx.preference.SwitchPreferenceCompat
+            android:key="event_media"
+            android:title="@string/dynamic_bar_event_media"
+            android:summary="@string/dynamic_bar_event_media_summary"
+            android:defaultValue="true" />
+
+        <androidx.preference.SwitchPreferenceCompat
+            android:key="event_notification"
+            android:title="@string/dynamic_bar_event_notification"
+            android:summary="@string/dynamic_bar_event_notification_summary"
+            android:defaultValue="true" />
+
+        <com.blaze.house.preferences.SecureSettingSwitchPreference
+            android:key="ax_dynamic_bar_compact_notifications"
+            android:title="@string/dynamic_bar_compact_notifications"
+            android:summary="@string/dynamic_bar_compact_notifications_summary"
+            android:defaultValue="true"
+            android:dependency="event_notification" />
+
+        <androidx.preference.SwitchPreferenceCompat
+            android:key="event_timer"
+            android:title="@string/dynamic_bar_event_timer"
+            android:summary="@string/dynamic_bar_event_timer_summary"
+            android:defaultValue="true" />
+
+        <androidx.preference.SwitchPreferenceCompat
+            android:key="event_stopwatch"
+            android:title="@string/dynamic_bar_event_stopwatch"
+            android:summary="@string/dynamic_bar_event_stopwatch_summary"
+            android:defaultValue="true" />
+
+        <androidx.preference.SwitchPreferenceCompat
+            android:key="event_alarm"
+            android:title="@string/dynamic_bar_event_alarm"
+            android:summary="@string/dynamic_bar_event_alarm_summary"
+            android:defaultValue="true" />
+
+        <androidx.preference.SwitchPreferenceCompat
+            android:key="event_charging"
+            android:title="@string/dynamic_bar_event_charging"
+            android:summary="@string/dynamic_bar_event_charging_summary"
+            android:defaultValue="true" />
+
+        <androidx.preference.SwitchPreferenceCompat
+            android:key="event_bluetooth"
+            android:title="@string/dynamic_bar_event_bluetooth"
+            android:summary="@string/dynamic_bar_event_bluetooth_summary"
+            android:defaultValue="true" />
+
+        <androidx.preference.SwitchPreferenceCompat
+            android:key="event_hotspot"
+            android:title="@string/dynamic_bar_event_hotspot"
+            android:summary="@string/dynamic_bar_event_hotspot_summary"
+            android:defaultValue="true" />
+
+        <androidx.preference.SwitchPreferenceCompat
+            android:key="event_ringer"
+            android:title="@string/dynamic_bar_event_ringer"
+            android:summary="@string/dynamic_bar_event_ringer_summary"
+            android:defaultValue="true" />
+
+        <androidx.preference.SwitchPreferenceCompat
+            android:key="event_vpn"
+            android:title="@string/dynamic_bar_event_vpn"
+            android:summary="@string/dynamic_bar_event_vpn_summary"
+            android:defaultValue="true" />
+
+        <androidx.preference.SwitchPreferenceCompat
+            android:key="event_clipboard"
+            android:title="@string/dynamic_bar_event_clipboard"
+            android:summary="@string/dynamic_bar_event_clipboard_summary"
+            android:defaultValue="true" />
+
+        <androidx.preference.SwitchPreferenceCompat
+            android:key="event_torch"
+            android:title="@string/dynamic_bar_event_torch"
+            android:summary="@string/dynamic_bar_event_torch_summary"
+            android:defaultValue="true" />
+
+        <androidx.preference.SwitchPreferenceCompat
+            android:key="event_promoted_ongoing"
+            android:title="@string/dynamic_bar_event_ongoing"
+            android:summary="@string/dynamic_bar_event_ongoing_summary"
+            android:defaultValue="true" />
+
+        <androidx.preference.SwitchPreferenceCompat
+            android:key="event_sports"
+            android:title="@string/dynamic_bar_event_sports"
+            android:summary="@string/dynamic_bar_event_sports_summary"
+            android:defaultValue="true" />
+
+        <androidx.preference.SwitchPreferenceCompat
+            android:key="event_app_switch"
+            android:title="@string/dynamic_bar_event_app_switch"
+            android:summary="@string/dynamic_bar_event_app_switch_summary"
+            android:defaultValue="true" />
+
+        <androidx.preference.SwitchPreferenceCompat
+            android:key="event_biometric_unlock"
+            android:title="@string/dynamic_bar_event_biometric"
+            android:summary="@string/dynamic_bar_event_biometric_summary"
+            android:defaultValue="true" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

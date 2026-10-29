@@ -47,4 +47,5 @@
     <integer name="sim_label_max_length">50</integer>
 
     <integer name="mirror_x_scale">1</integer>
+    <integer name="edge_light_preview_pulse_duration_ms">2000</integer>
 </resources>
