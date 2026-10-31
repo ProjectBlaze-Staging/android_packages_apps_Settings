@@ -121,8 +121,8 @@ private fun PixelPropsContent(context: android.content.Context) {
         context.resources.configuration.smallestScreenWidthDp >= 600
     }
 
-    // Mainline device gate — show unsupported card and bail
-    val isMainlineDevice = remember { PixelPropsUtils.isMainlinePixelDevice() }
+    // Allow Pixel Props configuration on all devices including Tensor Pixels (e.g. spoofing Pixel 6a as Pixel 9 Pro XL)
+    val isMainlineDevice = false
     if (isMainlineDevice) {
         Box(
             modifier = Modifier

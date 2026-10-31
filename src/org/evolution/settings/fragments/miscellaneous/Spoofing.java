@@ -69,27 +69,16 @@ public class Spoofing extends SettingsPreferenceFragment implements
         mSnapchatSpoof = (SwitchPreferenceCompat) findPreference(PI_SNAPCHAT_SPOOF);
         mTensorTargets = findPreference(KEY_TENSOR_TARGETS);
 
-        // Tensor targets: only relevant on non-Tensor devices
-        if (mTensorTargets != null && PixelPropsUtils.isTensorPixelDevice()) {
-            mFeaturesCategory.removePreference(mTensorTargets);
-        }
         mPhotosSpoof = initAppSpoof(mPhotosSpoof, PHOTOS_PACKAGE);
         mSnapchatSpoof = initAppSpoof(mSnapchatSpoof, SNAPCHAT_PACKAGE);
     }
 
     /**
-     * Checks whether {@code pkg} is installed. If not, removes {@code pref} from the
-     * app-specific category and returns null. If installed, syncs the checked state from
-     * Settings.Secure and registers the change listener, then returns the preference unchanged.
+     * Registers the change listener for app-specific spoofing toggles while keeping them visible
+     * even before the target application is installed.
      */
     private SwitchPreferenceCompat initAppSpoof(SwitchPreferenceCompat pref, String pkg) {
         if (pref == null) return null;
-        try {
-            getContext().getPackageManager().getPackageInfo(pkg, 0);
-        } catch (PackageManager.NameNotFoundException e) {
-            mAppSpecificCategory.removePreference(pref);
-            return null;
-        }
         // SecureSettingSwitchPreference already syncs checked state from Settings.Secure
         pref.setOnPreferenceChangeListener(this);
         return pref;

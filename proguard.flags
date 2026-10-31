@@ -80,3 +80,9 @@
 
 # Keep the device state AppFunction schema
 -keep class com.google.android.appfunctions.schema.common.v1.devicestate.** { *; }
+
+# Keep all BlazeHouse, Evolution Settings, and LineageOS preference classes, fragments, views, and Compose UI
+-keep class com.blaze.** { *; }
+-keep class org.evolution.** { *; }
+-keep class lineageos.preference.** { *; }
+
