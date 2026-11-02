@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2026 The BlazeAOSP Project
+     SPDX-License-Identifier: Apache-2.0
+-->
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:settings="http://schemas.android.com/apk/res-auto"
+    android:title="@string/treble_settings_title">
+
+    <!-- Detected Hardware & Vendor HAL Profile -->
+    <PreferenceCategory
+        android:key="treble_hw_info_category"
+        android:title="@string/treble_hw_info_category_title">
+
+        <Preference
+            android:key="treble_hardware_info"
+            android:title="@string/treble_hw_info_title"
+            android:icon="@drawable/ic_settings_blaze"
+            android:selectable="false" />
+
+    </PreferenceCategory>
+
+    <!-- Display, Backlight & Refresh Rate -->
+    <PreferenceCategory
+        android:key="treble_display_category"
+        android:title="@string/treble_display_category_title">
+
+        <com.blaze.house.preferences.GlobalSettingListPreference
+            android:key="blaze_treble_backlight_scale"
+            android:title="@string/treble_backlight_scale_title"
+            android:entries="@array/treble_backlight_scale_entries"
+            android:entryValues="@array/treble_backlight_scale_values"
+            android:defaultValue="0" />
+
+        <com.blaze.house.preferences.GlobalSettingSwitchPreference
+            android:key="blaze_treble_force_lights_hal"
+            android:title="@string/treble_force_lights_hal_title"
+            android:summary="@string/treble_force_lights_hal_summary"
+            android:defaultValue="false" />
+
+        <com.blaze.house.preferences.GlobalSettingListPreference
+            android:key="blaze_treble_refresh_rate_lock"
+            android:title="@string/treble_refresh_rate_lock_title"
+            android:entries="@array/treble_refresh_rate_entries"
+            android:entryValues="@array/treble_refresh_rate_values"
+            android:defaultValue="0" />
+
+    </PreferenceCategory>
+
+    <!-- Under-Display Fingerprint (UDFPS / FOD) -->
+    <PreferenceCategory
+        android:key="treble_udfps_category"
+        android:title="@string/treble_udfps_category_title">
+
+        <com.blaze.house.preferences.GlobalSettingListPreference
+            android:key="blaze_treble_udfps_mode"
+            android:title="@string/treble_udfps_mode_title"
+            android:entries="@array/treble_udfps_mode_entries"
+            android:entryValues="@array/treble_udfps_mode_values"
+            android:defaultValue="0" />
+
+    </PreferenceCategory>
+
+    <!-- Audio, Bluetooth & IMS Telephony -->
+    <PreferenceCategory
+        android:key="treble_audio_telephony_category"
+        android:title="@string/treble_audio_telephony_category_title">
+
+        <com.blaze.house.preferences.GlobalSettingSwitchPreference
+            android:key="blaze_treble_bt_a2dp_offload_disable"
+            android:title="@string/treble_bt_a2dp_offload_disable_title"
+            android:summary="@string/treble_bt_a2dp_offload_disable_summary"
+            android:defaultValue="false" />
+
+        <com.blaze.house.preferences.GlobalSettingSwitchPreference
+            android:key="blaze_treble_audio_safe_mode"
+            android:title="@string/treble_audio_safe_mode_title"
+            android:summary="@string/treble_audio_safe_mode_summary"
+            android:defaultValue="false" />
+
+        <com.blaze.house.preferences.GlobalSettingSwitchPreference
+            android:key="blaze_treble_force_ims_volte"
+            android:title="@string/treble_force_ims_volte_title"
+            android:summary="@string/treble_force_ims_volte_summary"
+            android:defaultValue="true" />
+
+    </PreferenceCategory>
+
+    <!-- Camera & SurfaceFlinger GPU -->
+    <PreferenceCategory
+        android:key="treble_camera_gpu_category"
+        android:title="@string/treble_camera_gpu_category_title">
+
+        <com.blaze.house.preferences.GlobalSettingSwitchPreference
+            android:key="blaze_treble_expose_aux_cameras"
+            android:title="@string/treble_expose_aux_cameras_title"
+            android:summary="@string/treble_expose_aux_cameras_summary"
+            android:defaultValue="true" />
+
+        <com.blaze.house.preferences.GlobalSettingSwitchPreference
+            android:key="blaze_treble_sf_gl_compat"
+            android:title="@string/treble_sf_gl_compat_title"
+            android:summary="@string/treble_sf_gl_compat_summary"
+            android:defaultValue="false" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

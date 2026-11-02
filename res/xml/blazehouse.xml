@@ -59,6 +59,14 @@
             android:icon="@drawable/ic_videogame_vd_theme_24"
             android:fragment="com.blaze.house.fragments.GameSpaceSettings" />
 
+        <!-- Device & Hardware Compatibility (Treble Toolkit) -->
+        <Preference
+            android:key="treble_settings"
+            android:title="@string/treble_settings_title"
+            android:summary="@string/treble_settings_summary"
+            android:icon="@drawable/ic_system_category"
+            android:fragment="com.blaze.house.fragments.TrebleSettings" />
+
         <!-- Miscellaneous (Power features) -->
         <Preference
             android:key="miscellaneous"

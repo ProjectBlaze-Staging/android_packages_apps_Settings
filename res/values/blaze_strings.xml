@@ -266,4 +266,41 @@
     <!-- Power Menu Actions -->
     <string name="power_menu_items_title">Power menu actions</string>
     <string name="power_menu_items_summary">Customize actions shown in the power menu (Restart, Recovery, Bootloader, Screenshot, Emergency)</string>
+
+    <!-- BlazeHouse Treble & Multi-Device Hardware Compatibility -->
+    <string name="treble_settings_title">Device &amp; Hardware Compatibility</string>
+    <string name="treble_settings_summary">Multi-vendor HAL fixes for Xiaomi, Samsung, OnePlus, Nothing, Snapdragon, Exynos &amp; MediaTek</string>
+    <string name="treble_hw_info_category_title">Detected Hardware &amp; Vendor Profile</string>
+    <string name="treble_hw_info_title">System &amp; Vendor HAL Status</string>
+    <string name="treble_display_category_title">Display, Backlight &amp; Refresh Rate</string>
+    <string name="treble_backlight_scale_title">Alternative Backlight Scale &amp; Curve</string>
+    <string name="treble_backlight_scale_default">Auto / Stock AOSP (Google Pixel &amp; Standard HAL)</string>
+    <string name="treble_backlight_scale_xiaomi">Xiaomi / Redmi / POCO 12-Bit PWM Boost (0–4095)</string>
+    <string name="treble_backlight_scale_samsung">Samsung Exynos / OneUI AMOLED Exponential (0–2047)</string>
+    <string name="treble_backlight_scale_linear">Direct 1:1 Linear Scale (Bypass Vendor Spline)</string>
+    <string name="treble_force_lights_hal_title">Force Legacy Lights HAL Backlight</string>
+    <string name="treble_force_lights_hal_summary">Bypass SurfaceControl HWC brightness on MediaTek, Unisoc, and older Xiaomi/Samsung vendors if brightness slider is stuck</string>
+    <string name="treble_refresh_rate_lock_title">Force Display Refresh Rate (LTPO / Hz Lock)</string>
+    <string name="treble_refresh_rate_auto">Dynamic / Adaptive (Default LTPO)</string>
+    <string name="treble_refresh_rate_60">Lock at 60 Hz (Power Saving / Legacy Panel)</string>
+    <string name="treble_refresh_rate_90">Lock at 90 Hz (Balanced Smoothness)</string>
+    <string name="treble_refresh_rate_120">Lock at 120 Hz (Prevent LTPO Flicker on Nothing / Xiaomi / Samsung)</string>
+    <string name="treble_udfps_category_title">Under-Display Fingerprint (UDFPS / FOD)</string>
+    <string name="treble_udfps_mode_title">Optical &amp; Ultrasonic UDFPS Vendor Mode</string>
+    <string name="treble_udfps_mode_default">Standard AOSP / Google Pixel AIDL</string>
+    <string name="treble_udfps_mode_xiaomi">Xiaomi / Redmi / POCO (Goodix &amp; FPC Optical HBM)</string>
+    <string name="treble_udfps_mode_oplus">OnePlus / Realme / Oppo (ColorOS Oplus Dimlayer HBM)</string>
+    <string name="treble_udfps_mode_samsung">Samsung Exynos &amp; Snapdragon (TSP FOD Enable)</string>
+    <string name="treble_audio_telephony_category_title">Audio, Bluetooth &amp; IMS Telephony</string>
+    <string name="treble_bt_a2dp_offload_disable_title">Disable Bluetooth A2DP Hardware Offload</string>
+    <string name="treble_bt_a2dp_offload_disable_summary">Fix Bluetooth headphone silence, stuttering, or routing to earpiece on Qualcomm Snapdragon, Exynos, and MediaTek devices</string>
+    <string name="treble_audio_safe_mode_title">Disable Broken Vendor Audio Effects</string>
+    <string name="treble_audio_safe_mode_summary">Bypass proprietary vendor audio effects that cause speaker crackling or microphone muting in VoIP apps</string>
+    <string name="treble_force_ims_volte_title">Force Universal VoLTE / VoWiFi (IMS)</string>
+    <string name="treble_force_ims_volte_summary">Override carrier and modem IMS provisioning checks for Qualcomm, MediaTek, and Samsung Exynos radios</string>
+    <string name="treble_camera_gpu_category_title">Camera &amp; SurfaceFlinger GPU</string>
+    <string name="treble_expose_aux_cameras_title">Expose Multi-Lens AUX Cameras (Ultrawide / Telephoto)</string>
+    <string name="treble_expose_aux_cameras_summary">Unlock secondary and tertiary camera sensors for GCam and Aperture on Xiaomi, OnePlus, and Nothing devices</string>
+    <string name="treble_sf_gl_compat_title">SurfaceFlinger GPU Buffer Latch Compatibility</string>
+    <string name="treble_sf_gl_compat_summary">Enable latch_unsignaled and disable backpressure to eliminate screen tearing or stutter on MediaTek Dimensity/Helio and Exynos GPUs</string>
 </resources>

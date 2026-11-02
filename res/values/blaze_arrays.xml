@@ -238,4 +238,46 @@
         <item>0</item>
         <item>1</item>
     </string-array>
+
+    <!-- Treble Backlight Scale -->
+    <string-array name="treble_backlight_scale_entries">
+        <item>@string/treble_backlight_scale_default</item>
+        <item>@string/treble_backlight_scale_xiaomi</item>
+        <item>@string/treble_backlight_scale_samsung</item>
+        <item>@string/treble_backlight_scale_linear</item>
+    </string-array>
+    <string-array name="treble_backlight_scale_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <!-- Treble Refresh Rate Lock -->
+    <string-array name="treble_refresh_rate_entries">
+        <item>@string/treble_refresh_rate_auto</item>
+        <item>@string/treble_refresh_rate_60</item>
+        <item>@string/treble_refresh_rate_90</item>
+        <item>@string/treble_refresh_rate_120</item>
+    </string-array>
+    <string-array name="treble_refresh_rate_values" translatable="false">
+        <item>0</item>
+        <item>60</item>
+        <item>90</item>
+        <item>120</item>
+    </string-array>
+
+    <!-- Treble UDFPS Vendor Mode -->
+    <string-array name="treble_udfps_mode_entries">
+        <item>@string/treble_udfps_mode_default</item>
+        <item>@string/treble_udfps_mode_xiaomi</item>
+        <item>@string/treble_udfps_mode_oplus</item>
+        <item>@string/treble_udfps_mode_samsung</item>
+    </string-array>
+    <string-array name="treble_udfps_mode_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
 </resources>

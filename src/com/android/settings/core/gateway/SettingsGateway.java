@@ -441,6 +441,7 @@ public class SettingsGateway {
             com.blaze.house.fragments.QuickSettings.class.getName(),
             com.blaze.house.fragments.LockScreen.class.getName(),
             com.blaze.house.fragments.PowerMenu.class.getName(),
+            com.blaze.house.fragments.TrebleSettings.class.getName(),
             com.blaze.house.fragments.Miscellaneous.class.getName(),
             com.blaze.house.fragments.Themes.class.getName(),
             org.evolution.settings.fragments.lockscreen.CustomClockPreview.class.getName(),

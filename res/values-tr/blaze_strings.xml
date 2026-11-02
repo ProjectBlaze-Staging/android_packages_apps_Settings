@@ -299,4 +299,41 @@
     <string name="blaze_auto_lite_on_battery_saver_summary">Pil Tasarrufu açıldığında GPU kırılma efektlerini ve ağır animasyonları otomatik olarak hafif moda geçirir</string>
     <string name="dynamic_bar_cos_island_title">ColorOS Kamera Deliği Animasyonu</string>
     <string name="dynamic_bar_cos_island_summary">Dinamik Adayı ön kamera deliğinden yumuşakça büyüterek çıkartır ve canlı ses dalgalarıyla medya kartı sunar</string>
+
+    <!-- BlazeHouse Treble & Multi-Device Hardware Compatibility -->
+    <string name="treble_settings_title">Cihaz ve Donanım Uyumluluğu</string>
+    <string name="treble_settings_summary">Xiaomi, Samsung, OnePlus, Nothing, Snapdragon, Exynos ve MediaTek için evrensel HAL yamaları</string>
+    <string name="treble_hw_info_category_title">Algılanan Donanım ve Vendor Profili</string>
+    <string name="treble_hw_info_title">Sistem ve Vendor HAL Durumu</string>
+    <string name="treble_display_category_title">Ekran, Parlaklık ve Yenileme Hızı</string>
+    <string name="treble_backlight_scale_title">Alternatif Parlaklık Ölçeği ve Eğrisi</string>
+    <string name="treble_backlight_scale_default">Otomatik / Stok AOSP (Google Pixel ve Standart HAL)</string>
+    <string name="treble_backlight_scale_xiaomi">Xiaomi / Redmi / POCO 12-Bit PWM Güçlendirme (0–4095)</string>
+    <string name="treble_backlight_scale_samsung">Samsung Exynos / OneUI AMOLED Üstel Eğri (0–2047)</string>
+    <string name="treble_backlight_scale_linear">Doğrudan 1:1 Doğrusal Ölçek (Vendor Eğrisini Atla)</string>
+    <string name="treble_force_lights_hal_title">Klasik Lights HAL Parlaklığını Zorla</string>
+    <string name="treble_force_lights_hal_summary">MediaTek, Unisoc ve eski Xiaomi/Samsung cihazlarda parlaklık çubuğu çalışmıyorsa HWC yerine doğrudan Lights HAL kullanır</string>
+    <string name="treble_refresh_rate_lock_title">Ekran Yenileme Hızı Sabitleyici (LTPO / Hz Kilidi)</string>
+    <string name="treble_refresh_rate_auto">Dinamik / Otomatik (Varsayılan LTPO)</string>
+    <string name="treble_refresh_rate_60">60 Hz Sabit (Pil Tasarrufu ve Standart Panel)</string>
+    <string name="treble_refresh_rate_90">90 Hz Sabit (Dengeli Akıcılık Modu)</string>
+    <string name="treble_refresh_rate_120">120 Hz Sabit (Nothing / Xiaomi / Samsung Titreme Önleyici)</string>
+    <string name="treble_udfps_category_title">Ekran İçi Parmak İzi (UDFPS / FOD)</string>
+    <string name="treble_udfps_mode_title">Optik ve Ultrasonik Parmak İzi Vendor Modu</string>
+    <string name="treble_udfps_mode_default">Standart AOSP / Google Pixel AIDL</string>
+    <string name="treble_udfps_mode_xiaomi">Xiaomi / Redmi / POCO (Goodix ve FPC Optik HBM)</string>
+    <string name="treble_udfps_mode_oplus">OnePlus / Realme / Oppo (ColorOS Oplus Dimlayer HBM)</string>
+    <string name="treble_udfps_mode_samsung">Samsung Exynos ve Snapdragon (TSP FOD Desteği)</string>
+    <string name="treble_audio_telephony_category_title">Ses, Bluetooth ve IMS Telekomünikasyon</string>
+    <string name="treble_bt_a2dp_offload_disable_title">Bluetooth A2DP Donanım Offload Kapatıcı</string>
+    <string name="treble_bt_a2dp_offload_disable_summary">Qualcomm Snapdragon, Exynos ve MediaTek cihazlarda Bluetooth kulaklıktan ses gelmemesi veya kopması sorununu çözer</string>
+    <string name="treble_audio_safe_mode_title">Bozuk Vendor Ses Efektlerini Devre Dışı Bırak</string>
+    <string name="treble_audio_safe_mode_summary">Hoparlör cızırtısı veya mikrofon kısılmasına yol açan tescilli üretici ses efekt kütüphanelerini atlar</string>
+    <string name="treble_force_ims_volte_title">Evrensel VoLTE / VoWiFi (IMS) Zorlayıcı</string>
+    <string name="treble_force_ims_volte_summary">Qualcomm, MediaTek ve Samsung Exynos modemlerde operatör kısıtlamalarını aşarak VoLTE ve Wi-Fi Aramayı etkinleştirir</string>
+    <string name="treble_camera_gpu_category_title">Kamera ve SurfaceFlinger GPU Uyumluluğu</string>
+    <string name="treble_expose_aux_cameras_title">Çoklu Kamera (Geniş Açı / Telefoto) Lenslerini Aç</string>
+    <string name="treble_expose_aux_cameras_summary">Xiaomi, OnePlus ve Nothing cihazlarda ikincil/üçüncül kamera sensörlerini GCam ve kamera uygulamalarına açar</string>
+    <string name="treble_sf_gl_compat_title">SurfaceFlinger GPU Tampon Uyumluluk Modu</string>
+    <string name="treble_sf_gl_compat_summary">MediaTek Dimensity/Helio ve Exynos GPU\'larda ekran yırtılmasını ve takılmaları önlemek için latch_unsignaled modunu açar</string>
 </resources>
