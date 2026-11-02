@@ -37,11 +37,35 @@
             android:summary="@string/gamespace_summary"
             android:fragment="com.blaze.house.fragments.GameSpaceSettings" />
 
+        <com.blaze.house.preferences.GlobalSettingSwitchPreference
+            android:key="game_props_unlimited_fps"
+            android:title="@string/games_fps_spoof_title"
+            android:summary="@string/games_fps_spoof_summary"
+            android:defaultValue="true" />
+
         <com.blaze.house.preferences.SystemSettingSwitchPreference
             android:key="gamespace_show_fps"
             android:title="@string/gamespace_fps_title"
             android:summary="@string/gamespace_fps_summary"
             android:defaultValue="false" />
+
+    </PreferenceCategory>
+
+    <!-- Power Menu & Advanced Reboot -->
+    <PreferenceCategory
+        android:title="@string/power_menu_title">
+
+        <lineageos.preference.LineageSecureSettingSwitchPreference
+            android:key="advanced_reboot"
+            android:title="@string/advanced_reboot_title"
+            android:summary="@string/advanced_reboot_summary"
+            android:defaultValue="true" />
+
+        <Preference
+            android:key="power_menu_actions"
+            android:title="@string/power_menu_items_title"
+            android:summary="@string/power_menu_items_summary"
+            android:fragment="org.evolution.settings.fragments.powermenu.PowerMenuActions" />
 
     </PreferenceCategory>
 
@@ -113,6 +137,30 @@
             android:key="window_block_screenshot_detection"
             android:title="@string/window_block_screenshot_detection_title"
             android:summary="@string/window_block_screenshot_detection_summary"
+            android:defaultValue="false" />
+
+        <com.blaze.house.preferences.GlobalSettingSwitchPreference
+            android:key="window_block_screenrecord_detection"
+            android:title="@string/window_block_screenrecord_detection_title"
+            android:summary="@string/window_block_screenrecord_detection_summary"
+            android:defaultValue="false" />
+
+    </PreferenceCategory>
+
+    <!-- System & App Compatibility -->
+    <PreferenceCategory
+        android:title="@string/miscellaneous_system_bypass_category">
+
+        <com.blaze.house.preferences.GlobalSettingSwitchPreference
+            android:key="bypass_low_target_sdk_block"
+            android:title="@string/bypass_low_target_sdk_block_title"
+            android:summary="@string/bypass_low_target_sdk_block_summary"
+            android:defaultValue="true" />
+
+        <com.blaze.house.preferences.GlobalSettingSwitchPreference
+            android:key="netflix_spoof"
+            android:title="@string/netflix_spoof_title"
+            android:summary="@string/netflix_spoof_summary"
             android:defaultValue="false" />
 
     </PreferenceCategory>

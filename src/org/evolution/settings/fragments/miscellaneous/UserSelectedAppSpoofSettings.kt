@@ -128,6 +128,56 @@ private const val SPOOFED_APPS_CACHE_SETTING = "per_apps_device_spoof_cache"
 private const val SPOOFED_APPS_ENABLED_SETTING = "per_apps_device_spoof_enabled"
 private const val CUSTOM_SPOOF_PROFILES_SETTING = "custom_spoof_profiles"
 
+private val DEFAULT_SPOOFED_APPS = linkedMapOf(
+    "com.tencent.ig" to "ROG9P",
+    "com.pubg.krmobile" to "ROG9P",
+    "com.pubg.imobile" to "ROG9P",
+    "com.vng.pubgmobile" to "ROG9P",
+    "com.pubg.newstate" to "ROG9P",
+    "com.activision.callofduty.shooter" to "ROG9P",
+    "com.activision.callofduty.warzone" to "ROG9P",
+    "com.garena.game.codm" to "ROG9P",
+    "com.mobile.legends" to "RM10P",
+    "com.miHoYo.GenshinImpact" to "RM10P",
+    "com.cognosphere.genshinimpact" to "RM10P",
+    "com.HoYoverse.hkrpgoversea" to "RM10P",
+    "com.HoYoverse.Nap" to "RM10P",
+    "com.riotgames.league.wildrift" to "ROG9P",
+    "com.dts.freefireth" to "ROG9P",
+    "com.dts.freefiremax" to "ROG9P",
+    "com.supercell.brawlstars" to "ROG9P",
+    "com.levelinfinite.sgameGlobal" to "RM10P",
+    "com.ea.gp.fifamobile" to "S25U",
+    "com.epicgames.fortnite" to "ROG9P",
+    "com.carxtech.sr" to "ROG9P",
+    "com.gameloft.android.ANMP.GloftA9HM" to "OP13"
+)
+
+private val DEFAULT_GAME_LABELS = mapOf(
+    "com.tencent.ig" to "PUBG MOBILE (Global)",
+    "com.pubg.krmobile" to "PUBG MOBILE (KR/JP)",
+    "com.pubg.imobile" to "Battlegrounds Mobile India (BGMI)",
+    "com.vng.pubgmobile" to "PUBG MOBILE (VN)",
+    "com.pubg.newstate" to "NEW STATE Mobile",
+    "com.activision.callofduty.shooter" to "Call of Duty: Mobile",
+    "com.activision.callofduty.warzone" to "Call of Duty: Warzone Mobile",
+    "com.garena.game.codm" to "Call of Duty: Mobile (Garena)",
+    "com.mobile.legends" to "Mobile Legends: Bang Bang",
+    "com.miHoYo.GenshinImpact" to "Genshin Impact",
+    "com.cognosphere.genshinimpact" to "Genshin Impact",
+    "com.HoYoverse.hkrpgoversea" to "Honkai: Star Rail",
+    "com.HoYoverse.Nap" to "Zenless Zone Zero",
+    "com.riotgames.league.wildrift" to "League of Legends: Wild Rift",
+    "com.dts.freefireth" to "Garena Free Fire",
+    "com.dts.freefiremax" to "Garena Free Fire MAX",
+    "com.supercell.brawlstars" to "Brawl Stars",
+    "com.levelinfinite.sgameGlobal" to "Honor of Kings",
+    "com.ea.gp.fifamobile" to "EA SPORTS FC Mobile",
+    "com.epicgames.fortnite" to "Fortnite",
+    "com.carxtech.sr" to "CarX Street",
+    "com.gameloft.android.ANMP.GloftA9HM" to "Asphalt Legends Unite"
+)
+
 private data class AppItem(
     val packageName: String,
     val label: String,
@@ -510,40 +560,44 @@ private fun AppSpoofingContent(context: Context) {
                         Column {
                             configuredMap.entries.toList().forEach { (pkg, profile) ->
                                 val app = allApps.find { it.packageName == pkg }
-                                if (app != null) {
-                                    val customProfile = customProfiles.find { it.id == profile }
-                                    val displayLabel = customProfile?.name ?: profileLabelMap[profile] ?: profile
-                                    val tagColor = brandColorForProfile(profile, customProfile?.brand ?: "")
+                                    ?: AppItem(
+                                        packageName = pkg,
+                                        label = DEFAULT_GAME_LABELS[pkg] ?: pkg,
+                                        icon = null,
+                                        isSystem = false
+                                    )
+                                val customProfile = customProfiles.find { it.id == profile }
+                                val displayLabel = customProfile?.name ?: profileLabelMap[profile] ?: profile
+                                val tagColor = brandColorForProfile(profile, customProfile?.brand ?: "")
 
-                                    AnimatedVisibility(
-                                        visible = true,
-                                        enter = fadeIn(MaterialTheme.motionScheme.defaultEffectsSpec()) +
-                                                expandVertically(MaterialTheme.motionScheme.defaultSpatialSpec()),
-                                        exit = fadeOut(MaterialTheme.motionScheme.fastEffectsSpec()) +
-                                               shrinkVertically(MaterialTheme.motionScheme.fastSpatialSpec())
-                                    ) {
-                                        Column {
-                                            AppConfigCard(
-                                                app = app,
-                                                profile = profile,
-                                                profileLabel = displayLabel,
-                                                tagColor = tagColor,
-                                                onRemove = {
-                                                    configuredMap = LinkedHashMap(configuredMap).apply { remove(pkg) }
-                                                    persistConfigured()
-                                                    stopPackage(pkg)
-                                                },
-                                                onEdit = {
-                                                    editTarget = app
-                                                    showModelDialog = true
-                                                },
-                                                onLongPress = {
-                                                    editTarget = app
-                                                    showModelDialog = true
-                                                }
-                                            )
-                                            Spacer(modifier = Modifier.height(8.dp))
-                                        }
+                                AnimatedVisibility(
+                                    visible = true,
+                                    enter = fadeIn(MaterialTheme.motionScheme.defaultEffectsSpec()) +
+                                            expandVertically(MaterialTheme.motionScheme.defaultSpatialSpec()),
+                                    exit = fadeOut(MaterialTheme.motionScheme.fastEffectsSpec()) +
+                                           shrinkVertically(MaterialTheme.motionScheme.fastSpatialSpec())
+                                ) {
+                                    Column {
+                                        AppConfigCard(
+                                            app = app,
+                                            profile = profile,
+                                            profileLabel = displayLabel,
+                                            tagColor = tagColor,
+                                            onRemove = {
+                                                configuredMap = LinkedHashMap(configuredMap).apply { remove(pkg) }
+                                                persistConfigured()
+                                                stopPackage(pkg)
+                                            },
+                                            onEdit = {
+                                                editTarget = app
+                                                showModelDialog = true
+                                            },
+                                            onLongPress = {
+                                                editTarget = app
+                                                showModelDialog = true
+                                            }
+                                        )
+                                        Spacer(modifier = Modifier.height(8.dp))
                                     }
                                 }
                             }
@@ -1078,7 +1132,13 @@ private fun AddAppDialog(
 }
 
 private fun readMapSetting(context: Context, key: String): Map<String, String> {
-    val stored = Settings.Secure.getString(context.contentResolver, key) ?: return emptyMap()
+    val stored = Settings.Secure.getString(context.contentResolver, key)
+    if (stored == null) {
+        if (key == SPOOFED_APPS_SETTING || key == SPOOFED_APPS_CACHE_SETTING) {
+            return LinkedHashMap(DEFAULT_SPOOFED_APPS)
+        }
+        return emptyMap()
+    }
     if (stored.isBlank()) return emptyMap()
     val map = linkedMapOf<String, String>()
     stored.split(",").forEach { entry ->

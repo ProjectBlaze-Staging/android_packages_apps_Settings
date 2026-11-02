@@ -46,6 +46,18 @@
         android:key="gamespace_category_performance"
         android:title="@string/gamespace_category_performance_title">
 
+        <com.blaze.house.preferences.GlobalSettingSwitchPreference
+            android:key="game_props_unlimited_fps"
+            android:title="@string/games_fps_spoof_title"
+            android:summary="@string/games_fps_spoof_summary"
+            android:defaultValue="true" />
+
+        <com.blaze.house.preferences.SystemSettingSwitchPreference
+            android:key="gamespace_show_fps"
+            android:title="@string/gamespace_fps_title"
+            android:summary="@string/gamespace_fps_summary"
+            android:defaultValue="false" />
+
         <com.blaze.house.preferences.SystemSettingSwitchPreference
             android:key="gamespace_performance_mode"
             android:title="@string/gamespace_performance_mode_title"
@@ -57,6 +69,12 @@
             android:title="@string/gamespace_high_touch_polling_title"
             android:summary="@string/gamespace_high_touch_polling_summary"
             android:defaultValue="false" />
+
+        <Preference
+            android:key="gamespace_per_app_spoof"
+            android:title="@string/user_selectable_app_spoofing_title"
+            android:summary="@string/user_selectable_app_spoofing_summary"
+            android:fragment="org.evolution.settings.fragments.miscellaneous.UserSelectedAppSpoofSettings" />
     </PreferenceCategory>
 
     <PreferenceCategory

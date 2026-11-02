@@ -199,7 +199,7 @@
     <string name="gamespace_category_management_title">Game Library</string>
     <string name="gamespace_app_list_title">Manage games</string>
     <string name="gamespace_app_list_summary">Add or remove games and applications from Game Space</string>
-    <string name="gamespace_app_list_empty_summary">No games added yet</string>
+    <string name="gamespace_app_list_empty_summary">22 high-FPS game profiles pre-configured • Tap to manage installed apps</string>
     <string name="gamespace_app_list_count_summary">%d game(s) configured</string>
     <string name="gamespace_installed_apps_title">Installed applications</string>
 
@@ -244,4 +244,26 @@
     <string name="lockscreen_clock_source_summary">Choose whether to use the default system/Pixel clock or BlazeHouse custom clocks</string>
     <string name="lockscreen_clock_source_system">Default System / Pixel Clock</string>
     <string name="lockscreen_clock_source_custom">BlazeHouse Custom Clocks</string>
+
+    <!-- Liquid Glass Design & Luminous Motion Engine -->
+    <string name="blaze_liquid_glass_category_title">ColorOS &amp; Liquid Glass Engine</string>
+    <string name="blaze_glass_style_title">UI Surface &amp; Glass Style</string>
+    <string name="blaze_glass_style_summary">Choose between flagship GPU Liquid Glass refraction, balanced ColorOS frosted glass, or lightweight Stock Material 3</string>
+    <string name="blaze_ui_glass_style_liquid">ColorOS Layout + iOS Liquid Glass (Flagship GPU)</string>
+    <string name="blaze_ui_glass_style_frosted">ColorOS Frosted Glass (Balanced)</string>
+    <string name="blaze_ui_glass_style_m3">Stock Material 3 (Lightweight)</string>
+    <string name="blaze_floating_bottom_nav_title">Floating Liquid Glass Tab Bar</string>
+    <string name="blaze_floating_bottom_nav_summary">Transform app bottom navigation bars (YouTube, Instagram, WhatsApp, etc.) into an interactive Liquid Glass capsule with spring slide &amp; hold-to-scrub</string>
+    <string name="blaze_animation_engine_title">Motion &amp; Spring Physics Engine</string>
+    <string name="blaze_animation_engine_summary">Control RenderThread Luminous spring physics and ColorOS wallpaper transition scaling</string>
+    <string name="blaze_animation_engine_luminous">Luminous + ColorOS Spring Physics (Flagship)</string>
+    <string name="blaze_animation_engine_standard">Standard Smooth (Lightweight)</string>
+    <string name="blaze_auto_lite_on_battery_saver_title">Auto-suspend heavy effects on Battery Saver</string>
+    <string name="blaze_auto_lite_on_battery_saver_summary">Automatically switch to lightweight mode when Battery Saver is active to save power</string>
+    <string name="dynamic_bar_cos_island_title">ColorOS Punch-Hole Expansion</string>
+    <string name="dynamic_bar_cos_island_summary">Smoothly expand Dynamic Island directly from the front camera cutout with live audio reactive waveform and media cards</string>
+
+    <!-- Power Menu Actions -->
+    <string name="power_menu_items_title">Power menu actions</string>
+    <string name="power_menu_items_summary">Customize actions shown in the power menu (Restart, Recovery, Bootloader, Screenshot, Emergency)</string>
 </resources>

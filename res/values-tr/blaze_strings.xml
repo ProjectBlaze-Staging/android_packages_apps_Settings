@@ -281,4 +281,22 @@
     <string name="lockscreen_clock_source_summary">Varsayılan sistem/Pixel saatini veya BlazeHouse özel saatlerini kullanmayı seçin</string>
     <string name="lockscreen_clock_source_system">Varsayılan Sistem / Pixel Saati</string>
     <string name="lockscreen_clock_source_custom">BlazeHouse Özel Saatleri</string>
+
+    <!-- Liquid Glass Design & Luminous Motion Engine -->
+    <string name="blaze_liquid_glass_category_title">ColorOS ve Liquid Glass Motoru</string>
+    <string name="blaze_glass_style_title">Arayüz Yüzey ve Cam Stili</string>
+    <string name="blaze_glass_style_summary">Amiral gemisi GPU Liquid Glass kırılma efekti, dengeli ColorOS buzlu cam veya hafif Stok Material 3 arasında seçim yapın</string>
+    <string name="blaze_ui_glass_style_liquid">ColorOS Düzeni + iOS Liquid Glass (Amiral Gemisi GPU)</string>
+    <string name="blaze_ui_glass_style_frosted">ColorOS Buzlu Cam (Dengeli)</string>
+    <string name="blaze_ui_glass_style_m3">Stok Material 3 (Hafif / Performans)</string>
+    <string name="blaze_floating_bottom_nav_title">Yüzen Liquid Glass Alt Bar</string>
+    <string name="blaze_floating_bottom_nav_summary">Uygulama alt gezinme çubuklarını (YouTube, Instagram, WhatsApp vb.) basılı tutup kaydırılabilen etkileşimli Liquid Glass kapsülüne dönüştürün</string>
+    <string name="blaze_animation_engine_title">Hareket ve Yay Fiziği Motoru</string>
+    <string name="blaze_animation_engine_summary">RenderThread Luminous yay fiziğini ve ColorOS duvar kağıdı geçiş ölçeklemesini kontrol edin</string>
+    <string name="blaze_animation_engine_luminous">Luminous + ColorOS Yay Fiziği (Amiral Gemisi)</string>
+    <string name="blaze_animation_engine_standard">Standart Akıcı (Hafif)</string>
+    <string name="blaze_auto_lite_on_battery_saver_title">Pil tasarrufunda ağır efektleri otomatik askıya al</string>
+    <string name="blaze_auto_lite_on_battery_saver_summary">Pil Tasarrufu açıldığında GPU kırılma efektlerini ve ağır animasyonları otomatik olarak hafif moda geçirir</string>
+    <string name="dynamic_bar_cos_island_title">ColorOS Kamera Deliği Animasyonu</string>
+    <string name="dynamic_bar_cos_island_summary">Dinamik Adayı ön kamera deliğinden yumuşakça büyüterek çıkartır ve canlı ses dalgalarıyla medya kartı sunar</string>
 </resources>

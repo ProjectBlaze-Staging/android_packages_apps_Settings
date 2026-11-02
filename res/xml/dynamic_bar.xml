@@ -27,7 +27,14 @@
         android:key="ax_dynamic_bar_enabled"
         android:title="@string/dynamic_bar"
         android:summary="@string/dynamic_bar_summary"
-        android:defaultValue="false" />
+        android:defaultValue="true" />
+
+    <org.evolution.settings.preferences.SecureSettingSwitchPreference
+        android:key="penguin_cos_island"
+        android:title="@string/dynamic_bar_cos_island_title"
+        android:summary="@string/dynamic_bar_cos_island_summary"
+        android:defaultValue="true"
+        android:dependency="ax_dynamic_bar_enabled" />
 
     <org.evolution.settings.preferences.SecureSettingSwitchPreference
         android:key="ax_dynamic_bar_keyguard_enabled"

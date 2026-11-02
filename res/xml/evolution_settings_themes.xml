@@ -9,6 +9,38 @@
     android:title="@string/themes_title">
 
     <PreferenceCategory
+        android:key="themes_liquid_glass_category"
+        android:title="@string/blaze_liquid_glass_category_title">
+
+        <org.evolution.settings.preferences.SecureSettingListPreference
+            android:key="blaze_ui_glass_style"
+            android:title="@string/blaze_glass_style_title"
+            android:entries="@array/blaze_ui_glass_style_entries"
+            android:entryValues="@array/blaze_ui_glass_style_values"
+            android:defaultValue="0" />
+
+        <org.evolution.settings.preferences.SecureSettingSwitchPreference
+            android:key="blaze_glass_tab_bars"
+            android:title="@string/blaze_floating_bottom_nav_title"
+            android:summary="@string/blaze_floating_bottom_nav_summary"
+            android:defaultValue="true" />
+
+        <org.evolution.settings.preferences.SecureSettingListPreference
+            android:key="blaze_animation_engine"
+            android:title="@string/blaze_animation_engine_title"
+            android:entries="@array/blaze_animation_engine_entries"
+            android:entryValues="@array/blaze_animation_engine_values"
+            android:defaultValue="0" />
+
+        <org.evolution.settings.preferences.SecureSettingSwitchPreference
+            android:key="blaze_auto_lite_on_battery_saver"
+            android:title="@string/blaze_auto_lite_on_battery_saver_title"
+            android:summary="@string/blaze_auto_lite_on_battery_saver_summary"
+            android:defaultValue="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:key="themes_fonts_category"
         android:title="@string/themes_fonts_category">
 

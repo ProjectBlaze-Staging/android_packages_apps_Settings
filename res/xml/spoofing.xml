@@ -80,5 +80,19 @@
             android:title="@string/spoofing_snap_title"
             android:summary="@string/spoofing_snap_summary"
             android:defaultValue="false" />
+
+        <!-- Higher FPS in games -->
+        <com.blaze.house.preferences.GlobalSettingSwitchPreference
+            android:key="game_props_unlimited_fps"
+            android:title="@string/games_fps_spoof_title"
+            android:summary="@string/games_fps_spoof_summary"
+            android:defaultValue="true" />
+
+        <!-- Netflix Spoof -->
+        <com.blaze.house.preferences.GlobalSettingSwitchPreference
+            android:key="netflix_spoof"
+            android:title="@string/netflix_spoof_title"
+            android:summary="@string/netflix_spoof_summary"
+            android:defaultValue="false" />
     </PreferenceCategory>
 </PreferenceScreen>

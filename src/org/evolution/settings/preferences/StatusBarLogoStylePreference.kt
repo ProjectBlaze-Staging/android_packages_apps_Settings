@@ -145,8 +145,12 @@ class StatusBarLogoStylePreference @JvmOverloads constructor(
         val res = sysUiRes ?: return null
         if (styleIndex < 0 || styleIndex >= logoDrawables.size) return null
 
-        val name = logoDrawables[styleIndex]
-        val id = res.getIdentifier(name, "drawable", SYSTEMUI_PACKAGE)
+        val rawName = logoDrawables[styleIndex]
+        val name = if (styleIndex == 0 || rawName == "ic_evolution_logo") "ic_blaze_logo" else rawName
+        var id = res.getIdentifier(name, "drawable", SYSTEMUI_PACKAGE)
+        if (id == 0 && name != rawName) {
+            id = res.getIdentifier(rawName, "drawable", SYSTEMUI_PACKAGE)
+        }
         if (id == 0) return null
 
         return try {
@@ -173,7 +177,8 @@ class StatusBarLogoStylePreference @JvmOverloads constructor(
 
     private fun labelForIndex(index: Int): String? {
         if (index < 0 || index >= logoLabels.size) return null
-        return logoLabels[index]
+        val lbl = logoLabels[index]
+        return if (index == 0 || lbl.contains("Evolution", ignoreCase = true)) "Blaze" else lbl
     }
 
     private fun tintDialogAccent(dlg: AlertDialog) {

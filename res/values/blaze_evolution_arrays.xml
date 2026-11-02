@@ -102,8 +102,8 @@
         <item>/product/media/audio/ui/Windows_Error_Unlock.ogg</item>
     </string-array>
     <string-array name="themes_boot_animation_entries">
-        <item>Evolution X</item>
-        <item>Evolution X (Reveal)</item>
+        <item>Blaze</item>
+        <item>Blaze (Reveal)</item>
         <item>AOKP</item>
         <item>CyanogenMod</item>
         <item>ctOS</item>
@@ -286,7 +286,7 @@
         <item>@string/status_bar_logo_style_custom</item>
     </string-array>
     <string-array name="statusbar_logo_drawables" translatable="false">
-        <item>ic_evolution_logo</item>
+        <item>ic_blaze_logo</item>
         <item>ic_android_logo</item>
         <item>ic_adidas</item>
         <item>ic_alien</item>

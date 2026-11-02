@@ -51,6 +51,14 @@
             android:icon="@drawable/ic_themes_category"
             android:fragment="com.blaze.house.fragments.Themes" />
 
+        <!-- Game Space -->
+        <Preference
+            android:key="game_space"
+            android:title="@string/gamespace_title"
+            android:summary="@string/gamespace_summary"
+            android:icon="@drawable/ic_videogame_vd_theme_24"
+            android:fragment="com.blaze.house.fragments.GameSpaceSettings" />
+
         <!-- Miscellaneous (Power features) -->
         <Preference
             android:key="miscellaneous"

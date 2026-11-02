@@ -5,8 +5,8 @@
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <!-- Evolver -->
-    <string name="evolver_dashboard_title">The Evolver</string>
-    <string name="evolver_dashboard_summary">Evolving your device, your way</string>
+    <string name="evolver_dashboard_title">BlazeHouse</string>
+    <string name="evolver_dashboard_summary">Customize your device, your way</string>
 
     <!-- Categories -->
     <string name="themes_title">Themes</string>
@@ -25,7 +25,7 @@
     <string name="buttons_summary">Power button, volume buttons</string>
     <string name="miscellaneous_title">Miscellaneous</string>
     <string name="miscellaneous_summary">Spoofing, developer options</string>
-    <string name="about_title">Evolution X</string>
+    <string name="about_title">Blaze</string>
     <string name="about_summary">About our ROM</string>
     <string name="general_category_title">General</string>
     <string name="gestures_category_title">Gestures</string>
@@ -619,7 +619,7 @@
     <string name="status_bar_logo_position_right">Right</string>
     <string name="status_bar_logo_style_title">Logo style</string>
     <string name="status_bar_logo_style_summary">Select a custom logo to display</string>
-    <string name="status_bar_logo_style_evolution">Evolution X</string>
+    <string name="status_bar_logo_style_evolution">Blaze</string>
     <string name="status_bar_logo_style_android">Android</string>
     <string name="status_bar_logo_style_adidas">Adidas</string>
     <string name="status_bar_logo_style_alien">Alien</string>
@@ -1394,7 +1394,7 @@
     <string name="ts_verification_cert_count">%1$d cert</string>
     <string name="ts_verification_leaf_count">%1$d leaf</string>
     <string name="ts_fetch_keybox">Fetch official keybox</string>
-    <string name="ts_fetch_keybox_summary">Download keybox from Evolution X servers</string>
+    <string name="ts_fetch_keybox_summary">Download keybox from Blaze servers</string>
     <string name="ts_fetch_keybox_fetching">Fetching keybox…</string>
     <string name="ts_fetch_keybox_success">Official keybox fetched successfully</string>
     <string name="ts_fetch_keybox_failed">Fetch failed: %s</string>
@@ -1411,7 +1411,7 @@
     <string name="ts_expiring_soon_message">This keybox\'s certificate expires on %1$s. It currently passes integrity but will stop working after expiry. Replace it now with the official keybox?</string>
     <string name="ts_expiry_unknown">unknown expiry</string>
     <string name="ts_untrusted_root_title">Unrecognized keybox root</string>
-    <string name="ts_untrusted_root_message">This keybox has a certificate chain rooted at an authority not recognized by Evolution X. It may still pass Strong Integrity on some devices. Keep it installed or replace it with the official keybox?</string>
+    <string name="ts_untrusted_root_message">This keybox has a certificate chain rooted at an authority not recognized by Blaze. It may still pass Strong Integrity on some devices. Keep it installed or replace it with the official keybox?</string>
     <string name="ts_untrusted_root_keep">Keep</string>
     <string name="ts_untrusted_root_replace">Replace</string>
 
@@ -1600,7 +1600,7 @@
     <string name="custom_system_theme_summary">Customize system appearance with themes and icon packs</string>
 
     <!-- About -->
-    <string name="about_info">Evolution X is a custom Android ROM that aims to replicate the Google Pixel experience with added customization. Based on the LineageOS Project.</string>
+    <string name="about_info">BlazeOS is a custom Android ROM that aims to replicate the Google Pixel experience with added customization. Based on the LineageOS Project.</string>
     <string name="about_website_title">Website</string>
     <string name="about_website_summary">Visit our site for updates</string>
     <string name="about_x_title" translatable="false">X</string>

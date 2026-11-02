@@ -6,6 +6,10 @@
 package com.blaze.house.fragments;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.os.UserHandle;
 import android.provider.Settings;
@@ -19,6 +23,10 @@ import com.android.settings.R;
 import com.android.settings.SettingsPreferenceFragment;
 import com.android.settings.search.BaseSearchIndexProvider;
 import com.android.settingslib.search.SearchIndexable;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @SearchIndexable
 public class GameSpaceSettings extends SettingsPreferenceFragment implements
@@ -53,8 +61,11 @@ public class GameSpaceSettings extends SettingsPreferenceFragment implements
         if (mAppListPref == null || getContext() == null) {
             return;
         }
-        final String gameList = Settings.System.getStringForUser(
+        String gameList = Settings.System.getStringForUser(
                 getContext().getContentResolver(), "gamespace_game_list", UserHandle.USER_CURRENT);
+        if (gameList == null) {
+            gameList = autoDetectInstalledGames(getContext());
+        }
         if (TextUtils.isEmpty(gameList)) {
             mAppListPref.setSummary(R.string.gamespace_app_list_empty_summary);
         } else {
@@ -71,6 +82,34 @@ public class GameSpaceSettings extends SettingsPreferenceFragment implements
                 mAppListPref.setSummary(getString(R.string.gamespace_app_list_count_summary, count));
             }
         }
+    }
+
+    private String autoDetectInstalledGames(Context context) {
+        try {
+            final PackageManager pm = context.getPackageManager();
+            final Intent launcherIntent = new Intent(Intent.ACTION_MAIN, null);
+            launcherIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+            final List<ResolveInfo> activities = pm.queryIntentActivities(launcherIntent, 0);
+            final Set<String> detected = new HashSet<>();
+            for (ResolveInfo info : activities) {
+                if (info.activityInfo == null || info.activityInfo.packageName == null) continue;
+                final String pkg = info.activityInfo.packageName;
+                try {
+                    ApplicationInfo appInfo = pm.getApplicationInfo(pkg, 0);
+                    if (appInfo.category == ApplicationInfo.CATEGORY_GAME) {
+                        detected.add(pkg);
+                    }
+                } catch (Exception ignored) {}
+            }
+            if (!detected.isEmpty()) {
+                final String joined = String.join(";", detected);
+                Settings.System.putStringForUser(
+                        context.getContentResolver(), "gamespace_game_list", joined,
+                        UserHandle.USER_CURRENT);
+                return joined;
+            }
+        } catch (Exception ignored) {}
+        return "";
     }
 
     @Override
