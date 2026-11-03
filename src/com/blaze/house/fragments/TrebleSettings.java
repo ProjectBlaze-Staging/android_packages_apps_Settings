@@ -42,6 +42,7 @@ public class TrebleSettings extends SettingsPreferenceFragment implements
     private static final String KEY_BT_A2DP_OFFLOAD = "blaze_treble_bt_a2dp_offload_disable";
     private static final String KEY_AUDIO_SAFE_MODE = "blaze_treble_audio_safe_mode";
     private static final String KEY_FORCE_IMS_VOLTE = "blaze_treble_force_ims_volte";
+    private static final String KEY_INCALL_AUDIO_FIX = "blaze_treble_incall_audio_fix";
     private static final String KEY_EXPOSE_AUX_CAMERAS = "blaze_treble_expose_aux_cameras";
     private static final String KEY_SF_GL_COMPAT = "blaze_treble_sf_gl_compat";
 
@@ -66,6 +67,7 @@ public class TrebleSettings extends SettingsPreferenceFragment implements
         bindListener(KEY_BT_A2DP_OFFLOAD);
         bindListener(KEY_AUDIO_SAFE_MODE);
         bindListener(KEY_FORCE_IMS_VOLTE);
+        bindListener(KEY_INCALL_AUDIO_FIX);
         bindListener(KEY_EXPOSE_AUX_CAMERAS);
         bindListener(KEY_SF_GL_COMPAT);
     }
@@ -187,6 +189,12 @@ public class TrebleSettings extends SettingsPreferenceFragment implements
             setPropSafe("persist.dbg.volte_avail_ovr", v);
             setPropSafe("persist.dbg.vt_avail_ovr", v);
             setPropSafe("persist.dbg.wfc_avail_ovr", v);
+            return true;
+        }
+
+        if (KEY_INCALL_AUDIO_FIX.equals(key)) {
+            boolean fix = Boolean.TRUE.equals(newValue);
+            setPropSafe("persist.sys.blaze.incall_audio_fix", fix ? "true" : "false");
             return true;
         }
 

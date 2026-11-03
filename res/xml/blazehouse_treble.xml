@@ -85,6 +85,12 @@
             android:summary="@string/treble_force_ims_volte_summary"
             android:defaultValue="true" />
 
+        <com.blaze.house.preferences.GlobalSettingSwitchPreference
+            android:key="blaze_treble_incall_audio_fix"
+            android:title="@string/treble_incall_audio_fix_title"
+            android:summary="@string/treble_incall_audio_fix_summary"
+            android:defaultValue="true" />
+
     </PreferenceCategory>
 
     <!-- Camera & SurfaceFlinger GPU -->

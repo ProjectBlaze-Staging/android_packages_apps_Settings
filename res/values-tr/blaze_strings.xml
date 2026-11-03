@@ -331,6 +331,8 @@
     <string name="treble_audio_safe_mode_summary">Hoparlör cızırtısı veya mikrofon kısılmasına yol açan tescilli üretici ses efekt kütüphanelerini atlar</string>
     <string name="treble_force_ims_volte_title">Evrensel VoLTE / VoWiFi (IMS) Zorlayıcı</string>
     <string name="treble_force_ims_volte_summary">Qualcomm, MediaTek ve Samsung Exynos modemlerde operatör kısıtlamalarını aşarak VoLTE ve Wi-Fi Aramayı etkinleştirir</string>
+    <string name="treble_incall_audio_fix_title">Evrensel Çağrı İçi Ses Yönlendirme Onarımı</string>
+    <string name="treble_incall_audio_fix_summary">Qualcomm, MediaTek ve Exynos cihazlarda arama yanıtlandığında ahize/hoparlör sesinin gelmemesi sorununu otomatik DSP ses tetiklemesiyle çözer</string>
     <string name="treble_camera_gpu_category_title">Kamera ve SurfaceFlinger GPU Uyumluluğu</string>
     <string name="treble_expose_aux_cameras_title">Çoklu Kamera (Geniş Açı / Telefoto) Lenslerini Aç</string>
     <string name="treble_expose_aux_cameras_summary">Xiaomi, OnePlus ve Nothing cihazlarda ikincil/üçüncül kamera sensörlerini GCam ve kamera uygulamalarına açar</string>

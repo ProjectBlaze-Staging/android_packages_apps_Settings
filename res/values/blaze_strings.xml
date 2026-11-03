@@ -298,6 +298,8 @@
     <string name="treble_audio_safe_mode_summary">Bypass proprietary vendor audio effects that cause speaker crackling or microphone muting in VoIP apps</string>
     <string name="treble_force_ims_volte_title">Force Universal VoLTE / VoWiFi (IMS)</string>
     <string name="treble_force_ims_volte_summary">Override carrier and modem IMS provisioning checks for Qualcomm, MediaTek, and Samsung Exynos radios</string>
+    <string name="treble_incall_audio_fix_title">Universal In-Call Audio Route Fix</string>
+    <string name="treble_incall_audio_fix_summary">Force modem voice PCM routing and auto-unmute call volume DSP when answering calls on Qualcomm, MediaTek, and Exynos GSIs</string>
     <string name="treble_camera_gpu_category_title">Camera &amp; SurfaceFlinger GPU</string>
     <string name="treble_expose_aux_cameras_title">Expose Multi-Lens AUX Cameras (Ultrawide / Telephoto)</string>
     <string name="treble_expose_aux_cameras_summary">Unlock secondary and tertiary camera sensors for GCam and Aperture on Xiaomi, OnePlus, and Nothing devices</string>
