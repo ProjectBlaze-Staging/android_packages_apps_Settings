@@ -303,4 +303,8 @@
     <string name="treble_expose_aux_cameras_summary">Unlock secondary and tertiary camera sensors for GCam and Aperture on Xiaomi, OnePlus, and Nothing devices</string>
     <string name="treble_sf_gl_compat_title">SurfaceFlinger GPU Buffer Latch Compatibility</string>
     <string name="treble_sf_gl_compat_summary">Enable latch_unsignaled and disable backpressure to eliminate screen tearing or stutter on MediaTek Dimensity/Helio and Exynos GPUs</string>
+    <string name="qqs_show_brightness_slider_title">Show Brightness Slider in QQS</string>
+    <string name="qqs_show_brightness_slider_summary">Display the modular brightness control slider in the collapsed Quick Quick Settings shade</string>
+    <string name="qqs_show_media_title">Show Media Player in QQS</string>
+    <string name="qqs_show_media_summary">Display the compact media player card in the collapsed Quick Quick Settings shade</string>
 </resources>

@@ -336,4 +336,8 @@
     <string name="treble_expose_aux_cameras_summary">Xiaomi, OnePlus ve Nothing cihazlarda ikincil/üçüncül kamera sensörlerini GCam ve kamera uygulamalarına açar</string>
     <string name="treble_sf_gl_compat_title">SurfaceFlinger GPU Tampon Uyumluluk Modu</string>
     <string name="treble_sf_gl_compat_summary">MediaTek Dimensity/Helio ve Exynos GPU\'larda ekran yırtılmasını ve takılmaları önlemek için latch_unsignaled modunu açar</string>
+    <string name="qqs_show_brightness_slider_title">Küçük Panelde (QQS) Parlaklık Sürgüsü</string>
+    <string name="qqs_show_brightness_slider_summary">İlk çekişteki daraltılmış Hızlı Ayarlar panelinde parlaklık kontrol sürgüsünü gösterir</string>
+    <string name="qqs_show_media_title">Küçük Panelde (QQS) Medya Oynatıcı</string>
+    <string name="qqs_show_media_summary">İlk çekişteki daraltılmış Hızlı Ayarlar panelinde kompakt medya oynatıcı kartını gösterir</string>
 </resources>

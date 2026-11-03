@@ -36,6 +36,18 @@
             android:summary="@string/qs_compact_media_player_mode_summary"
             android:defaultValue="false" />
 
+        <com.blaze.house.preferences.SystemSettingSwitchPreference
+            android:key="qqs_show_brightness_slider"
+            android:title="@string/qqs_show_brightness_slider_title"
+            android:summary="@string/qqs_show_brightness_slider_summary"
+            android:defaultValue="true" />
+
+        <com.blaze.house.preferences.SystemSettingSwitchPreference
+            android:key="qqs_show_media"
+            android:title="@string/qqs_show_media_title"
+            android:summary="@string/qqs_show_media_summary"
+            android:defaultValue="true" />
+
     </PreferenceCategory>
 
 
