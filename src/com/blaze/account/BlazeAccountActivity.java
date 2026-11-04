@@ -7,7 +7,7 @@ package com.blaze.account;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -29,8 +29,9 @@ public class BlazeAccountActivity extends AppCompatActivity {
     private static final int REQUEST_IMAGE_PICK = 1002;
 
     private ImageView mAvatarView;
-    private EditText mNameEdit;
-    private EditText mPhoneEdit;
+    private EditText mUsernameEdit;
+    private EditText mRealNameEdit;
+    private EditText mMottoEdit;
     private MaterialButton mSaveBtn;
     private MaterialButton mDeleteBtn;
 
@@ -45,14 +46,19 @@ public class BlazeAccountActivity extends AppCompatActivity {
         }
 
         mAvatarView = findViewById(R.id.account_avatar);
-        mNameEdit = findViewById(R.id.edit_account_name);
-        mPhoneEdit = findViewById(R.id.edit_account_phone);
+        mUsernameEdit = findViewById(R.id.edit_account_username);
+        mRealNameEdit = findViewById(R.id.edit_account_name);
+        mMottoEdit = findViewById(R.id.edit_account_phone);
         mSaveBtn = findViewById(R.id.btn_save_account);
         mDeleteBtn = findViewById(R.id.btn_delete_account);
 
         FrameLayout avatarContainer = findViewById(R.id.avatar_container);
         if (avatarContainer != null) {
             avatarContainer.setOnClickListener(v -> pickImage());
+        }
+        View changePhotoLabel = findViewById(R.id.btn_change_photo_label);
+        if (changePhotoLabel != null) {
+            changePhotoLabel.setOnClickListener(v -> pickImage());
         }
 
         loadAccountData();
@@ -69,25 +75,46 @@ public class BlazeAccountActivity extends AppCompatActivity {
     private void loadAccountData() {
         boolean configured = BlazeAccountUtils.isAccountConfigured(this);
         if (configured) {
-            String name = BlazeAccountUtils.getAccountName(this);
-            String phone = BlazeAccountUtils.getAccountPhone(this);
-            mNameEdit.setText(name);
-            mPhoneEdit.setText(phone);
-            mDeleteBtn.setVisibility(View.VISIBLE);
+            String username = BlazeAccountUtils.getUsername(this);
+            String realName = BlazeAccountUtils.getRealName(this);
+            String motto = BlazeAccountUtils.getMotto(this);
+            if (mUsernameEdit != null) mUsernameEdit.setText(username);
+            if (mRealNameEdit != null) mRealNameEdit.setText(realName);
+            if (mMottoEdit != null) mMottoEdit.setText(motto);
+            if (mDeleteBtn != null) mDeleteBtn.setVisibility(View.VISIBLE);
         } else {
-            mDeleteBtn.setVisibility(View.GONE);
+            if (mMottoEdit != null) {
+                mMottoEdit.setText(BlazeAccountUtils.DEFAULT_MOTTO);
+            }
+            if (mDeleteBtn != null) mDeleteBtn.setVisibility(View.GONE);
         }
 
-        Drawable avatar = BlazeAccountUtils.getCircularAvatar(this);
-        if (avatar != null && mAvatarView != null) {
-            mAvatarView.setImageDrawable(avatar);
+        refreshAvatarPreview();
+    }
+
+    private void refreshAvatarPreview() {
+        if (mAvatarView == null) return;
+        Bitmap bmp = BlazeAccountUtils.getAvatarBitmap(this);
+        if (bmp != null) {
+            mAvatarView.setImageBitmap(bmp);
+        } else {
+            mAvatarView.setImageResource(R.drawable.ic_blaze_account_avatar);
         }
     }
 
     private void pickImage() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("image/*");
-        startActivityForResult(Intent.createChooser(intent, getString(R.string.blaze_account_change_photo)), REQUEST_IMAGE_PICK);
+        try {
+            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            intent.setType("image/*");
+            startActivityForResult(intent, REQUEST_IMAGE_PICK);
+        } catch (Exception e) {
+            Intent fallback = new Intent(Intent.ACTION_GET_CONTENT);
+            fallback.setType("image/*");
+            startActivityForResult(
+                    Intent.createChooser(fallback, getString(R.string.blaze_account_change_photo)),
+                    REQUEST_IMAGE_PICK);
+        }
     }
 
     @Override
@@ -98,25 +125,38 @@ public class BlazeAccountActivity extends AppCompatActivity {
             if (imageUri != null) {
                 boolean saved = BlazeAccountUtils.saveAvatarFromUri(this, imageUri);
                 if (saved) {
-                    Drawable avatar = BlazeAccountUtils.getCircularAvatar(this);
-                    if (avatar != null && mAvatarView != null) {
-                        mAvatarView.setImageDrawable(avatar);
-                    }
+                    refreshAvatarPreview();
                 }
             }
         }
     }
 
     private void saveAccount() {
-        String name = mNameEdit.getText() != null ? mNameEdit.getText().toString().trim() : "";
-        String phone = mPhoneEdit.getText() != null ? mPhoneEdit.getText().toString().trim() : "";
+        String username = mUsernameEdit != null && mUsernameEdit.getText() != null
+                ? mUsernameEdit.getText().toString().trim() : "";
+        String realName = mRealNameEdit != null && mRealNameEdit.getText() != null
+                ? mRealNameEdit.getText().toString().trim() : "";
+        String motto = mMottoEdit != null && mMottoEdit.getText() != null
+                ? mMottoEdit.getText().toString().trim() : "";
 
-        if (TextUtils.isEmpty(name)) {
-            mNameEdit.setError(getString(R.string.blaze_account_name_hint));
+        if (TextUtils.isEmpty(username) && TextUtils.isEmpty(realName)) {
+            if (mUsernameEdit != null) {
+                mUsernameEdit.setError(getString(R.string.blaze_account_username_hint));
+            }
             return;
         }
+        if (TextUtils.isEmpty(username)) {
+            username = realName;
+        }
+        if (TextUtils.isEmpty(realName)) {
+            realName = username;
+        }
+        if (TextUtils.isEmpty(motto)) {
+            motto = BlazeAccountUtils.DEFAULT_MOTTO;
+        }
 
-        boolean saved = BlazeAccountUtils.saveAccount(this, name, phone, null);
+        boolean saved = BlazeAccountUtils.saveAccountProfile(
+                this, username, realName, motto, null);
         if (saved) {
             Toast.makeText(this, R.string.blaze_account_saved_toast, Toast.LENGTH_SHORT).show();
             finish();

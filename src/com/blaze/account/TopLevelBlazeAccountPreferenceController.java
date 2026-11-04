@@ -41,10 +41,22 @@ public class TopLevelBlazeAccountPreferenceController extends BasePreferenceCont
         if (preference == null) return;
 
         if (BlazeAccountUtils.isAccountConfigured(mContext)) {
-            String name = BlazeAccountUtils.getAccountName(mContext);
-            String phone = BlazeAccountUtils.getAccountPhone(mContext);
-            preference.setTitle(!TextUtils.isEmpty(name) ? name : mContext.getString(R.string.blaze_account_title));
-            preference.setSummary(!TextUtils.isEmpty(phone) ? phone : mContext.getString(R.string.blaze_account_offline));
+            String username = BlazeAccountUtils.getUsername(mContext);
+            String realName = BlazeAccountUtils.getRealName(mContext);
+            String title;
+            if (!TextUtils.isEmpty(realName) && !TextUtils.isEmpty(username)
+                    && !realName.equalsIgnoreCase(username)) {
+                title = realName + " (@" + username + ")";
+            } else if (!TextUtils.isEmpty(realName)) {
+                title = realName;
+            } else if (!TextUtils.isEmpty(username)) {
+                title = username;
+            } else {
+                title = mContext.getString(R.string.blaze_account_title);
+            }
+            preference.setTitle(title);
+            preference.setSummary(mContext.getString(R.string.blaze_account_title)
+                    + " • " + BlazeAccountUtils.getMotto(mContext));
             Drawable avatar = BlazeAccountUtils.getCircularAvatar(mContext);
             if (avatar != null) {
                 preference.setIcon(avatar);
@@ -52,7 +64,7 @@ public class TopLevelBlazeAccountPreferenceController extends BasePreferenceCont
                 preference.setIcon(R.drawable.ic_blaze_account_avatar);
             }
         } else {
-            preference.setTitle(R.string.blaze_account_create_title);
+            preference.setTitle(R.string.blaze_account_title);
             preference.setSummary(R.string.blaze_account_create_summary);
             preference.setIcon(R.drawable.ic_blaze_account_avatar);
         }

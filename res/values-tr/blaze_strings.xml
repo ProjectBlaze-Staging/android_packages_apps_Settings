@@ -262,19 +262,27 @@
 
     <!-- Blaze Account (Offline) -->
     <string name="blaze_account_title">Blaze Hesabı</string>
-    <string name="blaze_account_create_title">Blaze Hesabı oluşturun</string>
-    <string name="blaze_account_create_summary">Profilinizi kişiselleştirin ve cihazınızı özelleştirin</string>
-    <string name="blaze_account_offline">Çevrim Dışı Cihaz Hesabı</string>
-    <string name="blaze_account_status">Çevrim Dışı Profil • Cihaz içinde yerel olarak saklanır</string>
-    <string name="blaze_account_name_label">Görünen İsim</string>
+    <string name="blaze_account_create_title">Blaze Hesabı</string>
+    <string name="blaze_account_create_summary">Kullanıcı adı, gerçek ad ve profil fotoğrafınızı ayarlayın • Çevrimdışı</string>
+    <string name="blaze_account_offline">Çevrimdışı Blaze Profili</string>
+    <string name="blaze_account_status">Çevrimdışı Profil • Cihaz içinde yerel olarak saklanır, internet gerektirmez</string>
+    <string name="blaze_account_username_label">Kullanıcı Adı</string>
+    <string name="blaze_account_username_hint">Kullanıcı adınızı girin</string>
+    <string name="blaze_account_name_label">Gerçek Ad (Ad Soyad)</string>
     <string name="blaze_account_name_hint">Adınızı ve soyadınızı girin</string>
+    <string name="blaze_account_motto_label">Karşılama Sözü / Durum</string>
     <string name="blaze_account_phone_label">Telefon Numarası</string>
     <string name="blaze_account_phone_hint">Telefon numaranızı girin</string>
-    <string name="blaze_account_save">Profili Kaydet</string>
+    <string name="blaze_account_save">Blaze Hesabını Kaydet</string>
     <string name="blaze_account_saved_toast">Blaze Hesabı güncellendi</string>
     <string name="blaze_account_delete">Hesabı Kaldır</string>
     <string name="blaze_account_deleted_toast">Blaze Hesabı kaldırıldı</string>
-    <string name="blaze_account_change_photo">Fotoğrafı Değiştir</string>
+    <string name="blaze_account_change_photo">Profil Fotoğrafını Değiştir</string>
+    <string name="blaze_account_default_owner">Sahip</string>
+    <string name="blaze_greeting_morning">Günaydın</string>
+    <string name="blaze_greeting_afternoon">Tünaydın</string>
+    <string name="blaze_greeting_evening">İyi akşamlar</string>
+    <string name="blaze_greeting_night">İyi geceler</string>
 
     <!-- Lockscreen Clock Source -->
     <string name="lockscreen_clock_source_title">Saat kaynağı stili</string>

@@ -322,6 +322,12 @@ public class SettingsHomepageActivity extends FragmentActivity implements
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        updateBlazeAccountHeader();
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
         mAllowUpdateSuggestion = true;
@@ -415,6 +421,40 @@ public class SettingsHomepageActivity extends FragmentActivity implements
         FeatureFactory.getFeatureFactory().getSearchFeatureProvider()
                 .initSearchToolbar(this /* activity */, toolbar,
                         SettingsEnums.SETTINGS_HOMEPAGE);
+        updateBlazeAccountHeader();
+    }
+
+    private void updateBlazeAccountHeader() {
+        View greetingContainer = findViewById(R.id.blaze_homepage_greeting_container);
+        android.widget.TextView greetingTitle = findViewById(R.id.blaze_homepage_greeting_title);
+        android.widget.TextView greetingSubtitle = findViewById(R.id.blaze_homepage_greeting_subtitle);
+        View avatarCard = findViewById(R.id.blaze_homepage_avatar_card);
+        android.widget.ImageView avatarImg = findViewById(R.id.blaze_homepage_avatar_img);
+
+        if (greetingTitle != null) {
+            greetingTitle.setText(com.blaze.account.BlazeAccountUtils.getDynamicGreetingTitle(this));
+        }
+        if (greetingSubtitle != null) {
+            greetingSubtitle.setText(com.blaze.account.BlazeAccountUtils.getMotto(this));
+        }
+        if (avatarImg != null) {
+            android.graphics.Bitmap avatarBmp =
+                    com.blaze.account.BlazeAccountUtils.getAvatarBitmap(this);
+            if (avatarBmp != null) {
+                avatarImg.setImageBitmap(avatarBmp);
+            } else {
+                avatarImg.setImageResource(R.drawable.ic_blaze_account_avatar);
+            }
+        }
+        View.OnClickListener openBlazeAccount = v -> {
+            startActivity(new Intent(this, com.blaze.account.BlazeAccountActivity.class));
+        };
+        if (greetingContainer != null) {
+            greetingContainer.setOnClickListener(openBlazeAccount);
+        }
+        if (avatarCard != null) {
+            avatarCard.setOnClickListener(openBlazeAccount);
+        }
     }
 
     private void updateHomepageUI() {

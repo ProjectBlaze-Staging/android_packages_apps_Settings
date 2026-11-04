@@ -24,6 +24,14 @@
         android:order="-160"
         android:key="top_level_blaze_header_category">
         <com.android.settings.widget.HomepagePreference
+            android:key="top_level_blaze_account"
+            android:order="-30"
+            android:title="@string/blaze_account_title"
+            android:summary="@string/blaze_account_create_summary"
+            android:icon="@drawable/ic_blaze_account_avatar"
+            settings:controller="com.blaze.account.TopLevelBlazeAccountPreferenceController"/>
+
+        <com.android.settings.widget.HomepagePreference
             android:fragment="com.android.settings.deviceinfo.aboutphone.MyDeviceInfoFragment"
             android:icon="@drawable/ic_homepage_about"
             android:key="top_level_about_device"
