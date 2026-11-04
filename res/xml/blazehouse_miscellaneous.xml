@@ -77,7 +77,7 @@
             android:key="aggressive_doze"
             android:title="@string/aggressive_doze_title"
             android:summary="@string/aggressive_doze_summary"
-            android:defaultValue="false" />
+            android:defaultValue="true" />
 
         <Preference
             android:key="smart_pixels_settings"
