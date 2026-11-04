@@ -70,6 +70,52 @@ public class TrebleSettings extends SettingsPreferenceFragment implements
         bindListener(KEY_INCALL_AUDIO_FIX);
         bindListener(KEY_EXPOSE_AUX_CAMERAS);
         bindListener(KEY_SF_GL_COMPAT);
+
+        Preference deviceImagePref = findPreference("blaze_about_device_image_picker");
+        if (deviceImagePref != null) {
+            updateDeviceImageSummary(deviceImagePref);
+            deviceImagePref.setOnPreferenceClickListener(pref -> {
+                com.blaze.house.utils.BlazeDeviceImageHelper.showDeviceImagePickerDialog(
+                        getContext(),
+                        () -> updateDeviceImageSummary(deviceImagePref),
+                        () -> {
+                            try {
+                                android.content.Intent intent = new android.content.Intent(
+                                        android.content.Intent.ACTION_OPEN_DOCUMENT);
+                                intent.addCategory(android.content.Intent.CATEGORY_OPENABLE);
+                                intent.setType("image/*");
+                                startActivityForResult(intent, 9403);
+                            } catch (Exception ignored) {}
+                        }
+                );
+                return true;
+            });
+        }
+    }
+
+    private void updateDeviceImageSummary(Preference pref) {
+        if (pref != null && getContext() != null) {
+            String mode = com.blaze.house.utils.BlazeDeviceImageHelper.getCurrentMode(getContext());
+            pref.setSummary(com.blaze.house.utils.BlazeDeviceImageHelper.getModeDisplayName(mode));
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, android.content.Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 9403
+                && resultCode == android.app.Activity.RESULT_OK
+                && data != null
+                && data.getData() != null
+                && getContext() != null) {
+            if (com.blaze.house.utils.BlazeDeviceImageHelper.saveCustomImageFromUri(
+                    getContext(), data.getData())) {
+                updateDeviceImageSummary(findPreference("blaze_about_device_image_picker"));
+                android.widget.Toast.makeText(getContext(),
+                        "Özel cihaz görseli başarıyla kaydedildi!",
+                        android.widget.Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private void bindListener(String key) {

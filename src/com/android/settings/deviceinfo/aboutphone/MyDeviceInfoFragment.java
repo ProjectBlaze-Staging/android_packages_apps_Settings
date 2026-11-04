@@ -197,6 +197,21 @@ public class MyDeviceInfoFragment extends DashboardFragment
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_PICK_CUSTOM_DEVICE_IMAGE
+                && resultCode == Activity.RESULT_OK
+                && data != null
+                && data.getData() != null
+                && getContext() != null) {
+            boolean saved = com.blaze.house.utils.BlazeDeviceImageHelper.saveCustomImageFromUri(
+                    getContext(), data.getData());
+            if (saved) {
+                initHeader();
+                android.widget.Toast.makeText(getContext(),
+                        "Özel cihaz görseli başarıyla uygulandı!",
+                        android.widget.Toast.LENGTH_SHORT).show();
+            }
+            return;
+        }
         if (mBuildNumberPreferenceController.onActivityResult(requestCode, resultCode, data)) {
             return;
         }
@@ -252,21 +267,52 @@ public class MyDeviceInfoFragment extends DashboardFragment
                 });
             }
 
-            // GSI / Custom Device Render Handling:
-            // For GSI builds, renderView remains View.GONE.
-            // For custom device builds with custom render asset, renderView is shown.
-            if (renderView != null) {
-                boolean isGsi = android.os.SystemProperties.getBoolean("ro.blaze.is_gsi", false)
-                        || android.os.Build.PRODUCT.startsWith("gsi_")
-                        || android.os.Build.PRODUCT.contains("_gsi");
-                int customRenderRes = getContext().getResources().getIdentifier(
-                        "blaze_device_custom", "drawable", getContext().getPackageName());
-                if (!isGsi && customRenderRes != 0) {
-                    renderView.setImageResource(customRenderRes);
-                    renderView.setVisibility(View.VISIBLE);
-                } else {
-                    renderView.setVisibility(View.GONE);
+            // Disable clipping on parent containers so the 3D device render can overflow above the hero card
+            if (blazeRoot instanceof android.view.ViewGroup) {
+                ((android.view.ViewGroup) blazeRoot).setClipChildren(false);
+                ((android.view.ViewGroup) blazeRoot).setClipToPadding(false);
+                android.view.ViewParent parent = blazeRoot.getParent();
+                while (parent instanceof android.view.ViewGroup) {
+                    ((android.view.ViewGroup) parent).setClipChildren(false);
+                    ((android.view.ViewGroup) parent).setClipToPadding(false);
+                    parent = parent.getParent();
                 }
+            }
+
+            // Smart Device Auto-Detection + Brand Fallback (GSI) + BlazeHouse Custom Image Picker
+            if (renderView != null) {
+                com.blaze.house.utils.BlazeDeviceImageHelper.bindDeviceRender(
+                        getContext(), renderView);
+                View.OnClickListener openRenderPicker = v -> {
+                    com.blaze.house.utils.BlazeDeviceImageHelper.showDeviceImagePickerDialog(
+                            getContext(),
+                            () -> com.blaze.house.utils.BlazeDeviceImageHelper.bindDeviceRender(
+                                    getContext(), renderView),
+                            () -> launchCustomDeviceImagePicker()
+                    );
+                };
+                renderView.setOnClickListener(openRenderPicker);
+                renderView.setOnLongClickListener(v -> {
+                    openRenderPicker.onClick(v);
+                    return true;
+                });
+            }
+
+            // ProjectBlaze Animated "Updates" Capsule
+            final View updatesPill = blazeRoot.findViewById(R.id.blaze_about_updates_pill);
+            final View morphOverlay = blazeRoot.findViewById(R.id.blaze_about_updates_morph_overlay);
+            final View flameIcon = blazeRoot.findViewById(R.id.blaze_about_updates_flame_icon);
+            final View updatesText = blazeRoot.findViewById(R.id.blaze_about_updates_text);
+            if (updatesPill != null && morphOverlay != null && flameIcon != null) {
+                com.blaze.house.utils.BlazeDeviceImageHelper.startUpdatesPillAnimation(
+                        updatesPill, morphOverlay, flameIcon, updatesText);
+                updatesPill.setOnClickListener(v -> {
+                    // Trigger tactile bounce + open system updater or Blaze OTA status dialog
+                    v.animate().scaleX(0.94f).scaleY(0.94f).setDuration(90L)
+                            .withEndAction(() -> v.animate().scaleX(1f).scaleY(1f).setDuration(140L).start())
+                            .start();
+                    openSystemUpdatesOrBlazeDialog();
+                });
             }
 
             // 2. Dual Cards: Official Blaze Logo & Firmware Card
@@ -402,6 +448,56 @@ public class MyDeviceInfoFragment extends DashboardFragment
         }
 
         controller.done(true /* rebindActions */);
+    }
+
+    private static final int REQUEST_PICK_CUSTOM_DEVICE_IMAGE = 9401;
+
+    private void launchCustomDeviceImagePicker() {
+        try {
+            android.content.Intent intent = new android.content.Intent(
+                    android.content.Intent.ACTION_OPEN_DOCUMENT);
+            intent.addCategory(android.content.Intent.CATEGORY_OPENABLE);
+            intent.setType("image/*");
+            startActivityForResult(intent, REQUEST_PICK_CUSTOM_DEVICE_IMAGE);
+        } catch (Exception e) {
+            android.widget.Toast.makeText(getContext(),
+                    "Galeri seçici açılamadı.", android.widget.Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void openSystemUpdatesOrBlazeDialog() {
+        Context ctx = getContext();
+        if (ctx == null) return;
+        try {
+            android.content.Intent otaIntent = new android.content.Intent(
+                    "android.settings.SYSTEM_UPDATE_SETTINGS");
+            if (otaIntent.resolveActivity(ctx.getPackageManager()) != null) {
+                startActivity(otaIntent);
+                return;
+            }
+        } catch (Exception ignored) {}
+
+        String displayVer = getString(R.string.blaze_about_firmware_version);
+        String securityPatch = android.os.Build.VERSION.SECURITY_PATCH;
+        new android.app.AlertDialog.Builder(ctx)
+                .setTitle("ProjectBlaze Güncelleme Merkezi")
+                .setMessage(displayVer + "\nAndroid 17 • OFFICIAL\nGüvenlik Yaması: "
+                        + securityPatch + "\n\nSisteminiz güncel durumda.")
+                .setPositiveButton(android.R.string.ok, null)
+                .setNeutralButton("Cihaz Görselini Değiştir", (d, w) -> {
+                    final LayoutPreference headerPreference =
+                            getPreferenceScreen().findPreference(KEY_MY_DEVICE_INFO_HEADER);
+                    final android.widget.ImageView renderView = headerPreference != null
+                            ? headerPreference.findViewById(R.id.blaze_about_device_render)
+                            : null;
+                    com.blaze.house.utils.BlazeDeviceImageHelper.showDeviceImagePickerDialog(
+                            ctx,
+                            () -> com.blaze.house.utils.BlazeDeviceImageHelper.bindDeviceRender(
+                                    ctx, renderView),
+                            () -> launchCustomDeviceImagePicker()
+                    );
+                })
+                .show();
     }
 
     @Override

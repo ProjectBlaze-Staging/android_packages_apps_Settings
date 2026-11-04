@@ -31,6 +31,9 @@ public class Themes extends SettingsPreferenceFragment implements
 
     private static final String TAG = "Themes";
     private static final String KEY_THEMED_ICONS = "themed_icon_enabled";
+    private static final String KEY_ABOUT_DEVICE_IMAGE = "blaze_about_device_image_picker";
+    private static final int REQUEST_PICK_CUSTOM_IMAGE = 9402;
+    private Preference mAboutDeviceImagePref;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,6 +45,58 @@ public class Themes extends SettingsPreferenceFragment implements
         Preference themedIcons = findPreference(KEY_THEMED_ICONS);
         if (themedIcons != null) {
             themedIcons.setOnPreferenceChangeListener(this);
+        }
+
+        mAboutDeviceImagePref = findPreference(KEY_ABOUT_DEVICE_IMAGE);
+        if (mAboutDeviceImagePref != null) {
+            updateAboutDeviceImageSummary();
+            mAboutDeviceImagePref.setOnPreferenceClickListener(pref -> {
+                com.blaze.house.utils.BlazeDeviceImageHelper.showDeviceImagePickerDialog(
+                        getContext(),
+                        this::updateAboutDeviceImageSummary,
+                        this::launchGalleryPicker
+                );
+                return true;
+            });
+        }
+    }
+
+    private void updateAboutDeviceImageSummary() {
+        if (mAboutDeviceImagePref != null && getContext() != null) {
+            String mode = com.blaze.house.utils.BlazeDeviceImageHelper.getCurrentMode(getContext());
+            mAboutDeviceImagePref.setSummary(
+                    com.blaze.house.utils.BlazeDeviceImageHelper.getModeDisplayName(mode));
+        }
+    }
+
+    private void launchGalleryPicker() {
+        try {
+            android.content.Intent intent = new android.content.Intent(
+                    android.content.Intent.ACTION_OPEN_DOCUMENT);
+            intent.addCategory(android.content.Intent.CATEGORY_OPENABLE);
+            intent.setType("image/*");
+            startActivityForResult(intent, REQUEST_PICK_CUSTOM_IMAGE);
+        } catch (Exception e) {
+            android.widget.Toast.makeText(getContext(),
+                    "Galeri seçici açılamadı.", android.widget.Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, android.content.Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_PICK_CUSTOM_IMAGE
+                && resultCode == android.app.Activity.RESULT_OK
+                && data != null
+                && data.getData() != null
+                && getContext() != null) {
+            if (com.blaze.house.utils.BlazeDeviceImageHelper.saveCustomImageFromUri(
+                    getContext(), data.getData())) {
+                updateAboutDeviceImageSummary();
+                android.widget.Toast.makeText(getContext(),
+                        "Özel cihaz görseli başarıyla kaydedildi!",
+                        android.widget.Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

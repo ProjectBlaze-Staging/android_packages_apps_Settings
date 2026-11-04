@@ -309,4 +309,6 @@
     <string name="qqs_show_brightness_slider_summary">Display the modular brightness control slider in the collapsed Quick Quick Settings shade</string>
     <string name="qqs_show_media_title">Show Media Player in QQS</string>
     <string name="qqs_show_media_summary">Display the compact media player card in the collapsed Quick Quick Settings shade</string>
+    <string name="blaze_about_device_image_title">About Phone Device Render</string>
+    <string name="blaze_about_device_image_summary">Auto-detect model/brand, choose from built-in 3D renders, or select a custom PNG from Gallery</string>
 </resources>

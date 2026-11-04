@@ -342,4 +342,6 @@
     <string name="qqs_show_brightness_slider_summary">İlk çekişteki daraltılmış Hızlı Ayarlar panelinde parlaklık kontrol sürgüsünü gösterir</string>
     <string name="qqs_show_media_title">Küçük Panelde (QQS) Medya Oynatıcı</string>
     <string name="qqs_show_media_summary">İlk çekişteki daraltılmış Hızlı Ayarlar panelinde kompakt medya oynatıcı kartını gösterir</string>
+    <string name="blaze_about_device_image_title">Telefon Hakkında Cihaz Görseli</string>
+    <string name="blaze_about_device_image_summary">Cihaz/marka modelini otomatik algıla, hazır 3D modellerden seç veya galeriden özel PNG yükle</string>
 </resources>

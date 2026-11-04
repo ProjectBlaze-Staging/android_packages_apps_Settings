@@ -19,6 +19,11 @@
             android:icon="@drawable/ic_settings_blaze"
             android:selectable="false" />
 
+        <Preference
+            android:key="blaze_about_device_image_picker"
+            android:title="@string/blaze_about_device_image_title"
+            android:summary="@string/blaze_about_device_image_summary" />
+
     </PreferenceCategory>
 
     <!-- Display, Backlight & Refresh Rate -->

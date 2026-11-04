@@ -8,71 +8,133 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:clipChildren="false"
+    android:clipToPadding="false"
     android:paddingStart="16dp"
     android:paddingEnd="16dp"
-    android:paddingTop="8dp"
+    android:paddingTop="4dp"
     android:paddingBottom="16dp">
 
-    <!-- Screen Title: About device -->
-    <TextView
-        android:id="@+id/blaze_about_header_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="16dp"
-        android:text="@string/blaze_about_device_title"
-        android:textColor="?android:attr/textColorPrimary"
-        android:textSize="28sp"
-        android:textStyle="bold" />
-
-    <!-- 1. Top Hero Card (Terracotta background with device name, codename and render) -->
+    <!-- 1. Hero Section Wrapper (Title + Terracotta Hero Card + Top-Overflowing 3D Device Render) -->
     <FrameLayout
-        android:id="@+id/blaze_about_hero_card"
+        android:id="@+id/blaze_about_hero_container"
         android:layout_width="match_parent"
-        android:layout_height="145dp"
-        android:background="@drawable/blaze_hero_card_bg"
-        android:paddingStart="22dp"
-        android:paddingEnd="16dp"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"
-        android:foreground="?android:attr/selectableItemBackground">
+        android:layout_height="204dp"
+        android:clipChildren="false"
+        android:clipToPadding="false">
 
-        <LinearLayout
+        <!-- Screen Title: About device (Left side, above card) -->
+        <TextView
+            android:id="@+id/blaze_about_header_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="start|center_vertical"
-            android:orientation="vertical">
+            android:layout_gravity="top|start"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="156dp"
+            android:text="@string/blaze_about_device_title"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:maxLines="1"
+            android:ellipsize="end" />
 
-            <TextView
-                android:id="@+id/blaze_about_device_name_text"
-                android:layout_width="wrap_content"
+        <!-- Top Hero Card (Terracotta background with device name, Updates pill, and overflowing render) -->
+        <FrameLayout
+            android:id="@+id/blaze_about_hero_card"
+            android:layout_width="match_parent"
+            android:layout_height="152dp"
+            android:layout_gravity="bottom"
+            android:background="@drawable/blaze_hero_card_bg"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:paddingStart="20dp"
+            android:paddingEnd="152dp"
+            android:paddingTop="18dp"
+            android:paddingBottom="16dp"
+            android:foreground="?android:attr/selectableItemBackground">
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/summary_placeholder"
-                android:textColor="#FFFFFFFF"
-                android:textSize="21sp"
-                android:textStyle="bold"
-                android:maxLines="2"
-                android:ellipsize="end" />
+                android:layout_gravity="start|center_vertical"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/blaze_about_codename_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="@string/summary_placeholder"
-                android:textColor="#D8FFFFFF"
-                android:textSize="14sp" />
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/blaze_about_device_name_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/summary_placeholder"
+                    android:textColor="#FFFFFFFF"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
 
-        <!-- Right Side: Device 3D Render Image (Visible in custom builds, GONE in GSI builds) -->
+                <TextView
+                    android:id="@+id/blaze_about_codename_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="@string/summary_placeholder"
+                    android:textColor="#D8FFFFFF"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
+
+                <!-- ProjectBlaze Animated "Updates" Capsule -->
+                <FrameLayout
+                    android:id="@+id/blaze_about_updates_pill"
+                    android:layout_width="150dp"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/blaze_updates_pill_dark_bg"
+                    android:clipToOutline="true"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:elevation="2dp">
+
+                    <TextView
+                        android:id="@+id/blaze_about_updates_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Updates"
+                        android:textColor="#FFFFFFFF"
+                        android:textSize="17sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.01" />
+
+                    <!-- Morphing White Flame Overlay (Animates left-to-right wipe like concept GIF) -->
+                    <FrameLayout
+                        android:id="@+id/blaze_about_updates_morph_overlay"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/blaze_updates_pill_white_bg">
+
+                        <ImageView
+                            android:id="@+id/blaze_about_updates_flame_icon"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_blaze_updates_flame"
+                            android:scaleType="fitCenter"
+                            android:importantForAccessibility="no" />
+                    </FrameLayout>
+                </FrameLayout>
+            </LinearLayout>
+        </FrameLayout>
+
+        <!-- Right Side: Top-Overflowing 3D Device Render (Protrudes ~46dp above Hero Card!) -->
         <ImageView
             android:id="@+id/blaze_about_device_render"
-            android:layout_width="140dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="end|center_vertical"
+            android:layout_width="148dp"
+            android:layout_height="198dp"
+            android:layout_gravity="end|bottom"
+            android:layout_marginEnd="6dp"
+            android:layout_marginBottom="4dp"
+            android:elevation="6dp"
             android:scaleType="fitCenter"
-            android:visibility="gone"
+            android:src="@drawable/blaze_device_pixel_6a"
             android:contentDescription="@string/blaze_about_device_title" />
     </FrameLayout>
 
