@@ -7,7 +7,7 @@ package com.blaze.account;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -18,13 +18,11 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.settings.R;
-import com.google.android.material.appbar.MaterialToolbar;
-import com.google.android.material.button.MaterialButton;
+import com.android.settingslib.widget.SettingsThemeHelper;
 
-public class BlazeAccountActivity extends AppCompatActivity {
+public class BlazeAccountActivity extends Activity {
 
     private static final int REQUEST_IMAGE_PICK = 1002;
 
@@ -32,17 +30,20 @@ public class BlazeAccountActivity extends AppCompatActivity {
     private EditText mUsernameEdit;
     private EditText mRealNameEdit;
     private EditText mMottoEdit;
-    private MaterialButton mSaveBtn;
-    private MaterialButton mDeleteBtn;
+    private View mSaveBtn;
+    private View mDeleteBtn;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        if (SettingsThemeHelper.isExpressiveTheme(this)) {
+            setTheme(R.style.Theme_SubSettings_Expressive);
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_blaze_account);
 
-        MaterialToolbar toolbar = findViewById(R.id.account_toolbar);
-        if (toolbar != null) {
-            toolbar.setNavigationOnClickListener(v -> finish());
+        View backBtn = findViewById(R.id.account_back_btn);
+        if (backBtn != null) {
+            backBtn.setOnClickListener(v -> finish());
         }
 
         mAvatarView = findViewById(R.id.account_avatar);
@@ -94,9 +95,9 @@ public class BlazeAccountActivity extends AppCompatActivity {
 
     private void refreshAvatarPreview() {
         if (mAvatarView == null) return;
-        Bitmap bmp = BlazeAccountUtils.getAvatarBitmap(this);
-        if (bmp != null) {
-            mAvatarView.setImageBitmap(bmp);
+        Drawable circular = BlazeAccountUtils.getCircularAvatar(this);
+        if (circular != null) {
+            mAvatarView.setImageDrawable(circular);
         } else {
             mAvatarView.setImageResource(R.drawable.ic_blaze_account_avatar);
         }

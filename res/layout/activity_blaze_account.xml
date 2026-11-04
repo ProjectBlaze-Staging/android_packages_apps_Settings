@@ -4,20 +4,39 @@
      SPDX-License-Identifier: Apache-2.0
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:fitsSystemWindows="true"
     android:background="?android:attr/colorBackground">
 
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/account_toolbar"
+    <!-- Top Header Bar -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize"
-        android:background="?android:attr/colorBackground"
-        app:navigationIcon="@drawable/ic_arrow_back"
-        app:title="@string/blaze_account_title"
-        app:titleCentered="false" />
+        android:layout_height="64dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="12dp"
+        android:paddingEnd="20dp">
+
+        <ImageButton
+            android:id="@+id/account_back_btn"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_arrow_back"
+            android:tint="?android:attr/textColorPrimary"
+            android:contentDescription="@android:string/cancel" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:text="@string/blaze_account_title"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+    </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -28,46 +47,48 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingHorizontal="24dp"
-            android:paddingTop="12dp"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:paddingTop="8dp"
             android:paddingBottom="32dp"
             android:gravity="center_horizontal">
 
-            <!-- Avatar Container -->
+            <!-- Circular Avatar Container -->
             <FrameLayout
                 android:id="@+id/avatar_container"
-                android:layout_width="116dp"
-                android:layout_height="116dp"
-                android:layout_marginTop="12dp"
+                android:layout_width="118dp"
+                android:layout_height="118dp"
+                android:layout_marginTop="8dp"
                 android:clickable="true"
                 android:focusable="true">
 
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="116dp"
-                    android:layout_height="116dp"
-                    app:cardCornerRadius="58dp"
-                    app:cardElevation="3dp"
-                    app:strokeWidth="2.5dp"
-                    app:strokeColor="?android:attr/colorAccent">
+                <FrameLayout
+                    android:layout_width="118dp"
+                    android:layout_height="118dp"
+                    android:background="@drawable/blaze_avatar_circle_bg"
+                    android:padding="3dp"
+                    android:clipToOutline="true">
 
                     <ImageView
                         android:id="@+id/account_avatar"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/ic_blaze_account_avatar" />
-                </com.google.android.material.card.MaterialCardView>
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_blaze_account_avatar"
+                        android:importantForAccessibility="no" />
+                </FrameLayout>
 
-                <!-- Edit Badge -->
+                <!-- Camera Edit Badge -->
                 <ImageView
-                    android:layout_width="34dp"
-                    android:layout_height="34dp"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
                     android:layout_gravity="bottom|end"
-                    android:background="@drawable/search_bar_selected_background"
+                    android:background="@drawable/blaze_avatar_circle_bg"
                     android:elevation="4dp"
                     android:padding="7dp"
                     android:src="@android:drawable/ic_menu_camera"
-                    app:tint="?android:attr/colorAccent" />
+                    android:tint="?android:attr/colorAccent"
+                    android:importantForAccessibility="no" />
             </FrameLayout>
 
             <TextView
@@ -75,115 +96,154 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:padding="6dp"
                 android:text="@string/blaze_account_change_photo"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 android:textColor="?android:attr/colorAccent" />
 
             <!-- 1. Username (Used in Settings Header Greeting: "Good morning <Username>,") -->
-            <com.google.android.material.textfield.TextInputLayout
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:hint="@string/blaze_account_username_label"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginBottom="6dp"
+                android:text="@string/blaze_account_username_label"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="13sp"
+                android:textStyle="bold" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edit_account_username"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPersonName"
-                    android:maxLines="1" />
-            </com.google.android.material.textfield.TextInputLayout>
+            <EditText
+                android:id="@+id/edit_account_username"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:background="@drawable/blaze_account_input_bg"
+                android:paddingStart="18dp"
+                android:paddingEnd="18dp"
+                android:hint="@string/blaze_account_username_hint"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textColorHint="?android:attr/textColorTertiary"
+                android:textSize="16sp"
+                android:inputType="textPersonName"
+                android:singleLine="true"
+                android:maxLines="1" />
 
             <!-- 2. Real Name (Full Name) -->
-            <com.google.android.material.textfield.TextInputLayout
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
-                android:hint="@string/blaze_account_name_label"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginBottom="6dp"
+                android:text="@string/blaze_account_name_label"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="13sp"
+                android:textStyle="bold" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edit_account_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPersonName|textCapWords"
-                    android:maxLines="1" />
-            </com.google.android.material.textfield.TextInputLayout>
+            <EditText
+                android:id="@+id/edit_account_name"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:background="@drawable/blaze_account_input_bg"
+                android:paddingStart="18dp"
+                android:paddingEnd="18dp"
+                android:hint="@string/blaze_account_name_hint"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textColorHint="?android:attr/textColorTertiary"
+                android:textSize="16sp"
+                android:inputType="textPersonName|textCapWords"
+                android:singleLine="true"
+                android:maxLines="1" />
 
             <!-- 3. Personal Greeting Motto (Default: "Another day to live!") -->
-            <com.google.android.material.textfield.TextInputLayout
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
-                android:hint="@string/blaze_account_motto_label"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginBottom="6dp"
+                android:text="@string/blaze_account_motto_label"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="13sp"
+                android:textStyle="bold" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edit_account_phone"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textCapSentences"
-                    android:maxLines="1" />
-            </com.google.android.material.textfield.TextInputLayout>
+            <EditText
+                android:id="@+id/edit_account_phone"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:background="@drawable/blaze_account_input_bg"
+                android:paddingStart="18dp"
+                android:paddingEnd="18dp"
+                android:hint="Another day to live!"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textColorHint="?android:attr/textColorTertiary"
+                android:textSize="16sp"
+                android:inputType="textCapSentences"
+                android:singleLine="true"
+                android:maxLines="1" />
 
-            <!-- Status Banner -->
-            <com.google.android.material.card.MaterialCardView
+            <!-- Offline Status Info Card -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="22dp"
-                app:cardCornerRadius="18dp"
-                app:cardElevation="0dp"
-                app:strokeWidth="1dp"
-                app:strokeColor="?android:attr/textColorTertiary"
-                app:cardBackgroundColor="?android:attr/colorBackgroundFloating">
+                android:background="@drawable/blaze_specs_card_bg"
+                android:orientation="vertical"
+                android:padding="18dp">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+                    android:text="@string/blaze_account_offline"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/blaze_account_offline"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="@string/blaze_account_status"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="?android:attr/textColorSecondary" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/blaze_account_status"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="13sp" />
+            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
-            <!-- Action Buttons -->
-            <com.google.android.material.button.MaterialButton
+            <!-- Save Button -->
+            <TextView
                 android:id="@+id/btn_save_account"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginTop="24dp"
+                android:background="@drawable/blaze_account_primary_btn_bg"
+                android:gravity="center"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
                 android:text="@string/blaze_account_save"
-                app:cornerRadius="28dp" />
+                android:textColor="?android:attr/textColorPrimaryInverse"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
-            <com.google.android.material.button.MaterialButton
+            <!-- Delete Account Button -->
+            <TextView
                 android:id="@+id/btn_delete_account"
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:layout_marginTop="8dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?android:attr/selectableItemBackground"
                 android:text="@string/blaze_account_delete"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:textColor="?android:attr/colorError" />
+                android:textColor="#FFFF5252"
+                android:textSize="15sp"
+                android:textStyle="bold" />
 
         </LinearLayout>
     </ScrollView>

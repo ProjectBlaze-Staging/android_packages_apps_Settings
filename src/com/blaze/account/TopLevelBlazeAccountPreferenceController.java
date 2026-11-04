@@ -20,6 +20,10 @@ public class TopLevelBlazeAccountPreferenceController extends BasePreferenceCont
 
     private Preference mPreference;
 
+    public TopLevelBlazeAccountPreferenceController(Context context) {
+        super(context, "top_level_blaze_account");
+    }
+
     public TopLevelBlazeAccountPreferenceController(Context context, String preferenceKey) {
         super(context, preferenceKey);
     }

@@ -438,10 +438,10 @@ public class SettingsHomepageActivity extends FragmentActivity implements
             greetingSubtitle.setText(com.blaze.account.BlazeAccountUtils.getMotto(this));
         }
         if (avatarImg != null) {
-            android.graphics.Bitmap avatarBmp =
-                    com.blaze.account.BlazeAccountUtils.getAvatarBitmap(this);
-            if (avatarBmp != null) {
-                avatarImg.setImageBitmap(avatarBmp);
+            android.graphics.drawable.Drawable avatarDrawable =
+                    com.blaze.account.BlazeAccountUtils.getCircularAvatar(this);
+            if (avatarDrawable != null) {
+                avatarImg.setImageDrawable(avatarDrawable);
             } else {
                 avatarImg.setImageResource(R.drawable.ic_blaze_account_avatar);
             }

@@ -3,17 +3,21 @@
      Copyright (C) 2026 The BlazeAOSP Project
      SPDX-License-Identifier: Apache-2.0
 -->
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item>
-        <com.android.settingslib.widget.AdaptiveIconShapeDrawable
-            android:width="@dimen/dashboard_tile_image_size"
-            android:height="@dimen/dashboard_tile_image_size"
-            android:color="@color/homepage_accounts_background" />
-    </item>
-    <item
-        android:width="@dimen/dashboard_tile_foreground_image_size"
-        android:height="@dimen/dashboard_tile_foreground_image_size"
-        android:start="@dimen/dashboard_tile_foreground_image_inset"
-        android:top="@dimen/dashboard_tile_foreground_image_inset"
-        android:drawable="@drawable/ic_settings_accounts_and_backup_filled" />
-</layer-list>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+    <!-- Circular Warm Terracotta-Charcoal Avatar Background -->
+    <path
+        android:fillColor="#2B2220"
+        android:pathData="M24,0C37.25,0 48,10.75 48,24C48,37.25 37.25,48 24,48C10.75,48 0,37.25 0,24C0,10.75 10.75,0 24,0Z" />
+    <!-- User Head -->
+    <path
+        android:fillColor="#FF8A65"
+        android:pathData="M24,11C28.42,11 32,14.58 32,19C32,23.42 28.42,27 24,27C19.58,27 16,23.42 16,19C16,14.58 19.58,11 24,11Z" />
+    <!-- User Shoulders -->
+    <path
+        android:fillColor="#FFAB91"
+        android:pathData="M24,30.5C31.8,30.5 38.6,34.4 41.2,40.2C36.9,44.9 30.8,48 24,48C17.2,48 11.1,44.9 6.8,40.2C9.4,34.4 16.2,30.5 24,30.5Z" />
+</vector>
