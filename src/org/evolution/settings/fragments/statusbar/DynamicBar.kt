@@ -57,9 +57,50 @@ class DynamicBar : SettingsPreferenceFragment() {
         addPreferencesFromResource(R.xml.dynamic_bar)
 
         setupKeyguardSubPrefs()
+        setupNotificationModePref()
         setupEventToggles()
         updateCompactNotificationVisibility()
         registerObserver()
+    }
+
+    private fun setupNotificationModePref() {
+        val modePref = findPreference<androidx.preference.ListPreference>("ax_dynamic_bar_notification_mode") ?: return
+        val disabledEvents = getDisabledEvents()
+        val compact = Settings.Secure.getIntForUser(
+            resolver, SETTINGS_KEY_COMPACT_NOTIFICATIONS, 1, UserHandle.USER_CURRENT
+        ) == 1
+        val currentMode = when {
+            "notification" in disabledEvents -> "2"
+            compact -> "0"
+            else -> "1"
+        }
+        modePref.value = currentMode
+        modePref.setOnPreferenceChangeListener { _, newValue ->
+            when (newValue as? String) {
+                "0" -> {
+                    toggleEvent("notification", true)
+                    Settings.Secure.putIntForUser(
+                        resolver, SETTINGS_KEY_COMPACT_NOTIFICATIONS, 1, UserHandle.USER_CURRENT
+                    )
+                    findPreference<SwitchPreferenceCompat>("event_notification")?.isChecked = true
+                    findPreference<SwitchPreferenceCompat>(SETTINGS_KEY_COMPACT_NOTIFICATIONS)?.isChecked = true
+                }
+                "1" -> {
+                    toggleEvent("notification", true)
+                    Settings.Secure.putIntForUser(
+                        resolver, SETTINGS_KEY_COMPACT_NOTIFICATIONS, 0, UserHandle.USER_CURRENT
+                    )
+                    findPreference<SwitchPreferenceCompat>("event_notification")?.isChecked = true
+                    findPreference<SwitchPreferenceCompat>(SETTINGS_KEY_COMPACT_NOTIFICATIONS)?.isChecked = false
+                }
+                "2" -> {
+                    toggleEvent("notification", false)
+                    findPreference<SwitchPreferenceCompat>("event_notification")?.isChecked = false
+                }
+            }
+            updateCompactNotificationVisibility()
+            true
+        }
     }
 
     override fun onDestroy() {

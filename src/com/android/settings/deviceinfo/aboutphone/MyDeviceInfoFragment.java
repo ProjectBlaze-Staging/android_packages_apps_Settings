@@ -401,7 +401,35 @@ public class MyDeviceInfoFragment extends DashboardFragment
             }
 
             // 4. Bottom Floating Pill Bar (About & BlazeHouse)
+            final View bottomBar = blazeRoot.findViewById(R.id.blaze_about_bottom_bar);
+            final View aboutTab = blazeRoot.findViewById(R.id.blaze_about_tab_about);
             final View blazeHouseTab = blazeRoot.findViewById(R.id.blaze_about_tab_blazehouse);
+            int glassStyle = android.provider.Settings.Secure.getInt(
+                    getContext().getContentResolver(), "blaze_ui_glass_style", 0);
+            if (bottomBar != null && aboutTab != null) {
+                float d = getContext().getResources().getDisplayMetrics().density;
+                if (glassStyle == 3) {
+                    // iOS 27 Dark Crystal + Recessed Active Lens Pill
+                    android.graphics.drawable.GradientDrawable outerBg =
+                            new android.graphics.drawable.GradientDrawable(
+                                    android.graphics.drawable.GradientDrawable.Orientation.TL_BR,
+                                    new int[] {0xE0181C28, 0xCC11141E, 0xD8151A26});
+                    outerBg.setCornerRadius(30f * d);
+                    outerBg.setStroke(Math.round(1.4f * d), 0x66FFFFFF);
+                    bottomBar.setBackground(outerBg);
+
+                    android.graphics.drawable.GradientDrawable innerLens =
+                            new android.graphics.drawable.GradientDrawable(
+                                    android.graphics.drawable.GradientDrawable.Orientation.TOP_BOTTOM,
+                                    new int[] {0xEE090C14, 0xF205070B});
+                    innerLens.setCornerRadius(22f * d);
+                    innerLens.setStroke(Math.round(1.15f * d), 0x7088C8FF);
+                    aboutTab.setBackground(innerLens);
+                } else {
+                    bottomBar.setBackgroundResource(R.drawable.blaze_about_bottom_bar_bg);
+                    aboutTab.setBackgroundResource(R.drawable.blaze_about_tab_active_bg);
+                }
+            }
             if (blazeHouseTab != null) {
                 blazeHouseTab.setOnClickListener(v -> {
                     try {

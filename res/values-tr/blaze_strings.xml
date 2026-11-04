@@ -295,8 +295,13 @@
     <string name="blaze_glass_style_title">Arayüz Yüzey ve Cam Stili</string>
     <string name="blaze_glass_style_summary">Amiral gemisi GPU Liquid Glass kırılma efekti, dengeli ColorOS buzlu cam veya hafif Stok Material 3 arasında seçim yapın</string>
     <string name="blaze_ui_glass_style_liquid">ColorOS Düzeni + iOS Liquid Glass (Amiral Gemisi GPU)</string>
+    <string name="blaze_ui_glass_style_ios27_dark_crystal">iOS 27 Koyu Füme Kristal + Aktif İç Mercek Kapsülü (Apple Native Stili)</string>
     <string name="blaze_ui_glass_style_frosted">ColorOS Buzlu Cam (Dengeli)</string>
     <string name="blaze_ui_glass_style_m3">Stok Material 3 (Hafif / Performans)</string>
+    <string name="dynamic_bar_notification_mode_title">Gelen Mesaj ve Bildirim Gösterim Stili</string>
+    <string name="dynamic_bar_notif_mode_island_compact">Dinamik Ada Kapsülü (OriginOS / ColorOS Kompakt Önizleme + Tıklayınca Detay)</string>
+    <string name="dynamic_bar_notif_mode_island_expanded">Dinamik Ada Otomatik Açılır Kart (iOS Canlı Mesaj Kartı)</string>
+    <string name="dynamic_bar_notif_mode_stock_headsup">Stok Android Bildirimi (Standart Yüzen Başlık)</string>
     <string name="blaze_floating_bottom_nav_title">Yüzen Liquid Glass Alt Bar</string>
     <string name="blaze_floating_bottom_nav_summary">Uygulama alt gezinme çubuklarını (YouTube, Instagram, WhatsApp vb.) basılı tutup kaydırılabilen etkileşimli Liquid Glass kapsülüne dönüştürün</string>
     <string name="blaze_animation_engine_title">Hareket ve Yay Fiziği Motoru</string>

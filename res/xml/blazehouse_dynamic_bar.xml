@@ -17,7 +17,15 @@
         android:key="penguin_cos_island"
         android:title="@string/dynamic_bar_cos_island_title"
         android:summary="@string/dynamic_bar_cos_island_summary"
-        android:defaultValue="true"
+        android:defaultValue="false"
+        android:dependency="ax_dynamic_bar_enabled" />
+
+    <com.blaze.house.preferences.SecureSettingListPreference
+        android:key="ax_dynamic_bar_notification_mode"
+        android:title="@string/dynamic_bar_notification_mode_title"
+        android:entries="@array/dynamic_bar_notification_mode_entries"
+        android:entryValues="@array/dynamic_bar_notification_mode_values"
+        android:defaultValue="0"
         android:dependency="ax_dynamic_bar_enabled" />
 
     <com.blaze.house.preferences.SecureSettingSwitchPreference

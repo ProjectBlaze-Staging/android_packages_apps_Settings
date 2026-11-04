@@ -258,8 +258,13 @@
     <string name="blaze_glass_style_title">UI Surface &amp; Glass Style</string>
     <string name="blaze_glass_style_summary">Choose between flagship GPU Liquid Glass refraction, balanced ColorOS frosted glass, or lightweight Stock Material 3</string>
     <string name="blaze_ui_glass_style_liquid">ColorOS Layout + iOS Liquid Glass (Flagship GPU)</string>
+    <string name="blaze_ui_glass_style_ios27_dark_crystal">iOS 27 Native Dark Smoked Crystal + Active Lens Pill (Apple Style)</string>
     <string name="blaze_ui_glass_style_frosted">ColorOS Frosted Glass (Balanced)</string>
     <string name="blaze_ui_glass_style_m3">Stock Material 3 (Lightweight)</string>
+    <string name="dynamic_bar_notification_mode_title">Incoming Message &amp; Notification Delivery</string>
+    <string name="dynamic_bar_notif_mode_island_compact">Dynamic Island Capsule (OriginOS / ColorOS Compact Preview + Tap for Detail)</string>
+    <string name="dynamic_bar_notif_mode_island_expanded">Dynamic Island Auto-Expand Card (iOS Live Message Card)</string>
+    <string name="dynamic_bar_notif_mode_stock_headsup">Stock Android Notification (Standard Heads-Up Banner)</string>
     <string name="blaze_floating_bottom_nav_title">Floating Liquid Glass Tab Bar</string>
     <string name="blaze_floating_bottom_nav_summary">Transform app bottom navigation bars (YouTube, Instagram, WhatsApp, etc.) into an interactive Liquid Glass capsule with spring slide &amp; hold-to-scrub</string>
     <string name="blaze_animation_engine_title">Motion &amp; Spring Physics Engine</string>

@@ -220,10 +220,24 @@
     <!-- UI Surface & Glass Style -->
     <string-array name="blaze_ui_glass_style_entries">
         <item>@string/blaze_ui_glass_style_liquid</item>
+        <item>@string/blaze_ui_glass_style_ios27_dark_crystal</item>
         <item>@string/blaze_ui_glass_style_frosted</item>
         <item>@string/blaze_ui_glass_style_m3</item>
     </string-array>
     <string-array name="blaze_ui_glass_style_values" translatable="false">
+        <item>0</item>
+        <item>3</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <!-- Dynamic Bar Incoming Notification & Message Mode -->
+    <string-array name="dynamic_bar_notification_mode_entries">
+        <item>@string/dynamic_bar_notif_mode_island_compact</item>
+        <item>@string/dynamic_bar_notif_mode_island_expanded</item>
+        <item>@string/dynamic_bar_notif_mode_stock_headsup</item>
+    </string-array>
+    <string-array name="dynamic_bar_notification_mode_values" translatable="false">
         <item>0</item>
         <item>1</item>
         <item>2</item>
