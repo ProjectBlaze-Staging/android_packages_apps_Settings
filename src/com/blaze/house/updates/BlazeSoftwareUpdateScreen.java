@@ -103,8 +103,8 @@ public final class BlazeSoftwareUpdateScreen {
     }
 
     private void init() {
-        configureEdgeToEdgeWindow();
         mActivity.setContentView(R.layout.activity_blaze_software_update);
+        configureEdgeToEdgeWindow();
 
         mBackdrop = mActivity.findViewById(R.id.blaze_update_backdrop);
         mEmblem17 = mActivity.findViewById(R.id.blaze_update_emblem_17);
@@ -167,7 +167,8 @@ public final class BlazeSoftwareUpdateScreen {
         if (window == null) return;
         window.setStatusBarColor(Color.TRANSPARENT);
         window.setNavigationBarColor(0xFF070914);
-        WindowInsetsController controller = window.getInsetsController();
+        View decor = window.peekDecorView();
+        WindowInsetsController controller = decor != null ? decor.getWindowInsetsController() : null;
         if (controller != null) {
             controller.setSystemBarsAppearance(
                     0,
