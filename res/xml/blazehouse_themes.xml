@@ -43,6 +43,11 @@
             android:title="@string/blaze_about_device_image_title"
             android:summary="@string/blaze_about_device_image_summary" />
 
+        <Preference
+            android:key="blaze_about_hero_bg_picker"
+            android:title="@string/blaze_about_hero_bg_title"
+            android:summary="@string/blaze_about_hero_bg_summary" />
+
     </PreferenceCategory>
 
     <PreferenceCategory

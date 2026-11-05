@@ -324,6 +324,8 @@
     <string name="qqs_show_media_summary">Display the compact media player card in the collapsed Quick Quick Settings shade</string>
     <string name="blaze_about_device_image_title">About Phone Device Render</string>
     <string name="blaze_about_device_image_summary">Auto-detect model/brand, choose from built-in 3D renders, or select a custom PNG from Gallery</string>
+    <string name="blaze_about_hero_bg_title">About Phone Hero Card Background</string>
+    <string name="blaze_about_hero_bg_summary">ColorOS 17 Living Flow 3D glass waves, home wallpaper sync, or custom cropped &amp; resized gallery image</string>
 
     <!-- ColorOS 17 Living Flow Software Update Screen -->
     <string name="blaze_software_update_title">Software update</string>

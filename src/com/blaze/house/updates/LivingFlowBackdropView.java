@@ -35,11 +35,13 @@ public class LivingFlowBackdropView extends View {
     private final Paint mVioletPetalPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint mVioletRimPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint mSonarPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint mCardBorderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
     private final Path mAmberPath = new Path();
     private final Path mAmberRimPath = new Path();
     private final Path mVioletPath = new Path();
     private final Path mVioletRimPath = new Path();
+    private final android.graphics.RectF mCardBorderRect = new android.graphics.RectF();
 
     private long mLastFrameMs;
     private float mPhase = 0f;
@@ -79,6 +81,9 @@ public class LivingFlowBackdropView extends View {
 
         mSonarPaint.setStyle(Paint.Style.STROKE);
         mSonarPaint.setStrokeWidth(1.5f * d);
+
+        mCardBorderPaint.setStyle(Paint.Style.STROKE);
+        mCardBorderPaint.setStrokeWidth(1.2f * d);
     }
 
     public void setScanning(boolean scanning) {
@@ -141,14 +146,15 @@ public class LivingFlowBackdropView extends View {
         float wave1 = (float) Math.sin(mPhase);
         float wave2 = (float) Math.cos(mPhase * 0.78f);
         float wave3 = (float) Math.sin(mPhase * 0.55f + 1.1f);
+        boolean isLandscapeCard = w > h * 1.15f;
 
-        // 2. Ambient Upper Indigo-Violet Halo behind the "17" Hero Emblem
-        float heroCx = w * 0.50f + wave2 * (w * 0.03f) + mTouchOffsetX;
-        float heroCy = h * 0.25f + wave1 * (h * 0.015f) + mTouchOffsetY;
-        float heroRadius = Math.max(w, h) * 0.42f;
+        // 2. Ambient Upper Indigo-Violet Halo
+        float heroCx = w * (isLandscapeCard ? 0.34f : 0.50f) + wave2 * (w * 0.03f) + mTouchOffsetX;
+        float heroCy = h * (isLandscapeCard ? 0.28f : 0.25f) + wave1 * (h * 0.015f) + mTouchOffsetY;
+        float heroRadius = Math.max(w, h) * (isLandscapeCard ? 0.52f : 0.42f);
         mAuraPaint.setShader(new RadialGradient(
                 heroCx, heroCy, heroRadius,
-                new int[] {0x485865F2, 0x243B44B0, 0x00101432},
+                new int[] {0x525865F2, 0x283B44B0, 0x00101432},
                 new float[] {0f, 0.55f, 1f},
                 Shader.TileMode.CLAMP));
         canvas.drawCircle(heroCx, heroCy, heroRadius, mAuraPaint);
@@ -169,26 +175,26 @@ public class LivingFlowBackdropView extends View {
 
         // 3. Upper-Right Warm Amber-Gold-Coral 3D Glass Petal (ColorOS 17 Signature Ribbon)
         float ax0 = w * 1.12f;
-        float ay0 = h * (0.31f + 0.018f * wave1) + mTouchOffsetY * 0.6f;
-        float ac1x = w * (0.64f + 0.035f * wave2) + mTouchOffsetX;
-        float ac1y = h * (0.38f + 0.022f * wave3);
-        float ac2x = w * (0.14f + 0.025f * wave1);
-        float ac2y = h * (0.58f + 0.020f * wave2);
-        float axMid = w * (0.12f + 0.020f * wave3);
-        float ayMid = h * (0.67f + 0.015f * wave1);
+        float ay0 = h * ((isLandscapeCard ? 0.06f : 0.31f) + 0.025f * wave1) + mTouchOffsetY * 0.6f;
+        float ac1x = w * ((isLandscapeCard ? 0.62f : 0.64f) + 0.035f * wave2) + mTouchOffsetX;
+        float ac1y = h * ((isLandscapeCard ? 0.16f : 0.38f) + 0.028f * wave3);
+        float ac2x = w * ((isLandscapeCard ? 0.24f : 0.14f) + 0.025f * wave1);
+        float ac2y = h * ((isLandscapeCard ? 0.48f : 0.58f) + 0.025f * wave2);
+        float axMid = w * ((isLandscapeCard ? 0.18f : 0.12f) + 0.020f * wave3);
+        float ayMid = h * ((isLandscapeCard ? 0.68f : 0.67f) + 0.020f * wave1);
 
         mAmberPath.reset();
         mAmberPath.moveTo(ax0, ay0);
         mAmberPath.cubicTo(ac1x, ac1y, ac2x, ac2y, axMid, ayMid);
         mAmberPath.cubicTo(
-                w * 0.32f, h * (0.76f + 0.018f * wave2),
-                w * 0.78f, h * (0.70f + 0.015f * wave1),
-                w * 1.15f, h * 0.58f);
+                w * 0.38f, h * ((isLandscapeCard ? 0.84f : 0.76f) + 0.020f * wave2),
+                w * 0.78f, h * ((isLandscapeCard ? 0.76f : 0.70f) + 0.018f * wave1),
+                w * 1.15f, h * (isLandscapeCard ? 0.56f : 0.58f));
         mAmberPath.close();
 
         mAmberPetalPaint.setShader(new LinearGradient(
-                w * 0.95f, h * 0.34f,
-                w * 0.20f, h * 0.72f,
+                w * 0.95f, h * (isLandscapeCard ? 0.12f : 0.34f),
+                w * 0.20f, h * (isLandscapeCard ? 0.78f : 0.72f),
                 new int[] {0xF2FF6A1A, 0xECFF9A3C, 0xCCFFD26E, 0x384B2468},
                 new float[] {0f, 0.38f, 0.74f, 1f},
                 Shader.TileMode.CLAMP));
@@ -207,13 +213,13 @@ public class LivingFlowBackdropView extends View {
 
         // 4. Lower Foreground Iridescent Violet-Magenta-Peach Glass Petal
         float vx0 = -w * 0.14f;
-        float vy0 = h * (0.76f + 0.016f * wave2);
-        float vc1x = w * (0.08f + 0.025f * wave1) + mTouchOffsetX * 0.8f;
-        float vc1y = h * (0.55f + 0.022f * wave3) + mTouchOffsetY * 0.5f;
-        float vc2x = w * (0.56f + 0.030f * wave2);
-        float vc2y = h * (0.57f - 0.018f * wave1);
-        float vxEnd = w * 0.96f;
-        float vyEnd = h * (0.94f + 0.012f * wave3);
+        float vy0 = h * ((isLandscapeCard ? 0.74f : 0.76f) + 0.022f * wave2);
+        float vc1x = w * ((isLandscapeCard ? 0.10f : 0.08f) + 0.025f * wave1) + mTouchOffsetX * 0.8f;
+        float vc1y = h * ((isLandscapeCard ? 0.44f : 0.55f) + 0.028f * wave3) + mTouchOffsetY * 0.5f;
+        float vc2x = w * ((isLandscapeCard ? 0.56f : 0.56f) + 0.030f * wave2);
+        float vc2y = h * ((isLandscapeCard ? 0.48f : 0.57f) - 0.022f * wave1);
+        float vxEnd = w * 0.98f;
+        float vyEnd = h * ((isLandscapeCard ? 0.96f : 0.94f) + 0.016f * wave3);
 
         mVioletPath.reset();
         mVioletPath.moveTo(vx0, vy0);
@@ -223,8 +229,8 @@ public class LivingFlowBackdropView extends View {
         mVioletPath.close();
 
         mVioletPetalPaint.setShader(new LinearGradient(
-                w * 0.28f, h * 0.56f,
-                w * 0.68f, h * 0.98f,
+                w * 0.25f, h * (isLandscapeCard ? 0.46f : 0.56f),
+                w * 0.72f, h * 0.98f,
                 new int[] {0xE6FFC49B, 0xD8D462FF, 0xC86B2CF5, 0x90181240},
                 new float[] {0f, 0.28f, 0.68f, 1f},
                 Shader.TileMode.CLAMP));
@@ -235,11 +241,24 @@ public class LivingFlowBackdropView extends View {
         mVioletRimPath.moveTo(vx0, vy0);
         mVioletRimPath.cubicTo(vc1x, vc1y, vc2x, vc2y, vxEnd, vyEnd);
         mVioletRimPaint.setShader(new LinearGradient(
-                0f, h * 0.60f, w * 0.90f, h * 0.88f,
+                0f, h * (isLandscapeCard ? 0.50f : 0.60f), w * 0.90f, h * 0.88f,
                 new int[] {0x50FFFFFF, 0xEEFFF0FF, 0xAA9C72FF, 0x00FFFFFF},
                 new float[] {0f, 0.35f, 0.75f, 1f},
                 Shader.TileMode.CLAMP));
         canvas.drawPath(mVioletRimPath, mVioletRimPaint);
+
+        if (isLandscapeCard) {
+            float d = getResources().getDisplayMetrics().density;
+            float r = 28f * d;
+            float inset = 0.6f * d;
+            mCardBorderRect.set(inset, inset, w - inset, h - inset);
+            mCardBorderPaint.setShader(new LinearGradient(
+                    0f, 0f, w, h,
+                    new int[] {0x55FFFFFF, 0x28FFB76B, 0x45B388FF},
+                    new float[] {0f, 0.5f, 1f},
+                    Shader.TileMode.CLAMP));
+            canvas.drawRoundRect(mCardBorderRect, r, r, mCardBorderPaint);
+        }
 
         if (isAttachedToWindow()) {
             postInvalidateOnAnimation();

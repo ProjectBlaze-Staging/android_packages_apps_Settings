@@ -39,25 +39,50 @@
             android:maxLines="1"
             android:ellipsize="end" />
 
-        <!-- Top Hero Card (Terracotta background with device name, Updates pill, and overflowing render) -->
+        <!-- Top Hero Card (ColorOS 17 Living Flow / Custom / Wallpaper / Terracotta background) -->
         <FrameLayout
             android:id="@+id/blaze_about_hero_card"
             android:layout_width="match_parent"
             android:layout_height="152dp"
             android:layout_gravity="bottom"
             android:background="@drawable/blaze_hero_card_bg"
-            android:clipChildren="false"
-            android:clipToPadding="false"
-            android:paddingStart="20dp"
-            android:paddingEnd="152dp"
-            android:paddingTop="18dp"
-            android:paddingBottom="16dp"
+            android:clipToOutline="true"
             android:foreground="?android:attr/selectableItemBackground">
+
+            <!-- Dynamic Hero Card Backdrop Layer (Living Flow / Wallpaper / Custom Cropped Image) -->
+            <FrameLayout
+                android:id="@+id/blaze_about_hero_bg_clip_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.blaze.house.updates.LivingFlowBackdropView
+                    android:id="@+id/blaze_about_hero_living_flow_bg"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <ImageView
+                    android:id="@+id/blaze_about_hero_custom_bg_img"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:visibility="gone"
+                    android:importantForAccessibility="no" />
+
+                <View
+                    android:id="@+id/blaze_about_hero_bg_scrim"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone" />
+            </FrameLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start|center_vertical"
+                android:paddingStart="20dp"
+                android:paddingEnd="152dp"
+                android:paddingTop="18dp"
+                android:paddingBottom="16dp"
                 android:orientation="vertical">
 
                 <TextView

@@ -32,8 +32,11 @@ public class Themes extends SettingsPreferenceFragment implements
     private static final String TAG = "Themes";
     private static final String KEY_THEMED_ICONS = "themed_icon_enabled";
     private static final String KEY_ABOUT_DEVICE_IMAGE = "blaze_about_device_image_picker";
+    private static final String KEY_ABOUT_HERO_BG = "blaze_about_hero_bg_picker";
     private static final int REQUEST_PICK_CUSTOM_IMAGE = 9402;
+    private static final int REQUEST_PICK_CUSTOM_HERO_BG = 9404;
     private Preference mAboutDeviceImagePref;
+    private Preference mAboutHeroBgPref;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,6 +62,19 @@ public class Themes extends SettingsPreferenceFragment implements
                 return true;
             });
         }
+
+        mAboutHeroBgPref = findPreference(KEY_ABOUT_HERO_BG);
+        if (mAboutHeroBgPref != null) {
+            updateAboutHeroBgSummary();
+            mAboutHeroBgPref.setOnPreferenceClickListener(pref -> {
+                com.blaze.house.utils.BlazeDeviceImageHelper.showHeroCardBgPickerDialog(
+                        getContext(),
+                        this::updateAboutHeroBgSummary,
+                        this::launchHeroBgGalleryPicker
+                );
+                return true;
+            });
+        }
     }
 
     private void updateAboutDeviceImageSummary() {
@@ -69,6 +85,15 @@ public class Themes extends SettingsPreferenceFragment implements
         }
     }
 
+    private void updateAboutHeroBgSummary() {
+        if (mAboutHeroBgPref != null && getContext() != null) {
+            String mode = com.blaze.house.utils.BlazeDeviceImageHelper.getCurrentHeroBgMode(
+                    getContext());
+            mAboutHeroBgPref.setSummary(
+                    com.blaze.house.utils.BlazeDeviceImageHelper.getHeroBgModeDisplayName(mode));
+        }
+    }
+
     private void launchGalleryPicker() {
         try {
             android.content.Intent intent = new android.content.Intent(
@@ -76,6 +101,19 @@ public class Themes extends SettingsPreferenceFragment implements
             intent.addCategory(android.content.Intent.CATEGORY_OPENABLE);
             intent.setType("image/*");
             startActivityForResult(intent, REQUEST_PICK_CUSTOM_IMAGE);
+        } catch (Exception e) {
+            android.widget.Toast.makeText(getContext(),
+                    "Galeri seçici açılamadı.", android.widget.Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void launchHeroBgGalleryPicker() {
+        try {
+            android.content.Intent intent = new android.content.Intent(
+                    android.content.Intent.ACTION_OPEN_DOCUMENT);
+            intent.addCategory(android.content.Intent.CATEGORY_OPENABLE);
+            intent.setType("image/*");
+            startActivityForResult(intent, REQUEST_PICK_CUSTOM_HERO_BG);
         } catch (Exception e) {
             android.widget.Toast.makeText(getContext(),
                     "Galeri seçici açılamadı.", android.widget.Toast.LENGTH_SHORT).show();
@@ -97,6 +135,13 @@ public class Themes extends SettingsPreferenceFragment implements
                         "Özel cihaz görseli başarıyla kaydedildi!",
                         android.widget.Toast.LENGTH_SHORT).show();
             }
+        } else if (requestCode == REQUEST_PICK_CUSTOM_HERO_BG
+                && resultCode == android.app.Activity.RESULT_OK
+                && data != null
+                && data.getData() != null
+                && getContext() != null) {
+            com.blaze.house.utils.BlazeDeviceImageHelper.showHeroImageCropDialog(
+                    getContext(), data.getData(), this::updateAboutHeroBgSummary);
         }
     }
 

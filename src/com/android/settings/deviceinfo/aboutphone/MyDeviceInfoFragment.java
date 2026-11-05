@@ -212,6 +212,15 @@ public class MyDeviceInfoFragment extends DashboardFragment
             }
             return;
         }
+        if (requestCode == REQUEST_PICK_CUSTOM_HERO_BG
+                && resultCode == Activity.RESULT_OK
+                && data != null
+                && data.getData() != null
+                && getContext() != null) {
+            com.blaze.house.utils.BlazeDeviceImageHelper.showHeroImageCropDialog(
+                    getContext(), data.getData(), this::initHeader);
+            return;
+        }
         if (mBuildNumberPreferenceController.onActivityResult(requestCode, resultCode, data)) {
             return;
         }
@@ -261,6 +270,21 @@ public class MyDeviceInfoFragment extends DashboardFragment
             }
 
             if (heroCard != null) {
+                final View heroBgClipContainer =
+                        blazeRoot.findViewById(R.id.blaze_about_hero_bg_clip_container);
+                final View heroLivingFlowBg =
+                        blazeRoot.findViewById(R.id.blaze_about_hero_living_flow_bg);
+                final android.widget.ImageView heroCustomBgImg =
+                        blazeRoot.findViewById(R.id.blaze_about_hero_custom_bg_img);
+                final View heroBgScrim =
+                        blazeRoot.findViewById(R.id.blaze_about_hero_bg_scrim);
+                com.blaze.house.utils.BlazeDeviceImageHelper.bindHeroCardBackground(
+                        getContext(),
+                        heroCard,
+                        heroBgClipContainer,
+                        heroLivingFlowBg,
+                        heroCustomBgImg,
+                        heroBgScrim);
                 com.blaze.house.utils.LivingFlowTouchHelper.attachCard(heroCard);
                 heroCard.setOnClickListener(v -> {
                     com.android.settings.widget.ValidatedEditTextPreference pref =
@@ -268,6 +292,13 @@ public class MyDeviceInfoFragment extends DashboardFragment
                     if (pref != null) {
                         pref.performClick();
                     }
+                });
+                heroCard.setOnLongClickListener(v -> {
+                    com.blaze.house.utils.BlazeDeviceImageHelper.showHeroCardBgPickerDialog(
+                            getContext(),
+                            this::initHeader,
+                            this::launchCustomHeroBgPicker);
+                    return true;
                 });
             }
 
@@ -489,6 +520,7 @@ public class MyDeviceInfoFragment extends DashboardFragment
     }
 
     private static final int REQUEST_PICK_CUSTOM_DEVICE_IMAGE = 9401;
+    private static final int REQUEST_PICK_CUSTOM_HERO_BG = 9403;
 
     private void launchCustomDeviceImagePicker() {
         try {
@@ -497,6 +529,19 @@ public class MyDeviceInfoFragment extends DashboardFragment
             intent.addCategory(android.content.Intent.CATEGORY_OPENABLE);
             intent.setType("image/*");
             startActivityForResult(intent, REQUEST_PICK_CUSTOM_DEVICE_IMAGE);
+        } catch (Exception e) {
+            android.widget.Toast.makeText(getContext(),
+                    "Galeri seçici açılamadı.", android.widget.Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void launchCustomHeroBgPicker() {
+        try {
+            android.content.Intent intent = new android.content.Intent(
+                    android.content.Intent.ACTION_OPEN_DOCUMENT);
+            intent.addCategory(android.content.Intent.CATEGORY_OPENABLE);
+            intent.setType("image/*");
+            startActivityForResult(intent, REQUEST_PICK_CUSTOM_HERO_BG);
         } catch (Exception e) {
             android.widget.Toast.makeText(getContext(),
                     "Galeri seçici açılamadı.", android.widget.Toast.LENGTH_SHORT).show();
