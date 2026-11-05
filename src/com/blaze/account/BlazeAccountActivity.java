@@ -21,10 +21,13 @@ import androidx.annotation.Nullable;
 
 import com.android.settings.R;
 import com.android.settingslib.widget.SettingsThemeHelper;
+import com.blaze.house.updates.BlazeSoftwareUpdateScreen;
+import com.blaze.house.utils.LivingFlowTouchHelper;
 
 public class BlazeAccountActivity extends Activity {
 
     private static final int REQUEST_IMAGE_PICK = 1002;
+    private boolean mIsSoftwareUpdateMode = false;
 
     private ImageView mAvatarView;
     private EditText mUsernameEdit;
@@ -39,10 +42,20 @@ public class BlazeAccountActivity extends Activity {
             setTheme(R.style.Theme_SubSettings_Expressive);
         }
         super.onCreate(savedInstanceState);
+
+        Intent intent = getIntent();
+        if (intent != null && intent.getBooleanExtra(
+                BlazeSoftwareUpdateScreen.EXTRA_SOFTWARE_UPDATE_MODE, false)) {
+            mIsSoftwareUpdateMode = true;
+            BlazeSoftwareUpdateScreen.bind(this);
+            return;
+        }
+
         setContentView(R.layout.activity_blaze_account);
 
         View backBtn = findViewById(R.id.account_back_btn);
         if (backBtn != null) {
+            LivingFlowTouchHelper.attachPill(backBtn);
             backBtn.setOnClickListener(v -> finish());
         }
 
@@ -55,20 +68,24 @@ public class BlazeAccountActivity extends Activity {
 
         FrameLayout avatarContainer = findViewById(R.id.avatar_container);
         if (avatarContainer != null) {
+            LivingFlowTouchHelper.attach(avatarContainer, 0.94f, true);
             avatarContainer.setOnClickListener(v -> pickImage());
         }
         View changePhotoLabel = findViewById(R.id.btn_change_photo_label);
         if (changePhotoLabel != null) {
+            LivingFlowTouchHelper.attachPill(changePhotoLabel);
             changePhotoLabel.setOnClickListener(v -> pickImage());
         }
 
         loadAccountData();
 
         if (mSaveBtn != null) {
+            LivingFlowTouchHelper.attachPill(mSaveBtn);
             mSaveBtn.setOnClickListener(v -> saveAccount());
         }
 
         if (mDeleteBtn != null) {
+            LivingFlowTouchHelper.attachPill(mDeleteBtn);
             mDeleteBtn.setOnClickListener(v -> deleteAccount());
         }
     }

@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2026 The BlazeAOSP Project
+     SPDX-License-Identifier: Apache-2.0
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/blaze_update_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FF080B1E">
+
+    <!-- 1. Full-Screen 120Hz Living Flow Atmospheric Canvas (Cosmos Indigo + Amber/Violet Glass Petals) -->
+    <com.blaze.house.updates.LivingFlowBackdropView
+        android:id="@+id/blaze_update_backdrop"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- 2. Main Content Container -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:fitsSystemWindows="true">
+
+        <!-- Top App Bar: Back Arrow + "Software update" + 3-dot Menu -->
+        <LinearLayout
+            android:id="@+id/blaze_update_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp">
+
+            <ImageButton
+                android:id="@+id/blaze_update_back_btn"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_arrow_back"
+                android:tint="#FFFFFFFF"
+                android:contentDescription="@android:string/cancel" />
+
+            <TextView
+                android:id="@+id/blaze_update_toolbar_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:text="@string/blaze_software_update_title"
+                android:textColor="#FFFFFFFF"
+                android:textSize="20sp"
+                android:fontFamily="sans-serif-medium" />
+
+            <ImageButton
+                android:id="@+id/blaze_update_menu_btn"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_blaze_more_vert"
+                android:tint="#FFFFFFFF"
+                android:contentDescription="@string/blaze_software_update_title" />
+        </LinearLayout>
+
+        <!-- Scrollable Hero + Living Flow Glass Card -->
+        <ScrollView
+            android:id="@+id/blaze_update_scroll"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:fillViewport="true"
+            android:scrollbars="none"
+            android:overScrollMode="always">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:paddingStart="18dp"
+                android:paddingEnd="18dp"
+                android:paddingBottom="108dp">
+
+                <!-- Center Hero Emblem (ColorOS 17 Style "17" + "BlazeAOSP" + Device Model) -->
+                <LinearLayout
+                    android:id="@+id/blaze_update_hero_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal"
+                    android:paddingTop="28dp"
+                    android:paddingBottom="34dp"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <com.blaze.house.updates.LivingFlowVersionEmblemView
+                        android:id="@+id/blaze_update_emblem_17"
+                        android:layout_width="180dp"
+                        android:layout_height="102dp" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="-4dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/blaze_update_hero_flame"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_marginEnd="6dp"
+                            android:src="@drawable/ic_blaze_updates_flame"
+                            android:scaleType="fitCenter"
+                            android:importantForAccessibility="no" />
+
+                        <TextView
+                            android:id="@+id/blaze_update_os_brand_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="BlazeAOSP"
+                            android:textColor="#F8FFFFFF"
+                            android:textSize="25sp"
+                            android:fontFamily="sans-serif-medium"
+                            android:letterSpacing="0.02" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/blaze_update_device_model_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Google Pixel 6a"
+                        android:textColor="#CCDAE2FF"
+                        android:textSize="13sp"
+                        android:fontFamily="sans-serif-medium"
+                        android:letterSpacing="0.01" />
+
+                    <TextView
+                        android:id="@+id/blaze_update_live_status_subtext"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"
+                        android:background="@drawable/blaze_cos17_version_badge_bg"
+                        android:text="@string/blaze_update_status_checking"
+                        android:textColor="#E6FFFFFF"
+                        android:textSize="11.5sp" />
+                </LinearLayout>
+
+                <!-- 3. Frosted Translucent Glass Update Card (ColorOS 17 Bento Card) -->
+                <LinearLayout
+                    android:id="@+id/blaze_update_glass_card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/blaze_cos17_update_card_bg"
+                    android:orientation="vertical"
+                    android:paddingStart="22dp"
+                    android:paddingEnd="22dp"
+                    android:paddingTop="24dp"
+                    android:paddingBottom="28dp"
+                    android:elevation="8dp">
+
+                    <!-- Software Version Header Row + Badge -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/blaze_update_software_version_label"
+                            android:textColor="#FFFFFFFF"
+                            android:textSize="19sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/blaze_update_channel_badge"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:background="@drawable/blaze_cos17_version_badge_bg"
+                            android:paddingStart="9dp"
+                            android:paddingEnd="9dp"
+                            android:paddingTop="3dp"
+                            android:paddingBottom="3dp"
+                            android:text="Official • Living Flow"
+                            android:textColor="#EEFFFFFF"
+                            android:textSize="11.5sp"
+                            android:fontFamily="sans-serif-medium" />
+                    </LinearLayout>
+
+                    <!-- Build Number & Size Line -->
+                    <TextView
+                        android:id="@+id/blaze_update_build_signature_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Blaze_v5.0_17.0.0.100(CP2A) | 3,84 GB"
+                        android:textColor="#BAFFFFFF"
+                        android:textSize="14sp" />
+
+                    <!-- Translucent Divider -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="18dp"
+                        android:background="#24FFFFFF" />
+
+                    <!-- Expandable "About this update" Header Row -->
+                    <LinearLayout
+                        android:id="@+id/blaze_update_about_header_row"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/blaze_update_about_this_update"
+                            android:textColor="#FFFFFFFF"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <FrameLayout
+                            android:id="@+id/blaze_update_chevron_btn"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:background="@drawable/blaze_cos17_chevron_circle_bg">
+
+                            <ImageView
+                                android:id="@+id/blaze_update_chevron_icon"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_blaze_chevron_up"
+                                android:importantForAccessibility="no" />
+                        </FrameLayout>
+                    </LinearLayout>
+
+                    <!-- Collapsible Changelog & Architecture Body -->
+                    <LinearLayout
+                        android:id="@+id/blaze_update_changelog_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/blaze_update_changelog_headline"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/blaze_update_changelog_headline"
+                            android:textColor="#FFFFFFFF"
+                            android:textSize="21sp"
+                            android:textStyle="bold"
+                            android:lineSpacingExtra="3dp" />
+
+                        <TextView
+                            android:id="@+id/blaze_update_changelog_p1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:text="@string/blaze_update_changelog_p1"
+                            android:textColor="#C4FFFFFF"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
+
+                        <TextView
+                            android:id="@+id/blaze_update_changelog_p2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:text="@string/blaze_update_changelog_p2"
+                            android:textColor="#C4FFFFFF"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
+
+                        <TextView
+                            android:id="@+id/blaze_update_changelog_p3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:text="@string/blaze_update_changelog_p3"
+                            android:textColor="#C4FFFFFF"
+                            android:textSize="15sp"
+                            android:lineSpacingExtra="4dp" />
+
+                        <TextView
+                            android:id="@+id/blaze_update_changelog_p4"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:text="@string/blaze_update_changelog_p4"
+                            android:textColor="#9EFFFFFF"
+                            android:textSize="13.5sp"
+                            android:lineSpacingExtra="4dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
+    <!-- 4. Bottom Floating Azure Action Pill Button (ColorOS 17 Style) -->
+    <FrameLayout
+        android:id="@+id/blaze_update_action_pill"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="28dp"
+        android:background="@drawable/blaze_cos17_action_pill_bg"
+        android:clickable="true"
+        android:focusable="true"
+        android:elevation="12dp">
+
+        <TextView
+            android:id="@+id/blaze_update_action_pill_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/blaze_update_btn_checking"
+            android:textColor="#FFFFFFFF"
+            android:textSize="16.5sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.01" />
+    </FrameLayout>
+</FrameLayout>

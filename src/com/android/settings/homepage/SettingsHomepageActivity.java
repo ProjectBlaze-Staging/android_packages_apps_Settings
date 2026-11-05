@@ -451,9 +451,15 @@ public class SettingsHomepageActivity extends FragmentActivity implements
         };
         if (greetingContainer != null) {
             greetingContainer.setOnClickListener(openBlazeAccount);
+            com.blaze.house.utils.LivingFlowTouchHelper.attachCard(greetingContainer);
         }
         if (avatarCard != null) {
             avatarCard.setOnClickListener(openBlazeAccount);
+            com.blaze.house.utils.LivingFlowTouchHelper.attachPill(avatarCard);
+        }
+        View toolbar = findViewById(R.id.search_action_bar);
+        if (toolbar != null) {
+            com.blaze.house.utils.LivingFlowTouchHelper.attachCard(toolbar);
         }
     }
 

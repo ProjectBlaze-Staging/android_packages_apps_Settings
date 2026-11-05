@@ -357,4 +357,24 @@
     <string name="qqs_show_media_summary">İlk çekişteki daraltılmış Hızlı Ayarlar panelinde kompakt medya oynatıcı kartını gösterir</string>
     <string name="blaze_about_device_image_title">Telefon Hakkında Cihaz Görseli</string>
     <string name="blaze_about_device_image_summary">Cihaz/marka modelini otomatik algıla, hazır 3D modellerden seç veya galeriden özel PNG yükle</string>
+
+    <!-- ColorOS 17 Living Flow Yazılım Güncellemesi Ekranı -->
+    <string name="blaze_software_update_title">Yazılım güncellemesi</string>
+    <string name="blaze_update_software_version_label">Yazılım sürümü</string>
+    <string name="blaze_update_about_this_update">Bu güncelleme hakkında</string>
+    <string name="blaze_update_status_checking">Güncellemeler denetleniyor…</string>
+    <string name="blaze_update_status_up_to_date">Sürüm güncel • Son denetleme: %1$s</string>
+    <string name="blaze_update_btn_checking">Güncellemeler denetleniyor…</string>
+    <string name="blaze_update_btn_check_again">Güncellemeleri Denetle</string>
+    <string name="blaze_update_changelog_headline">BlazeAOSP 17. İpeksi Akıcılık. Living Flow.</string>
+    <string name="blaze_update_changelog_p1">BlazeAOSP 17, yepyeni bir görünüm.\n\nİlk andan itibaren pürüzsüz, zamanla daha da akıcı. Yepyeni Living Flow Tasarım Dili. Hareket halinde ipeksi, doğası gereği canlı.</string>
+    <string name="blaze_update_changelog_p2">Laminar Flow Engine; RenderThread hızlandırmalı Luminous yay fiziği ve adaptif bellek zamanlaması ile hem ön planda hem arka planda kesintisiz kararlılık ve akıcı performans sunar.</string>
+    <string name="blaze_update_changelog_p3">Material 3 Expressive ikon ve formlar, iOS 27 Koyu Kristal mercek yüzeyleri ve Dinamik Ada canlı zamanlayıcı ve mesaj sistemi kusursuz uyumla bir araya getirildi.</string>
+    <string name="blaze_update_changelog_p4">Android 17 (API 37) • Resmi Sürüm</string>
+    <string name="blaze_update_changelog_p4_formatted">Güvenlik yaması: %1$s • Çekirdek: %2$s\nYapı: %3$s • BlazeAOSP OTA tarafından doğrulandı</string>
+    <string name="blaze_update_menu_check_now">Güncellemeleri şimdi denetle</string>
+    <string name="blaze_update_menu_local_ota">Yerel güncelleme paketi seç (.zip)</string>
+    <string name="blaze_update_menu_system_updater">Android sistem güncelleyicisini aç</string>
+    <string name="blaze_update_local_ota_unavailable">Dosya seçici açılamadı</string>
+    <string name="blaze_update_already_latest_toast">BlazeAOSP 17 sisteminiz zaten en güncel sürümde</string>
 </resources>

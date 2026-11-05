@@ -224,6 +224,8 @@ public class MyDeviceInfoFragment extends DashboardFragment
         initHeader();
     }
 
+    private boolean mEntranceAnimated = false;
+
     private void initHeader() {
         final LayoutPreference headerPreference =
                 getPreferenceScreen().findPreference(KEY_MY_DEVICE_INFO_HEADER);
@@ -236,6 +238,7 @@ public class MyDeviceInfoFragment extends DashboardFragment
             headerPreference.setVisible(true);
 
             // 1. Top Hero Card (Device Name & Codename & Render)
+            final View heroContainer = blazeRoot.findViewById(R.id.blaze_about_hero_container);
             final View heroCard = blazeRoot.findViewById(R.id.blaze_about_hero_card);
             final android.widget.TextView deviceNameView =
                     blazeRoot.findViewById(R.id.blaze_about_device_name_text);
@@ -258,6 +261,7 @@ public class MyDeviceInfoFragment extends DashboardFragment
             }
 
             if (heroCard != null) {
+                com.blaze.house.utils.LivingFlowTouchHelper.attachCard(heroCard);
                 heroCard.setOnClickListener(v -> {
                     com.android.settings.widget.ValidatedEditTextPreference pref =
                             findPreference("device_name");
@@ -283,6 +287,7 @@ public class MyDeviceInfoFragment extends DashboardFragment
             if (renderView != null) {
                 com.blaze.house.utils.BlazeDeviceImageHelper.bindDeviceRender(
                         getContext(), renderView);
+                com.blaze.house.utils.LivingFlowTouchHelper.attach(renderView, 0.94f, true);
                 View.OnClickListener openRenderPicker = v -> {
                     com.blaze.house.utils.BlazeDeviceImageHelper.showDeviceImagePickerDialog(
                             getContext(),
@@ -306,13 +311,8 @@ public class MyDeviceInfoFragment extends DashboardFragment
             if (updatesPill != null && morphOverlay != null && flameIcon != null) {
                 com.blaze.house.utils.BlazeDeviceImageHelper.startUpdatesPillAnimation(
                         updatesPill, morphOverlay, flameIcon, updatesText);
-                updatesPill.setOnClickListener(v -> {
-                    // Trigger tactile bounce + open system updater or Blaze OTA status dialog
-                    v.animate().scaleX(0.94f).scaleY(0.94f).setDuration(90L)
-                            .withEndAction(() -> v.animate().scaleX(1f).scaleY(1f).setDuration(140L).start())
-                            .start();
-                    openSystemUpdatesOrBlazeDialog();
-                });
+                com.blaze.house.utils.LivingFlowTouchHelper.attachPill(updatesPill);
+                updatesPill.setOnClickListener(v -> openSystemUpdatesOrBlazeDialog());
             }
 
             // 2. Dual Cards: Official Blaze Logo & Firmware Card
@@ -324,6 +324,7 @@ public class MyDeviceInfoFragment extends DashboardFragment
                     blazeRoot.findViewById(R.id.blaze_about_firmware_edition_text);
 
             if (logoCard != null) {
+                com.blaze.house.utils.LivingFlowTouchHelper.attachCard(logoCard);
                 logoCard.setOnClickListener(v -> {
                     try {
                         android.content.Intent easterEgg = new android.content.Intent(android.content.Intent.ACTION_MAIN);
@@ -350,15 +351,15 @@ public class MyDeviceInfoFragment extends DashboardFragment
             }
 
             if (firmwareCard != null) {
-                firmwareCard.setOnClickListener(v -> {
-                    androidx.preference.Preference firmwarePref = findPreference("firmware_version");
-                    if (firmwarePref != null) {
-                        firmwarePref.performClick();
-                    }
-                });
+                com.blaze.house.utils.LivingFlowTouchHelper.attachCard(firmwareCard);
+                firmwareCard.setOnClickListener(v -> openSystemUpdatesOrBlazeDialog());
             }
 
             // 3. Hardware Specs Card
+            final View specsCard = blazeRoot.findViewById(R.id.blaze_about_specs_card);
+            if (specsCard != null) {
+                com.blaze.house.utils.LivingFlowTouchHelper.attachCard(specsCard);
+            }
             final android.widget.TextView chipsetValue =
                     blazeRoot.findViewById(R.id.blaze_about_chipset_value);
             final android.widget.TextView resolutionValue =
@@ -431,6 +432,7 @@ public class MyDeviceInfoFragment extends DashboardFragment
                 }
             }
             if (blazeHouseTab != null) {
+                com.blaze.house.utils.LivingFlowTouchHelper.attachPill(blazeHouseTab);
                 blazeHouseTab.setOnClickListener(v -> {
                     try {
                         android.content.Intent intent = new android.content.Intent();
@@ -445,6 +447,14 @@ public class MyDeviceInfoFragment extends DashboardFragment
                                 .launch();
                     }
                 });
+            }
+            if (aboutTab != null) {
+                com.blaze.house.utils.LivingFlowTouchHelper.attachPill(aboutTab);
+            }
+            if (!mEntranceAnimated) {
+                mEntranceAnimated = true;
+                com.blaze.house.utils.LivingFlowTouchHelper.playEntranceCascade(
+                        20L, heroContainer, logoCard, firmwareCard, specsCard, bottomBar);
             }
             return;
         }
@@ -496,36 +506,7 @@ public class MyDeviceInfoFragment extends DashboardFragment
     private void openSystemUpdatesOrBlazeDialog() {
         Context ctx = getContext();
         if (ctx == null) return;
-        try {
-            android.content.Intent otaIntent = new android.content.Intent(
-                    "android.settings.SYSTEM_UPDATE_SETTINGS");
-            if (otaIntent.resolveActivity(ctx.getPackageManager()) != null) {
-                startActivity(otaIntent);
-                return;
-            }
-        } catch (Exception ignored) {}
-
-        String displayVer = getString(R.string.blaze_about_firmware_version);
-        String securityPatch = android.os.Build.VERSION.SECURITY_PATCH;
-        new android.app.AlertDialog.Builder(ctx)
-                .setTitle("ProjectBlaze Güncelleme Merkezi")
-                .setMessage(displayVer + "\nAndroid 17 • OFFICIAL\nGüvenlik Yaması: "
-                        + securityPatch + "\n\nSisteminiz güncel durumda.")
-                .setPositiveButton(android.R.string.ok, null)
-                .setNeutralButton("Cihaz Görselini Değiştir", (d, w) -> {
-                    final LayoutPreference headerPreference =
-                            getPreferenceScreen().findPreference(KEY_MY_DEVICE_INFO_HEADER);
-                    final android.widget.ImageView renderView = headerPreference != null
-                            ? headerPreference.findViewById(R.id.blaze_about_device_render)
-                            : null;
-                    com.blaze.house.utils.BlazeDeviceImageHelper.showDeviceImagePickerDialog(
-                            ctx,
-                            () -> com.blaze.house.utils.BlazeDeviceImageHelper.bindDeviceRender(
-                                    ctx, renderView),
-                            () -> launchCustomDeviceImagePicker()
-                    );
-                })
-                .show();
+        com.blaze.house.updates.BlazeSoftwareUpdateScreen.launch(ctx);
     }
 
     @Override

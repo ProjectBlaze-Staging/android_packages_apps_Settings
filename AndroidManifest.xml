@@ -297,6 +297,19 @@
             android:exported="true">
         </activity>
 
+        <!-- Blaze Software Update (ColorOS 17 Living Flow) -->
+        <activity
+            android:name="com.blaze.house.updates.BlazeSoftwareUpdateActivity"
+            android:label="@string/blaze_software_update_title"
+            android:icon="@drawable/ic_blaze_updates_flame"
+            android:theme="@style/Theme.SubSettings"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.blaze.settings.SOFTWARE_UPDATE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
         <!-- BlazeHouse Main -->
         <activity
             android:name=".Settings$BlazeHouseActivity"

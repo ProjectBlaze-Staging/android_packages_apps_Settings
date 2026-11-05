@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2026 The BlazeAOSP Project
+     SPDX-License-Identifier: Apache-2.0
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <gradient
+        android:angle="315"
+        android:startColor="#BF181B30"
+        android:centerColor="#C6141628"
+        android:endColor="#D2101222"
+        android:type="linear" />
+    <corners android:radius="28dp" />
+    <stroke
+        android:width="1.2dp"
+        android:color="#38FFFFFF" />
+</shape>
