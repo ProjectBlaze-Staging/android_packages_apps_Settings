@@ -390,6 +390,13 @@ public class MyDeviceInfoFragment extends DashboardFragment
             final View specsCard = blazeRoot.findViewById(R.id.blaze_about_specs_card);
             if (specsCard != null) {
                 com.blaze.house.utils.LivingFlowTouchHelper.attachCard(specsCard);
+                specsCard.setOnClickListener(v -> {
+                    new com.android.settings.core.SubSettingLauncher(getContext())
+                            .setDestination("com.blaze.house.fragments.BlazeBatteryHealthStudioFragment")
+                            .setSourceMetricsCategory(getMetricsCategory())
+                            .setTitleText("Pil Sağlığı & Donanım Pasaportu")
+                            .launch();
+                });
             }
             final android.widget.TextView chipsetValue =
                     blazeRoot.findViewById(R.id.blaze_about_chipset_value);

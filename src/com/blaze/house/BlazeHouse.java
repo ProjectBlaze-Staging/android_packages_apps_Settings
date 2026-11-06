@@ -314,6 +314,32 @@ public class BlazeHouse extends SettingsPreferenceFragment {
         final Context context = getContext();
         if (context == null) return;
 
+        Preference nowBarPosPref = findPreference("blaze_nowbar_position_selector");
+        if (nowBarPosPref != null) {
+            updateNowBarPosSummary(context, nowBarPosPref);
+            nowBarPosPref.setOnPreferenceClickListener(pref -> {
+                String[] options = new String[]{
+                        "Tek Elle Kullanım (Alt Konum • OneUI 8.5 Ergonomik)",
+                        "Görsel Odak (Orta-Alt Konum • OneUI 9 Standart)",
+                        "Hibrit Mod (Kilit Ekranında Now Bar, Ana Ekranda Atomic/Dynamic Island)"
+                };
+                int cur = Settings.System.getIntForUser(
+                        context.getContentResolver(), "blaze_nowbar_position_mode", 2, UserHandle.USER_CURRENT);
+                new AlertDialog.Builder(context)
+                        .setTitle("Now Bar & Atomic Island Konum Yöneticisi")
+                        .setSingleChoiceItems(options, Math.max(0, Math.min(2, cur)), (dialog, which) -> {
+                            Settings.System.putIntForUser(
+                                    context.getContentResolver(), "blaze_nowbar_position_mode", which, UserHandle.USER_CURRENT);
+                            triggerClickHaptic(context);
+                            updateNowBarPosSummary(context, nowBarPosPref);
+                            dialog.dismiss();
+                        })
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .show();
+                return true;
+            });
+        }
+
         Preference doubleTapLockscreen = findPreference("double_tap_sleep_lockscreen");
         if (doubleTapLockscreen != null) {
             doubleTapLockscreen.setOnPreferenceChangeListener((pref, newVal) -> {
@@ -333,6 +359,34 @@ public class BlazeHouse extends SettingsPreferenceFragment {
     private void wireSystemTab() {
         final Context context = getContext();
         if (context == null) return;
+
+        Preference ohapticsPref = findPreference("blaze_ohaptics_engine_selector");
+        if (ohapticsPref != null) {
+            updateOHapticsSummary(context, ohapticsPref);
+            ohapticsPref.setOnPreferenceClickListener(pref -> {
+                String[] items = new String[]{
+                        "Keskin / Mekanik (ColorOS 17 O-Haptics Crisp)",
+                        "Yumuşak / Kadife (ColorOS 17 O-Haptics Gentle)",
+                        "Kapalı (Dokunsal Zarf Devre Dışı)"
+                };
+                int cur = Settings.System.getIntForUser(
+                        context.getContentResolver(), "blaze_ohaptics_style", 1, UserHandle.USER_CURRENT);
+                int checkedIdx = cur == 1 ? 0 : (cur == 2 ? 1 : 2);
+                new AlertDialog.Builder(context)
+                        .setTitle("ColorOS 17 O-Haptics Dokunsal Motoru")
+                        .setSingleChoiceItems(items, checkedIdx, (dialog, which) -> {
+                            int newStyle = which == 0 ? 1 : (which == 1 ? 2 : 0);
+                            Settings.System.putIntForUser(
+                                    context.getContentResolver(), "blaze_ohaptics_style", newStyle, UserHandle.USER_CURRENT);
+                            com.blaze.house.utils.LivingFlowTouchHelper.triggerOHaptic(context, false);
+                            updateOHapticsSummary(context, ohapticsPref);
+                            dialog.dismiss();
+                        })
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .show();
+                return true;
+            });
+        }
 
         String[] hapticKeys = new String[]{
                 "haptic_feedback_enabled",
@@ -365,12 +419,25 @@ public class BlazeHouse extends SettingsPreferenceFragment {
     }
 
     private void triggerClickHaptic(Context context) {
-        try {
-            Vibrator vib = context.getSystemService(Vibrator.class);
-            if (vib != null && vib.hasVibrator()) {
-                vib.vibrate(VibrationEffect.createPredefined(VibrationEffect.EFFECT_CLICK));
-            }
-        } catch (Throwable ignored) {}
+        com.blaze.house.utils.LivingFlowTouchHelper.triggerOHaptic(context, false);
+    }
+
+    private void updateOHapticsSummary(Context context, Preference pref) {
+        int cur = Settings.System.getIntForUser(
+                context.getContentResolver(), "blaze_ohaptics_style", 1, UserHandle.USER_CURRENT);
+        String label = cur == 1 ? "Aktif: Keskin / Mekanik (O-Haptics Crisp) + Polar Light Işık İzi"
+                : (cur == 2 ? "Aktif: Yumuşak / Kadife (O-Haptics Gentle) + Polar Light Işık İzi"
+                : "Kapalı");
+        pref.setSummary(label);
+    }
+
+    private void updateNowBarPosSummary(Context context, Preference pref) {
+        int cur = Settings.System.getIntForUser(
+                context.getContentResolver(), "blaze_nowbar_position_mode", 2, UserHandle.USER_CURRENT);
+        String label = cur == 0 ? "Aktif: Tek Elle Kullanım (Alt Konum)"
+                : (cur == 1 ? "Aktif: Görsel Odak (OneUI 9 Orta-Alt Konum)"
+                : "Aktif: Hibrit Mod (Kilit Ekranı Now Bar + Ana Ekran Dynamic Island)");
+        pref.setSummary(label);
     }
 
     private void updateAboutDeviceImageSummary() {

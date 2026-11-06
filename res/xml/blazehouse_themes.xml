@@ -12,6 +12,12 @@
         android:key="themes_liquid_glass_category"
         android:title="@string/blaze_liquid_glass_category_title">
 
+        <Preference
+            android:key="blaze_goodlock_studio_entry"
+            android:title="✨ Blaze Good Lock Studio (Make Up &amp; Life Up)"
+            android:summary="LockStar, Home Up (DIY Home), QuickStar, Edge Lighting+, Wonderland 3D, SoundAssistant, One Hand Operation+ ve Nice Catch"
+            android:fragment="com.blaze.house.fragments.BlazeGoodLockStudioFragment" />
+
         <com.blaze.house.preferences.SecureSettingListPreference
             android:key="blaze_ui_glass_style"
             android:title="@string/blaze_glass_style_title"

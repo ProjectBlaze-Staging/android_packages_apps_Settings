@@ -12,6 +12,17 @@
     <PreferenceCategory
         android:title="@string/haptic_feedback_title">
 
+        <Preference
+            android:key="blaze_goodlock_studio_sys_entry"
+            android:title="✨ Blaze Good Lock Studio (Make Up &amp; Life Up)"
+            android:summary="OneUI 9 Good Lock: SoundAssistant, One Hand Operation+, Smart Sidebar, MultiStar, RegiStar, Nice Catch ve LockStar/Wonderland"
+            android:fragment="com.blaze.house.fragments.BlazeGoodLockStudioFragment" />
+
+        <Preference
+            android:key="blaze_ohaptics_engine_selector"
+            android:title="ColorOS 17 O-Haptics &amp; Polar Light Dokunma Motoru"
+            android:summary="Keskin (Crisp Mekanik), Yumuşak (Gentle Kadife) dokunsal zarf eğrisi ve dokunma ışık izi" />
+
         <com.blaze.house.preferences.SystemSettingSwitchPreference
             android:key="haptic_feedback_enabled"
             android:title="@string/haptic_feedback_title"
@@ -89,6 +100,12 @@
     <!-- Battery & Performance -->
     <PreferenceCategory
         android:title="@string/battery_performance_title">
+
+        <Preference
+            android:key="blaze_battery_health_studio"
+            android:title="Pil Sağlığı, Döngü Sayısı &amp; 3 Kademeli Koruma"
+            android:summary="HyperOS 4 / OneUI 9 gerçek kapasite (mAh), şarj döngüsü, anlık Watt/°C ve 3 kademeli koruma stüdyosu"
+            android:fragment="com.blaze.house.fragments.BlazeBatteryHealthStudioFragment" />
 
         <com.blaze.house.preferences.GlobalSettingSwitchPreference
             android:key="aggressive_doze"
