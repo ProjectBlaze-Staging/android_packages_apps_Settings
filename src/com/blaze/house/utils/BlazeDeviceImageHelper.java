@@ -236,14 +236,21 @@ public final class BlazeDeviceImageHelper {
 
     /**
      * Applies the configured device render to the About Phone hero ImageView.
+     * When hidden (MODE_NONE), renders a subtle glass restore badge so the user can always tap
+     * to re-enable or change the device image directly from About Phone.
      */
     public static void bindDeviceRender(Context context, ImageView renderView) {
         if (context == null || renderView == null) return;
         String mode = getCurrentMode(context);
         if (MODE_NONE.equals(mode)) {
-            renderView.setVisibility(View.GONE);
+            renderView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+            renderView.setImageBitmap(createHiddenDeviceRestoreBadge(context));
+            renderView.setAlpha(0.85f);
+            renderView.setVisibility(View.VISIBLE);
             return;
         }
+        renderView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        renderView.setAlpha(1.0f);
 
         if (MODE_CUSTOM.equals(mode)) {
             Bitmap customBmp = loadCustomBitmap(context);
@@ -259,6 +266,33 @@ public final class BlazeDeviceImageHelper {
         String effectiveMode = MODE_AUTO.equals(mode) ? resolveAutoMode() : mode;
         renderView.setImageResource(getDrawableResForMode(effectiveMode));
         renderView.setVisibility(View.VISIBLE);
+    }
+
+    private static Bitmap createHiddenDeviceRestoreBadge(Context context) {
+        float d = context.getResources().getDisplayMetrics().density;
+        int w = Math.round(108f * d);
+        int h = Math.round(40f * d);
+        Bitmap bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(bmp);
+        Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
+        RectF pill = new RectF(2f * d, 4f * d, w - 2f * d, h - 4f * d);
+        p.setStyle(Paint.Style.FILL);
+        p.setColor(0x40000000);
+        c.drawRoundRect(pill, 18f * d, 18f * d, p);
+        p.setStyle(Paint.Style.STROKE);
+        p.setStrokeWidth(1.2f * d);
+        p.setColor(0x66FFFFFF);
+        c.drawRoundRect(pill, 18f * d, 18f * d, p);
+
+        p.setStyle(Paint.Style.FILL);
+        p.setColor(0xEEFFFFFF);
+        p.setTextSize(11.5f * d);
+        p.setTextAlign(Paint.Align.CENTER);
+        p.setFakeBoldText(true);
+        Paint.FontMetrics fm = p.getFontMetrics();
+        float textY = pill.centerY() - (fm.ascent + fm.descent) * 0.5f;
+        c.drawText("+ Cihaz Görseli", pill.centerX(), textY, p);
+        return bmp;
     }
 
     /**
@@ -669,6 +703,9 @@ public final class BlazeDeviceImageHelper {
                                 "Kart arka planı güncellendi: " + getHeroBgModeDisplayName(selected),
                                 Toast.LENGTH_SHORT).show();
                     }
+                })
+                .setNeutralButton("Cihaz Görseli Seç...", (dialog, which) -> {
+                    showDeviceImagePickerDialog(context, onModeChanged, null);
                 })
                 .setNegativeButton(android.R.string.cancel, null)
                 .show();

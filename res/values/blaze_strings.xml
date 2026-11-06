@@ -346,4 +346,13 @@
     <string name="blaze_update_menu_system_updater">Open Android system updater</string>
     <string name="blaze_update_local_ota_unavailable">Document picker is unavailable</string>
     <string name="blaze_update_already_latest_toast">Your BlazeAOSP 17 system is already up to date</string>
+    <string name="status_bar_battery_style_ios27_capsule">iOS 27 Capsule (Liquid Glass)</string>
+    <string name="status_bar_battery_style_coloros17_capsule">ColorOS 17 Living Capsule</string>
+    <string name="status_bar_battery_style_oneui9_pill">One UI 9 Pill Battery</string>
+    <string name="blaze_dolby_atmos_title">Dolby Atmos &amp; Spatial Audio Studio</string>
+    <string name="blaze_dolby_atmos_summary">3D spatial sound stage, Dynamic/Movie/Music/Game/Voice DSP profiles, and 10-band studio equalizer</string>
+    <string name="blaze_gamespace_fps_hud_title">Floating Live FPS &amp; CPU HUD</string>
+    <string name="blaze_gamespace_fps_hud_summary">Display real-time refresh rate, frame pacing, and CPU/battery telemetry pill over games and apps</string>
+    <string name="blaze_gamespace_touch_boost_title">HyperTouch 360Hz Sampling Boost</string>
+    <string name="blaze_gamespace_touch_boost_summary">Minimize touch latency and prioritize input dispatcher responsiveness during gaming</string>
 </resources>

@@ -9,11 +9,28 @@
     android:title="@string/miscellaneous_title">
 
     <!-- Haptic feedback on gesture -->
-    <com.blaze.house.preferences.SystemSettingSwitchPreference
-        android:key="haptic_feedback_enabled"
-        android:title="@string/haptic_feedback_title"
-        android:summary="@string/haptic_feedback_summary"
-        android:defaultValue="true" />
+    <PreferenceCategory
+        android:title="@string/haptic_feedback_title">
+
+        <com.blaze.house.preferences.SystemSettingSwitchPreference
+            android:key="haptic_feedback_enabled"
+            android:title="@string/haptic_feedback_title"
+            android:summary="@string/haptic_feedback_summary"
+            android:defaultValue="true" />
+
+        <com.blaze.house.preferences.SystemSettingSwitchPreference
+            android:key="qs_tile_haptic"
+            android:title="@string/quick_settings_tile_haptic_title"
+            android:summary="@string/quick_settings_tile_haptic_summary"
+            android:defaultValue="true" />
+
+        <com.blaze.house.preferences.SystemSettingSwitchPreference
+            android:key="qs_brightness_slider_haptic"
+            android:title="@string/quick_settings_brightness_slider_haptic_title"
+            android:summary="@string/quick_settings_brightness_slider_haptic_summary"
+            android:defaultValue="true" />
+
+    </PreferenceCategory>
 
     <!-- LMO Freeform Windowing & Multitasking -->
     <PreferenceCategory
@@ -79,6 +96,20 @@
             android:summary="@string/aggressive_doze_summary"
             android:defaultValue="true" />
 
+        <com.blaze.house.preferences.SystemSettingSwitchPreference
+            android:key="charging_control_enabled"
+            android:title="@string/charging_control_title"
+            android:summary="@string/charging_control_summary"
+            android:defaultValue="false" />
+
+        <com.blaze.house.preferences.SystemSettingListPreference
+            android:key="charging_control_limit"
+            android:title="@string/charging_control_limit_title"
+            android:entries="@array/charging_control_limit_entries"
+            android:entryValues="@array/charging_control_limit_values"
+            android:defaultValue="80"
+            android:dependency="charging_control_enabled" />
+
         <Preference
             android:key="smart_pixels_settings"
             android:title="@string/smart_pixels_title"
@@ -90,6 +121,16 @@
     <!-- Volume Settings -->
     <PreferenceCategory
         android:title="@string/volume_settings_title">
+
+        <Preference
+            android:key="blaze_dolby_atmos_entry"
+            android:title="@string/blaze_dolby_atmos_title"
+            android:summary="@string/blaze_dolby_atmos_summary">
+            <intent
+                android:action="android.media.action.DISPLAY_AUDIO_EFFECT_CONTROL_PANEL"
+                android:targetPackage="org.lineageos.audiofx"
+                android:targetClass="org.lineageos.audiofx.activity.ActivityMusic" />
+        </Preference>
 
         <com.blaze.house.preferences.LineageSystemSettingSwitchPreference
             android:key="volbtn_music_controls"

@@ -152,9 +152,37 @@ public class Themes extends SettingsPreferenceFragment implements
 
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
-        // The SecureSettingSwitchPreference already committed the value.
-        // Return true to allow the UI to update.
+        if (KEY_THEMED_ICONS.equals(preference.getKey()) && getContext() != null) {
+            boolean enabled = Boolean.TRUE.equals(newValue);
+            applyThemedIcons(getContext(), enabled);
+        }
         return true;
+    }
+
+    public static void applyThemedIcons(android.content.Context context, boolean enabled) {
+        if (context == null) return;
+        android.content.ContentResolver resolver = context.getContentResolver();
+        try {
+            android.provider.Settings.Secure.putInt(resolver, "themed_icon_enabled", enabled ? 1 : 0);
+            android.provider.Settings.Secure.putInt(resolver, "themed_icons", enabled ? 1 : 0);
+        } catch (Throwable ignored) {}
+
+        String[] authorities = new String[]{
+                "com.android.launcher3.grid_control",
+                "com.google.android.apps.nexuslauncher.grid_control"
+        };
+        for (String auth : authorities) {
+            try {
+                android.net.Uri uri = new android.net.Uri.Builder()
+                        .scheme("content")
+                        .authority(auth)
+                        .appendPath("icon_themed")
+                        .build();
+                android.content.ContentValues values = new android.content.ContentValues();
+                values.put("boolean_value", enabled);
+                resolver.update(uri, values, null, null);
+            } catch (Throwable ignored) {}
+        }
     }
 
     public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER =

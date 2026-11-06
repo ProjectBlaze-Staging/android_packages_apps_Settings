@@ -169,12 +169,6 @@ class WallpaperSubjectExtractorService : Service() {
         }
         if (gen != currentGeneration) return
 
-        val storageState = Environment.getExternalStorageState()
-        if (storageState != Environment.MEDIA_MOUNTED) {
-            Log.e(TAG, "External storage not mounted: $storageState")
-            return
-        }
-
         val wm = WallpaperManager.getInstance(this)
         val isLive = wm.wallpaperInfo != null
 
@@ -224,12 +218,25 @@ class WallpaperSubjectExtractorService : Service() {
             }
             if (gen != currentGeneration) return
 
+            Settings.System.putIntForUser(
+                contentResolver,
+                SETTING_DEPTH_ENABLED,
+                1,
+                UserHandle.USER_CURRENT,
+            )
             Settings.System.putStringForUser(
                 contentResolver,
                 SETTING_SUBJECT_URI,
                 savedPath,
                 UserHandle.USER_CURRENT,
             )
+            handler.post {
+                android.widget.Toast.makeText(
+                    this@WallpaperSubjectExtractorService,
+                    "Derinlik öznesi başarıyla ayrıştırıldı ve kilit ekranına uygulandı!",
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
+            }
         } finally {
             segmenter.release()
             if (!cropped.isRecycled) cropped.recycle()
@@ -238,31 +245,26 @@ class WallpaperSubjectExtractorService : Service() {
 
     private fun saveForeground(foreground: Bitmap): String? {
         return try {
-            val baseDir = Environment.getExternalStorageDirectory()
-            val dir = File(baseDir, "Evolution-X/depthwallpaper")
-
-            if (!dir.exists()) {
-                if (!dir.mkdirs()) {
-                    Log.e(TAG, "Failed to create save directory")
-                    return null
-                }
-            }
-
-            dir.listFiles { _, name ->
-                name.startsWith(FILE_PREFIX) && name.endsWith(".png")
-            }?.forEach { it.delete() }
-
-            val stamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
-            val file = File(dir, "${FILE_PREFIX}_${stamp}.png")
-
-            FileOutputStream(file).use { out ->
+            val pubDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+            if (!pubDir.exists()) pubDir.mkdirs()
+            val pubFile = File(pubDir, "blaze_depth_subject.png")
+            FileOutputStream(pubFile).use { out ->
                 if (!foreground.compress(Bitmap.CompressFormat.PNG, 100, out)) {
-                    Log.e(TAG, "Bitmap.compress() returned false")
                     return null
                 }
             }
+            pubFile.setReadable(true, false)
 
-            file.absolutePath
+            try {
+                val sysFile = File("/data/system/users/0/blaze_depth_subject.png")
+                sysFile.parentFile?.mkdirs()
+                FileOutputStream(sysFile).use { out ->
+                    foreground.compress(Bitmap.CompressFormat.PNG, 100, out)
+                }
+                sysFile.setReadable(true, false)
+            } catch (ignored: Exception) {}
+
+            pubFile.absolutePath
         } catch (e: Exception) {
             Log.e(TAG, "saveForeground exception", e)
             null

@@ -103,8 +103,82 @@ public class PowerMenuActions extends SettingsPreferenceFragment {
         }
 
         if (!TelephonyUtils.isVoiceCapable(getActivity())) {
-            mPowerMenuItemsCategory.removePreference(mEmergencyPref);
+            removeActionPreference(mEmergencyPref);
             mEmergencyPref = null;
+        }
+    }
+
+    private void removeActionPreference(Preference pref) {
+        if (pref == null) return;
+        if (mPowerMenuItemsCategory != null) {
+            mPowerMenuItemsCategory.removePreference(pref);
+        } else if (getPreferenceScreen() != null) {
+            getPreferenceScreen().removePreference(pref);
+        }
+    }
+
+    private static final String DEFAULT_POWER_MENU_ACTIONS =
+            "power,restart,screenshot,airplane,users,lockdown,emergency";
+
+    private boolean safeUserConfigContains(String action) {
+        try {
+            if (mLineageGlobalActions != null) {
+                return mLineageGlobalActions.userConfigContains(action);
+            }
+        } catch (Throwable ignored) {
+        }
+        String raw = Settings.Secure.getString(
+                mContext.getContentResolver(), "power_menu_actions");
+        if (raw == null) {
+            try {
+                raw = LineageSettings.Secure.getString(
+                        mContext.getContentResolver(),
+                        LineageSettings.Secure.POWER_MENU_ACTIONS);
+            } catch (Throwable ignored) {
+            }
+        }
+        if (raw == null) {
+            raw = DEFAULT_POWER_MENU_ACTIONS;
+        }
+        for (String token : raw.split(",")) {
+            if (action.equals(token.trim())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void safeUpdateUserConfig(boolean enabled, String action) {
+        try {
+            if (mLineageGlobalActions != null) {
+                mLineageGlobalActions.updateUserConfig(enabled, action);
+                return;
+            }
+        } catch (Throwable ignored) {
+        }
+        String raw = Settings.Secure.getString(
+                mContext.getContentResolver(), "power_menu_actions");
+        if (raw == null) {
+            raw = DEFAULT_POWER_MENU_ACTIONS;
+        }
+        List<String> list = new ArrayList<>();
+        for (String token : raw.split(",")) {
+            String t = token.trim();
+            if (!t.isEmpty() && !t.equals(action)) {
+                list.add(t);
+            }
+        }
+        if (enabled) {
+            list.add(action);
+        }
+        String updated = String.join(",", list);
+        Settings.Secure.putString(mContext.getContentResolver(), "power_menu_actions", updated);
+        try {
+            LineageSettings.Secure.putString(
+                    mContext.getContentResolver(),
+                    LineageSettings.Secure.POWER_MENU_ACTIONS,
+                    updated);
+        } catch (Throwable ignored) {
         }
     }
 
@@ -113,27 +187,27 @@ public class PowerMenuActions extends SettingsPreferenceFragment {
         super.onStart();
 
         if (mScreenshotPref != null) {
-            mScreenshotPref.setChecked(mLineageGlobalActions.userConfigContains(
+            mScreenshotPref.setChecked(safeUserConfigContains(
                     GLOBAL_ACTION_KEY_SCREENSHOT));
         }
 
         if (mOnTheGoPref != null) {
-            mOnTheGoPref.setChecked(mLineageGlobalActions.userConfigContains(
+            mOnTheGoPref.setChecked(safeUserConfigContains(
                     GLOBAL_ACTION_KEY_ONTHEGO));
         }
 
         if (mAirplanePref != null) {
-            mAirplanePref.setChecked(mLineageGlobalActions.userConfigContains(
+            mAirplanePref.setChecked(safeUserConfigContains(
                     GLOBAL_ACTION_KEY_AIRPLANE));
         }
 
         if (mEmergencyPref != null) {
-            mEmergencyPref.setChecked(mLineageGlobalActions.userConfigContains(
+            mEmergencyPref.setChecked(safeUserConfigContains(
                     GLOBAL_ACTION_KEY_EMERGENCY));
         }
 
         if (mDeviceControlsPref != null) {
-            mDeviceControlsPref.setChecked(mLineageGlobalActions.userConfigContains(
+            mDeviceControlsPref.setChecked(safeUserConfigContains(
                     GLOBAL_ACTION_KEY_DEVICECONTROLS));
 
             // Enable preference if any device control app is installed
@@ -164,31 +238,31 @@ public class PowerMenuActions extends SettingsPreferenceFragment {
 
         if (preference == mScreenshotPref) {
             value = mScreenshotPref.isChecked();
-            mLineageGlobalActions.updateUserConfig(value, GLOBAL_ACTION_KEY_SCREENSHOT);
+            safeUpdateUserConfig(value, GLOBAL_ACTION_KEY_SCREENSHOT);
 
         } else if (preference == mOnTheGoPref) {
             value = mOnTheGoPref.isChecked();
-            mLineageGlobalActions.updateUserConfig(value, GLOBAL_ACTION_KEY_ONTHEGO);
+            safeUpdateUserConfig(value, GLOBAL_ACTION_KEY_ONTHEGO);
 
         } else if (preference == mAirplanePref) {
             value = mAirplanePref.isChecked();
-            mLineageGlobalActions.updateUserConfig(value, GLOBAL_ACTION_KEY_AIRPLANE);
+            safeUpdateUserConfig(value, GLOBAL_ACTION_KEY_AIRPLANE);
 
         } else if (preference == mUsersPref) {
             value = mUsersPref.isChecked();
-            mLineageGlobalActions.updateUserConfig(value, GLOBAL_ACTION_KEY_USERS);
+            safeUpdateUserConfig(value, GLOBAL_ACTION_KEY_USERS);
 
         } else if (preference == mLockDownPref) {
             value = mLockDownPref.isChecked();
-            mLineageGlobalActions.updateUserConfig(value, GLOBAL_ACTION_KEY_LOCKDOWN);
+            safeUpdateUserConfig(value, GLOBAL_ACTION_KEY_LOCKDOWN);
 
         } else if (preference == mEmergencyPref) {
             value = mEmergencyPref.isChecked();
-            mLineageGlobalActions.updateUserConfig(value, GLOBAL_ACTION_KEY_EMERGENCY);
+            safeUpdateUserConfig(value, GLOBAL_ACTION_KEY_EMERGENCY);
 
         } else if (preference == mDeviceControlsPref) {
             value = mDeviceControlsPref.isChecked();
-            mLineageGlobalActions.updateUserConfig(value, GLOBAL_ACTION_KEY_DEVICECONTROLS);
+            safeUpdateUserConfig(value, GLOBAL_ACTION_KEY_DEVICECONTROLS);
 
         } else {
             return super.onPreferenceTreeClick(preference);
@@ -200,7 +274,7 @@ public class PowerMenuActions extends SettingsPreferenceFragment {
         boolean isKeyguardSecure = mLockPatternUtils.isSecure(UserHandle.myUserId());
         if (mLockDownPref != null) {
             mLockDownPref.setEnabled(isKeyguardSecure);
-            mLockDownPref.setChecked(mLineageGlobalActions.userConfigContains(
+            mLockDownPref.setChecked(safeUserConfigContains(
                     GLOBAL_ACTION_KEY_LOCKDOWN));
             if (isKeyguardSecure) {
                 mLockDownPref.setSummary(null);
@@ -210,12 +284,12 @@ public class PowerMenuActions extends SettingsPreferenceFragment {
         }
         if (mUsersPref != null) {
             if (!UserHandle.MU_ENABLED || !UserManager.supportsMultipleUsers()) {
-                mPowerMenuItemsCategory.removePreference(mUsersPref);
+                removeActionPreference(mUsersPref);
                 mUsersPref = null;
             } else {
                 List<UserInfo> users = mUserManager.getUsers();
                 boolean enabled = (users.size() > 1);
-                mUsersPref.setChecked(mLineageGlobalActions.userConfigContains(
+                mUsersPref.setChecked(safeUserConfigContains(
                         GLOBAL_ACTION_KEY_USERS) && enabled);
                 mUsersPref.setEnabled(enabled);
             }

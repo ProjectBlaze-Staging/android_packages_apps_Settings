@@ -379,4 +379,13 @@
     <string name="blaze_update_menu_system_updater">Android sistem güncelleyicisini aç</string>
     <string name="blaze_update_local_ota_unavailable">Dosya seçici açılamadı</string>
     <string name="blaze_update_already_latest_toast">BlazeAOSP 17 sisteminiz zaten en güncel sürümde</string>
+    <string name="status_bar_battery_style_ios27_capsule">iOS 27 Kapsül Pil (Liquid Glass)</string>
+    <string name="status_bar_battery_style_coloros17_capsule">ColorOS 17 Canlı Kapsül</string>
+    <string name="status_bar_battery_style_oneui9_pill">One UI 9 Hap Pil</string>
+    <string name="blaze_dolby_atmos_title">Dolby Atmos ve Uzamsal Ses Stüdyosu</string>
+    <string name="blaze_dolby_atmos_summary">3B uzamsal ses sahnesi, Dinamik/Sinema/Müzik/Oyun/Ses DSP profilleri ve 10 bantlı stüdyo ekolayzer</string>
+    <string name="blaze_gamespace_fps_hud_title">Yüzen Canlı FPS ve CPU Göstergesi (HUD)</string>
+    <string name="blaze_gamespace_fps_hud_summary">Oyunlarda ve uygulamalarda gerçek zamanlı FPS, yenileme hızı ve CPU/sıcaklık telemetri kapsülünü göster</string>
+    <string name="blaze_gamespace_touch_boost_title">HyperTouch 360Hz Dokunma İvmesi</string>
+    <string name="blaze_gamespace_touch_boost_summary">Oyun sırasında dokunma gecikmesini en aza indirir ve giriş tepki süresine öncelik verir</string>
 </resources>

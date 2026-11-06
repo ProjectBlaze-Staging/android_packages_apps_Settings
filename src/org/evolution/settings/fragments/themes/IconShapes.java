@@ -1,59 +1,72 @@
 /*
- * Copyright (C) 2022-2025 crDroid Android Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright (C) 2022-2026 crDroid Android Project & The BlazeAOSP Project
+ * SPDX-License-Identifier: Apache-2.0
  */
 
 package org.evolution.settings.fragments.themes;
 
 import static com.android.internal.util.evolution.ThemeUtils.ICON_SHAPE_KEY;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
-import android.content.res.Resources;
+import android.database.Cursor;
+import android.graphics.Canvas;
+import android.graphics.ColorFilter;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.PixelFormat;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.graphics.ColorUtils;
+import androidx.core.graphics.PathParser;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.internal.logging.nano.MetricsProto.MetricsEvent;
+import com.android.internal.util.evolution.ThemeUtils;
 import com.android.settings.R;
 import com.android.settings.SettingsPreferenceFragment;
 import com.android.settingslib.Utils;
-import com.android.internal.util.evolution.ThemeUtils;
 
-import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
 
 public class IconShapes extends SettingsPreferenceFragment {
 
-    private static final String TAG = "IconShapes";
-
     private RecyclerView mRecyclerView;
     private ThemeUtils mThemeUtils;
     private final String mCategory = ICON_SHAPE_KEY;
-    private List<String> mPkgs;
+    private final List<ShapeOption> mOptions = new ArrayList<>();
+
+    public static class ShapeOption {
+        public final String key;
+        public final String title;
+        public final String svgPath;
+        public final String overlayPkg;
+
+        public ShapeOption(String key, String title, String svgPath, String overlayPkg) {
+            this.key = key;
+            this.title = title;
+            this.svgPath = svgPath;
+            this.overlayPkg = overlayPkg;
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,7 +74,79 @@ public class IconShapes extends SettingsPreferenceFragment {
         if (!isAdded()) return;
         requireActivity().setTitle(R.string.themes_icon_shape_title);
         mThemeUtils = ThemeUtils.getInstance(requireContext());
-        mPkgs = mThemeUtils.getOverlayPackagesForCategory(mCategory, "android");
+        loadShapeOptions(requireContext());
+    }
+
+    private void loadShapeOptions(Context context) {
+        mOptions.clear();
+        ContentResolver resolver = context.getContentResolver();
+
+        // 1. Query Launcher3 GridCustomizationsProvider (/shape_options)
+        String[] authorities = new String[]{
+                "com.android.launcher3.grid_control",
+                "com.google.android.apps.nexuslauncher.grid_control"
+        };
+        for (String auth : authorities) {
+            Uri uri = new Uri.Builder()
+                    .scheme("content")
+                    .authority(auth)
+                    .appendPath("shape_options")
+                    .build();
+            try (Cursor c = resolver.query(uri, null, null, null, null)) {
+                if (c != null && c.moveToFirst()) {
+                    int keyIdx = c.getColumnIndex("shape_key");
+                    int titleIdx = c.getColumnIndex("shape_title");
+                    int pathIdx = c.getColumnIndex("path");
+                    do {
+                        String key = keyIdx >= 0 ? c.getString(keyIdx) : "";
+                        String title = titleIdx >= 0 ? c.getString(titleIdx) : key;
+                        String path = pathIdx >= 0 ? c.getString(pathIdx) : "";
+                        if (key != null && !key.isEmpty()) {
+                            mOptions.add(new ShapeOption(key, title != null ? title : key, path, null));
+                        }
+                    } while (c.moveToNext());
+                    if (!mOptions.isEmpty()) break;
+                }
+            } catch (Throwable ignored) {}
+        }
+
+        // 2. Built-in Flagship Shapes (always available even if Launcher provider is restricted)
+        addIfMissing("circle", "Daire (Pixel)",
+                "M50,0 C77.6,0 100,22.4 100,50 C100,77.6 77.6,100 50,100 C22.4,100 0,77.6 0,50 C0,22.4 22.4,0 50,0 Z");
+        addIfMissing("squircle", "ColorOS 17 Süper Elips",
+                "M50,0 C10,0 0,10 0,50 C0,90 10,100 50,100 C90,100 100,90 100,50 C100,10 90,0 50,0 Z");
+        addIfMissing("rounded_square", "iOS 27 Yuvarlatılmış",
+                "M22,0 L78,0 C90.15,0 100,9.85 100,22 L100,78 C100,90.15 90.15,100 78,100 L22,100 C9.85,100 0,90.15 0,78 L0,22 C0,9.85 9.85,0 22,0 Z");
+        addIfMissing("teardrop", "Damla (Teardrop)",
+                "M50,0 C77.6,0 100,22.4 100,50 L100,86 C100,93.7 93.7,100 86,100 L50,100 C22.4,100 0,77.6 0,50 C0,22.4 22.4,0 50,0 Z");
+        addIfMissing("pebble", "One UI 9 Çakıl Taşı",
+                "M55,0 C82,0 100,18 100,45 C100,78 78,100 45,100 C18,100 0,82 0,55 C0,22 22,0 55,0 Z");
+        addIfMissing("hexagon", "Altıgen (Cyber)",
+                "M50,0 L95,25 L95,75 L50,100 L5,75 L5,25 Z");
+
+        // 3. Also append any installed RRO Icon Shape overlays
+        if (mThemeUtils != null) {
+            List<String> pkgs = mThemeUtils.getOverlayPackagesForCategory(mCategory, "android");
+            if (pkgs != null) {
+                for (String pkg : pkgs) {
+                    if ("android".equals(pkg)) continue;
+                    String label = pkg;
+                    try {
+                        label = context.getPackageManager()
+                                .getApplicationInfo(pkg, 0)
+                                .loadLabel(context.getPackageManager()).toString();
+                    } catch (Throwable ignored) {}
+                    mOptions.add(new ShapeOption(pkg, label, null, pkg));
+                }
+            }
+        }
+    }
+
+    private void addIfMissing(String key, String title, String svgPath) {
+        for (ShapeOption opt : mOptions) {
+            if (opt.key.equalsIgnoreCase(key)) return;
+        }
+        mOptions.add(new ShapeOption(key, title, svgPath, null));
     }
 
     @Override
@@ -70,7 +155,7 @@ public class IconShapes extends SettingsPreferenceFragment {
         View view = inflater.inflate(R.layout.item_view, container, false);
         mRecyclerView = view.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 3));
-        mRecyclerView.setAdapter(new Adapter(requireContext(), mPkgs, mThemeUtils, mCategory, mRecyclerView));
+        mRecyclerView.setAdapter(new Adapter(requireContext(), mOptions, mThemeUtils, mCategory));
         return view;
     }
 
@@ -84,17 +169,7 @@ public class IconShapes extends SettingsPreferenceFragment {
             }
             return;
         }
-
         super.setDivider(divider);
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        if (mRecyclerView != null) {
-            mRecyclerView.setAdapter(null);
-            mRecyclerView = null;
-        }
     }
 
     @Override
@@ -102,29 +177,75 @@ public class IconShapes extends SettingsPreferenceFragment {
         return MetricsEvent.VIEW_UNKNOWN;
     }
 
+    private static class SvgShapeDrawable extends Drawable {
+        private final Path mSourcePath;
+        private final Path mDrawPath = new Path();
+        private final Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        private final Matrix mMatrix = new Matrix();
+
+        SvgShapeDrawable(String pathData, int color) {
+            Path parsed = null;
+            try {
+                if (pathData != null && !pathData.isEmpty()) {
+                    parsed = PathParser.createPathFromPathData(pathData);
+                }
+            } catch (Throwable ignored) {}
+            if (parsed == null) {
+                parsed = new Path();
+                parsed.addCircle(50f, 50f, 50f, Path.Direction.CW);
+            }
+            mSourcePath = parsed;
+            mPaint.setStyle(Paint.Style.FILL);
+            mPaint.setColor(color);
+        }
+
+        @Override
+        protected void onBoundsChange(Rect bounds) {
+            super.onBoundsChange(bounds);
+            RectF src = new RectF(0f, 0f, 100f, 100f);
+            float pad = bounds.width() * 0.1f;
+            RectF dst = new RectF(bounds.left + pad, bounds.top + pad,
+                    bounds.right - pad, bounds.bottom - pad);
+            mMatrix.reset();
+            mMatrix.setRectToRect(src, dst, Matrix.ScaleToFit.CENTER);
+            mSourcePath.transform(mMatrix, mDrawPath);
+        }
+
+        @Override
+        public void draw(@NonNull Canvas canvas) {
+            canvas.drawPath(mDrawPath, mPaint);
+        }
+
+        @Override
+        public void setAlpha(int alpha) {
+            mPaint.setAlpha(alpha);
+        }
+
+        @Override
+        public void setColorFilter(@Nullable ColorFilter colorFilter) {
+            mPaint.setColorFilter(colorFilter);
+        }
+
+        @Override
+        public int getOpacity() {
+            return PixelFormat.TRANSLUCENT;
+        }
+    }
+
     public static class Adapter extends RecyclerView.Adapter<Adapter.CustomViewHolder> {
-        private final WeakReference<Context> contextRef;
-        private final List<String> mPkgs;
+        private final Context mContext;
+        private final List<ShapeOption> mOptions;
         private final ThemeUtils mThemeUtils;
         private final String mCategory;
-        private final RecyclerView mRecyclerView;
-        private final String mAppliedPkg;
-        private String mSelectedPkg;
+        private String mSelectedKey;
 
-        public Adapter(Context context, List<String> pkgs, ThemeUtils themeUtils, String category, RecyclerView recyclerView) {
-            this.contextRef = new WeakReference<>(context);
-            this.mPkgs = pkgs;
-            this.mThemeUtils = themeUtils;
-            this.mCategory = category;
-            this.mRecyclerView = recyclerView;
-
-            mAppliedPkg = mThemeUtils.getOverlayInfos(mCategory).stream()
-                    .filter(info -> info.isEnabled())
-                    .map(info -> info.packageName)
-                    .findFirst()
-                    .orElse("android");
-
-            mSelectedPkg = mAppliedPkg;
+        public Adapter(Context context, List<ShapeOption> options, ThemeUtils themeUtils, String category) {
+            mContext = context;
+            mOptions = options;
+            mThemeUtils = themeUtils;
+            mCategory = category;
+            String saved = Settings.Secure.getString(context.getContentResolver(), "blaze_icon_shape_key");
+            mSelectedKey = (saved != null && !saved.isEmpty()) ? saved : "circle";
         }
 
         @NonNull
@@ -136,42 +257,64 @@ public class IconShapes extends SettingsPreferenceFragment {
 
         @Override
         public void onBindViewHolder(@NonNull CustomViewHolder holder, int position) {
-            Context context = contextRef.get();
-            if (context == null) return;
+            ShapeOption opt = mOptions.get(position);
+            boolean isSelected = opt.key.equalsIgnoreCase(mSelectedKey);
+            int accent = Utils.getColorAttrDefaultColor(mContext, android.R.attr.colorAccent);
+            int tintColor = ColorUtils.setAlphaComponent(accent, isSelected ? 220 : 95);
 
-            String pkg = mPkgs.get(position);
-            Drawable drawable = mThemeUtils.createShapeDrawable(pkg);
-            if (drawable != null) {
-                holder.image.setBackground(drawable);
+            Drawable shapeDrawable = null;
+            if (opt.overlayPkg != null && mThemeUtils != null) {
+                shapeDrawable = mThemeUtils.createShapeDrawable(opt.overlayPkg);
+                if (shapeDrawable != null) {
+                    shapeDrawable.setTintList(ColorStateList.valueOf(tintColor));
+                }
+            }
+            if (shapeDrawable == null) {
+                shapeDrawable = new SvgShapeDrawable(opt.svgPath, tintColor);
             }
 
-            String label = getLabel(context, pkg);
-            holder.name.setText("android".equals(pkg) ? "Default" : label);
+            holder.image.setBackground(shapeDrawable);
+            holder.name.setText(opt.title);
+            View tile = holder.itemView.findViewById(R.id.option_tile);
+            if (tile != null) tile.setBackground(null);
+            holder.itemView.setActivated(isSelected);
 
-            boolean isDefault = "android".equals(mAppliedPkg) && "android".equals(pkg);
-            int color = ColorUtils.setAlphaComponent(
-                    Utils.getColorAttrDefaultColor(context, android.R.attr.colorAccent),
-                    pkg.equals(mAppliedPkg) || isDefault ? 170 : 75);
-            holder.image.setBackgroundTintList(ColorStateList.valueOf(color));
-
-            holder.itemView.findViewById(R.id.option_tile).setBackground(null);
-            holder.itemView.setActivated(pkg.equals(mSelectedPkg));
-            holder.itemView.setOnClickListener(view -> {
-                if (!pkg.equals(mSelectedPkg)) {
-                    mSelectedPkg = pkg;
-                    mThemeUtils.setOverlayEnabled(mCategory, pkg, "android");
-                }
-                updateActivatedStatus();
+            holder.itemView.setOnClickListener(v -> {
+                mSelectedKey = opt.key;
+                Settings.Secure.putString(mContext.getContentResolver(), "blaze_icon_shape_key", opt.key);
+                applyShapeToLauncherAndSystem(opt);
+                notifyDataSetChanged();
+                Toast.makeText(mContext, "İkon şekli uygulandı: " + opt.title, Toast.LENGTH_SHORT).show();
             });
+        }
+
+        private void applyShapeToLauncherAndSystem(ShapeOption opt) {
+            String[] authorities = new String[]{
+                    "com.android.launcher3.grid_control",
+                    "com.google.android.apps.nexuslauncher.grid_control"
+            };
+            for (String auth : authorities) {
+                try {
+                    Uri uri = new Uri.Builder()
+                            .scheme("content")
+                            .authority(auth)
+                            .appendPath("shape")
+                            .build();
+                    ContentValues values = new ContentValues();
+                    values.put("shape_key", opt.key);
+                    mContext.getContentResolver().update(uri, values, null, null);
+                } catch (Throwable ignored) {}
+            }
+            if (mThemeUtils != null && opt.overlayPkg != null) {
+                try {
+                    mThemeUtils.setOverlayEnabled(mCategory, opt.overlayPkg, "android");
+                } catch (Throwable ignored) {}
+            }
         }
 
         @Override
         public int getItemCount() {
-            return mPkgs.size();
-        }
-
-        private void updateActivatedStatus() {
-            notifyDataSetChanged();
+            return mOptions.size();
         }
 
         public static class CustomViewHolder extends RecyclerView.ViewHolder {
@@ -182,16 +325,6 @@ public class IconShapes extends SettingsPreferenceFragment {
                 name = itemView.findViewById(R.id.option_label);
                 image = itemView.findViewById(R.id.option_thumbnail);
             }
-        }
-
-        private String getLabel(Context context, String pkg) {
-            PackageManager pm = context.getPackageManager();
-            try {
-                return pm.getApplicationInfo(pkg, 0).loadLabel(pm).toString();
-            } catch (PackageManager.NameNotFoundException e) {
-                Log.e(TAG, "Label load failed for pkg: " + pkg, e);
-            }
-            return pkg;
         }
     }
 }

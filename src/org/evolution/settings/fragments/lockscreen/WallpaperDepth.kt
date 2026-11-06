@@ -101,11 +101,26 @@ class WallpaperDepth : OptimizedSettingsFragment(), Preference.OnPreferenceChang
                     )
                 }
                 if (savedImagePath != null) {
+                    var targetPath = savedImagePath
+                    try {
+                        val srcFile = File(savedImagePath)
+                        val pubDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                        if (!pubDir.exists()) pubDir.mkdirs()
+                        val pubFile = File(pubDir, "blaze_depth_subject.png")
+                        if (srcFile.exists()) {
+                            srcFile.copyTo(pubFile, overwrite = true)
+                            pubFile.setReadable(true, false)
+                            targetPath = pubFile.absolutePath
+                        }
+                    } catch (ignored: Exception) {}
                     val resolver = context?.contentResolver
                     resolver?.let {
+                        Settings.System.putIntForUser(
+                            it, "depth_wallpaper_enabled", 1, UserHandle.USER_CURRENT
+                        )
                         Settings.System.putStringForUser(
                             it, "depth_wallpaper_subject_image_uri",
-                            savedImagePath, UserHandle.USER_CURRENT
+                            targetPath, UserHandle.USER_CURRENT
                         )
                     }
                     updateClearSubjectState()
@@ -147,19 +162,6 @@ class WallpaperDepth : OptimizedSettingsFragment(), Preference.OnPreferenceChang
     }
 
     private fun triggerExtraction() {
-        val ctx = context ?: return
-
-        if (ctx.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-            != PackageManager.PERMISSION_GRANTED
-        ) {
-            mPendingExtraction = true
-            requestPermissions(
-                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                REQUEST_WRITE_STORAGE
-            )
-            return
-        }
-
         startExtractionService()
     }
 
@@ -202,6 +204,7 @@ class WallpaperDepth : OptimizedSettingsFragment(), Preference.OnPreferenceChang
         )
 
         try {
+            File("/data/system/users/0/blaze_depth_subject.png").delete()
             val dir = File(Environment.getExternalStorageDirectory(), SAVE_DIR)
             if (dir.exists()) {
                 val files = dir.listFiles { _, name ->

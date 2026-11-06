@@ -111,6 +111,13 @@
     <PreferenceCategory
         android:title="@string/status_bar_icons_category">
 
+        <Preference
+            android:key="status_bar_icons"
+            android:title="@string/status_bar_tuner_title"
+            android:summary="@string/status_bar_tuner_summary">
+            <intent android:action="com.android.settings.action.STATUS_BAR_TUNER" />
+        </Preference>
+
         <com.blaze.house.preferences.SystemSettingSwitchPreference
             android:key="show_fourg_icon"
             android:title="@string/show_fourg_icon_title"

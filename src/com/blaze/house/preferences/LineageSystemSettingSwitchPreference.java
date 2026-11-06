@@ -28,17 +28,34 @@ public class LineageSystemSettingSwitchPreference extends SelfRemovingSwitchPref
 
     @Override
     protected boolean isPersisted() {
-        return LineageSettings.System.getString(getContext().getContentResolver(), getKey()) != null;
+        return LineageSettings.System.getString(getContext().getContentResolver(), getKey()) != null
+                || android.provider.Settings.System.getString(getContext().getContentResolver(), getKey()) != null;
     }
 
     @Override
     protected void putBoolean(String key, boolean value) {
-        LineageSettings.System.putIntForUser(getContext().getContentResolver(), key, value ? 1 : 0, UserHandle.USER_CURRENT);
+        int intVal = value ? 1 : 0;
+        try {
+            LineageSettings.System.putIntForUser(
+                    getContext().getContentResolver(), key, intVal, UserHandle.USER_CURRENT);
+        } catch (Exception ignored) {
+        }
+        try {
+            android.provider.Settings.System.putIntForUser(
+                    getContext().getContentResolver(), key, intVal, UserHandle.USER_CURRENT);
+        } catch (Exception ignored) {
+        }
     }
 
     @Override
     protected boolean getBoolean(String key, boolean defaultValue) {
-        return LineageSettings.System.getIntForUser(getContext().getContentResolver(),
-                key, defaultValue ? 1 : 0, UserHandle.USER_CURRENT) != 0;
+        int def = defaultValue ? 1 : 0;
+        int val = LineageSettings.System.getIntForUser(
+                getContext().getContentResolver(), key, -1, UserHandle.USER_CURRENT);
+        if (val != -1) {
+            return val != 0;
+        }
+        return android.provider.Settings.System.getIntForUser(
+                getContext().getContentResolver(), key, def, UserHandle.USER_CURRENT) != 0;
     }
 }
