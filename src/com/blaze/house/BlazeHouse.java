@@ -319,14 +319,14 @@ public class BlazeHouse extends SettingsPreferenceFragment {
             updateNowBarPosSummary(context, nowBarPosPref);
             nowBarPosPref.setOnPreferenceClickListener(pref -> {
                 String[] options = new String[]{
-                        "Tek Elle Kullanım (Alt Konum • OneUI 8.5 Ergonomik)",
-                        "Görsel Odak (Orta-Alt Konum • OneUI 9 Standart)",
-                        "Hibrit Mod (Kilit Ekranında Now Bar, Ana Ekranda Atomic/Dynamic Island)"
+                        "Tek Elle Kullanım (Ergonomik Alt Konum)",
+                        "Görsel Odak (Orta-Alt Standart Konum)",
+                        "Hibrit Mod (Kilit Ekranında Alt Çubuk, Ana Ekranda Dinamik Ada)"
                 };
                 int cur = Settings.System.getIntForUser(
                         context.getContentResolver(), "blaze_nowbar_position_mode", 2, UserHandle.USER_CURRENT);
                 new AlertDialog.Builder(context)
-                        .setTitle("Now Bar & Atomic Island Konum Yöneticisi")
+                        .setTitle("Alt Bilgi Çubuğu ve Dinamik Ada Konumu")
                         .setSingleChoiceItems(options, Math.max(0, Math.min(2, cur)), (dialog, which) -> {
                             Settings.System.putIntForUser(
                                     context.getContentResolver(), "blaze_nowbar_position_mode", which, UserHandle.USER_CURRENT);
@@ -365,15 +365,15 @@ public class BlazeHouse extends SettingsPreferenceFragment {
             updateOHapticsSummary(context, ohapticsPref);
             ohapticsPref.setOnPreferenceClickListener(pref -> {
                 String[] items = new String[]{
-                        "Keskin / Mekanik (ColorOS 17 O-Haptics Crisp)",
-                        "Yumuşak / Kadife (ColorOS 17 O-Haptics Gentle)",
-                        "Kapalı (Dokunsal Zarf Devre Dışı)"
+                        "Keskin ve Mekanik Titreşim",
+                        "Yumuşak ve Dengeli Titreşim",
+                        "Kapalı (Özel Titreşim Profili Devre Dışı)"
                 };
                 int cur = Settings.System.getIntForUser(
                         context.getContentResolver(), "blaze_ohaptics_style", 1, UserHandle.USER_CURRENT);
                 int checkedIdx = cur == 1 ? 0 : (cur == 2 ? 1 : 2);
                 new AlertDialog.Builder(context)
-                        .setTitle("ColorOS 17 O-Haptics Dokunsal Motoru")
+                        .setTitle("Dokunsal Geri Bildirim Profili")
                         .setSingleChoiceItems(items, checkedIdx, (dialog, which) -> {
                             int newStyle = which == 0 ? 1 : (which == 1 ? 2 : 0);
                             Settings.System.putIntForUser(
@@ -425,8 +425,8 @@ public class BlazeHouse extends SettingsPreferenceFragment {
     private void updateOHapticsSummary(Context context, Preference pref) {
         int cur = Settings.System.getIntForUser(
                 context.getContentResolver(), "blaze_ohaptics_style", 1, UserHandle.USER_CURRENT);
-        String label = cur == 1 ? "Aktif: Keskin / Mekanik (O-Haptics Crisp) + Polar Light Işık İzi"
-                : (cur == 2 ? "Aktif: Yumuşak / Kadife (O-Haptics Gentle) + Polar Light Işık İzi"
+        String label = cur == 1 ? "Aktif: Keskin ve Mekanik Titreşim"
+                : (cur == 2 ? "Aktif: Yumuşak ve Dengeli Titreşim"
                 : "Kapalı");
         pref.setSummary(label);
     }
@@ -435,8 +435,8 @@ public class BlazeHouse extends SettingsPreferenceFragment {
         int cur = Settings.System.getIntForUser(
                 context.getContentResolver(), "blaze_nowbar_position_mode", 2, UserHandle.USER_CURRENT);
         String label = cur == 0 ? "Aktif: Tek Elle Kullanım (Alt Konum)"
-                : (cur == 1 ? "Aktif: Görsel Odak (OneUI 9 Orta-Alt Konum)"
-                : "Aktif: Hibrit Mod (Kilit Ekranı Now Bar + Ana Ekran Dynamic Island)");
+                : (cur == 1 ? "Aktif: Görsel Odak (Orta-Alt Konum)"
+                : "Aktif: Hibrit Mod (Kilit Ekranı Alt Çubuk + Ana Ekran Dinamik Ada)");
         pref.setSummary(label);
     }
 

@@ -542,7 +542,7 @@ public final class BlazeDeviceImageHelper {
                 return "Klasik Blaze Terracotta (Düz Kırmızı)";
             case HERO_BG_LIVING_FLOW:
             default:
-                return "ColorOS 17 Living Flow (Canlı 3D Cam Dalgaları)";
+                return "Canlı 3D Cam Dalgaları (Akıcı Arka Plan)";
         }
     }
 
@@ -672,7 +672,7 @@ public final class BlazeDeviceImageHelper {
             HERO_BG_TERRACOTTA
         };
         final CharSequence[] labels = new CharSequence[] {
-            "ColorOS 17 Living Flow (Canlı 3D Cam Dalgaları)",
+            "Canlı 3D Cam Dalgaları (Akıcı Arka Plan)",
             "Ana Ekran Duvar Kağıdını Kullan (Otomatik Senkronize)",
             "Özel Görsel Seç, Kırp ve Boyutlandır (Galeriden)...",
             "Klasik Blaze Terracotta (Düz Kırmızı)"

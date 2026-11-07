@@ -344,6 +344,29 @@ class WallpaperDepth : OptimizedSettingsFragment(), Preference.OnPreferenceChang
             val d = context.resources.displayMetrics.density
             fun dp(v: Float) = (v * d).roundToInt()
 
+            val uiMode = context.resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK
+            val isNight = (uiMode == android.content.res.Configuration.UI_MODE_NIGHT_YES)
+            fun resolveAttr(attr: Int, fallback: Int): Int {
+                val tv = android.util.TypedValue()
+                if (context.theme.resolveAttribute(attr, tv, true)) {
+                    if (tv.resourceId != 0) {
+                        try {
+                            return context.getColor(tv.resourceId)
+                        } catch (ignored: Exception) {}
+                    }
+                    return tv.data
+                }
+                return fallback
+            }
+            fun withAlpha(c: Int, a: Int): Int = (c and 0x00FFFFFF) or ((a and 0xFF) shl 24)
+
+            val colorAccent = resolveAttr(android.R.attr.colorAccent, if (isNight) 0xFFA8C7FA.toInt() else 0xFF1B6EF3.toInt())
+            val colorTextPrimary = resolveAttr(android.R.attr.textColorPrimary, if (isNight) 0xFFE2E2E9.toInt() else 0xFF1A1C20.toInt())
+            val colorTextSecondary = resolveAttr(android.R.attr.textColorSecondary, if (isNight) 0xFFC4C6D0.toInt() else 0xFF44474F.toInt())
+            val colorSurface = if (isNight) 0xFF1C1F26.toInt() else 0xFFFFFFFF.toInt()
+            val colorSurfaceVariant = if (isNight) 0xFF252932.toInt() else 0xFFEEF1F7.toInt()
+            val colorBorder = if (isNight) 0x22FFFFFF else 0x16000000
+
             reloadPreviewBitmaps()
 
             val container = LinearLayout(context).apply {
@@ -357,28 +380,26 @@ class WallpaperDepth : OptimizedSettingsFragment(), Preference.OnPreferenceChang
 
             val card = LinearLayout(context).apply {
                 orientation = LinearLayout.VERTICAL
-                setPadding(dp(16f), dp(16f), dp(16f), dp(16f))
-                background = GradientDrawable(
-                    GradientDrawable.Orientation.TOP_BOTTOM,
-                    intArrayOf(0xFF0F172A.toInt(), 0xFF1E293B.toInt())
-                ).apply {
+                setPadding(dp(18f), dp(16f), dp(18f), dp(16f))
+                background = GradientDrawable().apply {
+                    setColor(colorSurface)
                     cornerRadius = dp(24f).toFloat()
-                    setStroke(dp(1.2f), 0x4438BDF8)
+                    setStroke(dp(1f), colorBorder)
                 }
             }
 
             // Title Row
             val titleView = TextView(context).apply {
-                text = "DERİNLİK & SAAT KONUM STÜDYOSU"
-                textSize = 13f
-                setTextColor(0xFF38BDF8.toInt())
+                text = "DERİNLİK VE SAAT KONUM STÜDYOSU"
+                textSize = 11.5f
+                setTextColor(colorAccent)
                 typeface = Typeface.create("sans-serif-medium", Typeface.BOLD)
-                letterSpacing = 0.06f
+                letterSpacing = 0.05f
             }
             val subTitleView = TextView(context).apply {
                 text = "Üst üste saat örtülme koruması, kilit ekranı derinlik katmanı ve ana ekran önizlemesi"
-                textSize = 11.5f
-                setTextColor(0xFF94A3B8.toInt())
+                textSize = 12f
+                setTextColor(colorTextSecondary)
                 setPadding(0, dp(2f), 0, dp(10f))
             }
             card.addView(titleView)
@@ -397,12 +418,12 @@ class WallpaperDepth : OptimizedSettingsFragment(), Preference.OnPreferenceChang
                     textSize = 11.5f
                     gravity = Gravity.CENTER
                     typeface = Typeface.create("sans-serif-medium", Typeface.BOLD)
-                    setPadding(dp(10f), dp(6f), dp(10f), dp(6f))
-                    setTextColor(if (active) 0xFF0F172A.toInt() else 0xFFE2E8F0.toInt())
+                    setPadding(dp(10f), dp(7f), dp(10f), dp(7f))
+                    setTextColor(if (active) colorAccent else colorTextSecondary)
                     background = GradientDrawable().apply {
-                        cornerRadius = dp(999f).toFloat()
-                        setColor(if (active) 0xFF38BDF8.toInt() else 0x33334155)
-                        setStroke(dp(1f), if (active) 0xFF38BDF8.toInt() else 0x5564748B)
+                        cornerRadius = dp(14f).toFloat()
+                        setColor(if (active) withAlpha(colorAccent, 30) else colorSurfaceVariant)
+                        setStroke(dp(1f), if (active) colorAccent else colorBorder)
                     }
                     layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f).apply {
                         marginEnd = dp(6f)
@@ -410,21 +431,27 @@ class WallpaperDepth : OptimizedSettingsFragment(), Preference.OnPreferenceChang
                 }
             }
 
-            val tabLockBtn = makeChip("🔒 Kilit Ekranı", !previewModeHomescreen)
-            val tabHomeBtn = makeChip("🏠 Ana Ekran", previewModeHomescreen)
+            val tabLockBtn = makeChip("Kilit Ekranı", !previewModeHomescreen)
+            val tabHomeBtn = makeChip("Ana Ekran", previewModeHomescreen)
             val clockStyleBtn = makeChip(
-                if (previewStackedClock) "🕒 Üst Üste Saat" else "🕒 Tek Satır",
+                if (previewStackedClock) "Üst Üste Saat" else "Tek Satır Saat",
                 true
             ).apply {
                 (layoutParams as LinearLayout.LayoutParams).marginEnd = 0
             }
 
+            fun styleChip(tv: TextView, active: Boolean) {
+                (tv.background as GradientDrawable).apply {
+                    setColor(if (active) withAlpha(colorAccent, 30) else colorSurfaceVariant)
+                    setStroke(dp(1f), if (active) colorAccent else colorBorder)
+                }
+                tv.setTextColor(if (active) colorAccent else colorTextSecondary)
+            }
+
             fun updateChipStyles() {
-                (tabLockBtn.background as GradientDrawable).setColor(if (!previewModeHomescreen) 0xFF38BDF8.toInt() else 0x33334155)
-                tabLockBtn.setTextColor(if (!previewModeHomescreen) 0xFF0F172A.toInt() else 0xFFE2E8F0.toInt())
-                (tabHomeBtn.background as GradientDrawable).setColor(if (previewModeHomescreen) 0xFF38BDF8.toInt() else 0x33334155)
-                tabHomeBtn.setTextColor(if (previewModeHomescreen) 0xFF0F172A.toInt() else 0xFFE2E8F0.toInt())
-                clockStyleBtn.text = if (previewStackedClock) "🕒 Üst Üste Saat" else "🕒 Tek Satır"
+                styleChip(tabLockBtn, !previewModeHomescreen)
+                styleChip(tabHomeBtn, previewModeHomescreen)
+                clockStyleBtn.text = if (previewStackedClock) "Üst Üste Saat" else "Tek Satır Saat"
                 previewCanvasView?.invalidate()
             }
 
@@ -459,13 +486,13 @@ class WallpaperDepth : OptimizedSettingsFragment(), Preference.OnPreferenceChang
 
             val badge = TextView(context).apply {
                 textSize = 10.5f
-                setTextColor(0xFFE2E8F0.toInt())
+                setTextColor(0xFFF8FAFC.toInt())
                 typeface = Typeface.create("sans-serif-medium", Typeface.BOLD)
-                setPadding(dp(10f), dp(5f), dp(10f), dp(5f))
+                setPadding(dp(12f), dp(5f), dp(12f), dp(5f))
                 background = GradientDrawable().apply {
                     cornerRadius = dp(999f).toFloat()
-                    setColor(0xCC0F172A.toInt())
-                    setStroke(dp(1f), 0x6638BDF8)
+                    setColor(0xCC111318.toInt())
+                    setStroke(dp(1f), 0x44FFFFFF)
                 }
                 layoutParams = FrameLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -485,15 +512,13 @@ class WallpaperDepth : OptimizedSettingsFragment(), Preference.OnPreferenceChang
                 gravity = Gravity.CENTER_VERTICAL
                 setPadding(0, dp(10f), 0, dp(6f))
             }
-            val dragSubjBtn = makeChip("🎯 Dokunarak Özneyi Taşı", !dragTargetClock)
-            val dragClockBtn = makeChip("↕️ Dokunarak Saati Taşı", dragTargetClock).apply {
+            val dragSubjBtn = makeChip("Dokunarak Özneyi Taşı", !dragTargetClock)
+            val dragClockBtn = makeChip("Dokunarak Saati Taşı", dragTargetClock).apply {
                 (layoutParams as LinearLayout.LayoutParams).marginEnd = 0
             }
             fun updateDragButtons() {
-                (dragSubjBtn.background as GradientDrawable).setColor(if (!dragTargetClock) 0xFF22C55E.toInt() else 0x33334155)
-                dragSubjBtn.setTextColor(if (!dragTargetClock) 0xFF052E16.toInt() else 0xFFE2E8F0.toInt())
-                (dragClockBtn.background as GradientDrawable).setColor(if (dragTargetClock) 0xFF22C55E.toInt() else 0x33334155)
-                dragClockBtn.setTextColor(if (dragTargetClock) 0xFF052E16.toInt() else 0xFFE2E8F0.toInt())
+                styleChip(dragSubjBtn, !dragTargetClock)
+                styleChip(dragClockBtn, dragTargetClock)
             }
             updateDragButtons()
             dragSubjBtn.setOnClickListener {
@@ -517,8 +542,8 @@ class WallpaperDepth : OptimizedSettingsFragment(), Preference.OnPreferenceChang
             }
             val guardLabel = TextView(context).apply {
                 text = "Akıllı Üst Üste Saat Koruması (Alt Rakamların Kapanmasını Önle)"
-                textSize = 12f
-                setTextColor(0xFFF8FAFC.toInt())
+                textSize = 12.5f
+                setTextColor(colorTextPrimary)
                 layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
             }
             val guardSwitch = Switch(context).apply {
@@ -536,16 +561,16 @@ class WallpaperDepth : OptimizedSettingsFragment(), Preference.OnPreferenceChang
             guardRow.addView(guardSwitch)
             card.addView(guardRow)
 
-            // OriginOS 6 3D Gyroscope Parallax Toggle Row
+            // 3D Gyroscope Parallax Toggle Row
             val gyroRow = LinearLayout(context).apply {
                 orientation = LinearLayout.HORIZONTAL
                 gravity = Gravity.CENTER_VERTICAL
                 setPadding(dp(4f), dp(4f), dp(4f), dp(6f))
             }
             val gyroLabel = TextView(context).apply {
-                text = "OriginOS 6 • 3D Jiroskop Paralaks & Eğim Tepkisi (Sıfır Pil Sızıntılı)"
-                textSize = 12f
-                setTextColor(0xFFF8FAFC.toInt())
+                text = "3D Jiroskop Paralaks ve Eğim Tepkisi (Sıfır Pil Sızıntılı)"
+                textSize = 12.5f
+                setTextColor(colorTextPrimary)
                 layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
             }
             val gyroSwitch = Switch(context).apply {
@@ -582,13 +607,13 @@ class WallpaperDepth : OptimizedSettingsFragment(), Preference.OnPreferenceChang
                 }
                 val labelTv = TextView(context).apply {
                     text = title
-                    textSize = 11.5f
-                    setTextColor(0xFFCBD5E1.toInt())
+                    textSize = 12f
+                    setTextColor(colorTextSecondary)
                     layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
                 }
                 val valTv = TextView(context).apply {
-                    textSize = 11.5f
-                    setTextColor(0xFF38BDF8.toInt())
+                    textSize = 12f
+                    setTextColor(colorAccent)
                     typeface = Typeface.create("sans-serif-medium", Typeface.BOLD)
                 }
                 topLine.addView(labelTv)
@@ -630,7 +655,7 @@ class WallpaperDepth : OptimizedSettingsFragment(), Preference.OnPreferenceChang
             addStudioSlider("Saat Dikey Hizalama (Clock Y)", "depth_wallpaper_clock_offset_y", -140, 140, 0, " dp")
             addStudioSlider("Saat Boyutu (Clock Scale)", "depth_wallpaper_clock_scale", 70, 130, 100, "%")
             addStudioSlider(
-                "Ana Ekran Karartma & Kontrast (Homescreen Dim)",
+                "Ana Ekran Karartma ve Kontrast",
                 "wallpaper_dim_level",
                 0,
                 70,
@@ -647,8 +672,8 @@ class WallpaperDepth : OptimizedSettingsFragment(), Preference.OnPreferenceChang
                 orientation = LinearLayout.HORIZONTAL
                 setPadding(0, dp(8f), 0, 0)
             }
-            val resetBtn = makeChip("↺ Konumları Sıfırla", false)
-            val autoFitBtn = makeChip("✨ Üst Üste Saate Otomatik Hizala", true).apply {
+            val resetBtn = makeChip("Konumları Sıfırla", false)
+            val autoFitBtn = makeChip("Saate Otomatik Hizala", true).apply {
                 (layoutParams as LinearLayout.LayoutParams).marginEnd = 0
             }
             resetBtn.setOnClickListener {
@@ -665,7 +690,6 @@ class WallpaperDepth : OptimizedSettingsFragment(), Preference.OnPreferenceChang
             autoFitBtn.setOnClickListener {
                 Settings.System.putIntForUser(cr, "depth_wallpaper_smart_clock_guard", 1, UserHandle.USER_CURRENT)
                 guardSwitch.isChecked = true
-                // Compute ideal clock Y offset & subject Y offset for stacked clock legibility
                 Settings.System.putIntForUser(cr, "depth_wallpaper_clock_offset_y", -24, UserHandle.USER_CURRENT)
                 Settings.System.putIntForUser(cr, "depth_wallpaper_clock_scale", 95, UserHandle.USER_CURRENT)
                 Settings.System.putIntForUser(cr, "depth_wallpaper_offset_y", 28, UserHandle.USER_CURRENT)
@@ -874,19 +898,19 @@ class WallpaperDepth : OptimizedSettingsFragment(), Preference.OnPreferenceChang
                 // 4. Update telemetry badge
                 statusBadgeView?.text = if (subj != null) {
                     if (smartGuard) {
-                        "✓ AKILLI SAAT KORUMASI AKTİF • Örtülme: %$occlusionPct (İdeal)"
+                        "Akıllı Saat Koruması Aktif • Örtülme: %$occlusionPct (İdeal)"
                     } else {
-                        "⚠ KORUMA KAPALI • Örtülme: %$occlusionPct (Manuel Konum)"
+                        "Koruma Kapalı • Örtülme: %$occlusionPct (Manuel Konum)"
                     }
                 } else {
-                    "ℹ Özne Henüz Çıkarılmadı — 'Şimdi Özneyi Çıkar'a Dokunun"
+                    "Özne Henüz Çıkarılmadı — 'Şimdi Özneyi Çıkar'a Dokunun"
                 }
 
                 canvas.restore()
             }
 
             private fun drawHomescreenMockup(canvas: Canvas, w: Float, h: Float, d: Float, dimPct: Int) {
-                statusBadgeView?.text = "🏠 ANA EKRAN ÖNİZLEMESİ • Karartma: %$dimPct • İkon Kontrastı: Optimize"
+                statusBadgeView?.text = "Ana Ekran Önizlemesi • Karartma: %$dimPct • İkon Kontrastı: Dengeli"
                 // Weather / At a Glance pill
                 subTextPaint.textSize = 12f * d
                 canvas.drawText("Cum, 6 Kas  •  21°C Açık", w * 0.5f, 48f * d, subTextPaint)

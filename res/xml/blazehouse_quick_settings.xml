@@ -118,9 +118,9 @@
         <com.blaze.house.preferences.SystemSettingSeekBarPreference
             android:key="qs_columns_portrait"
             android:title="@string/quick_settings_columns_portrait_title"
-            android:defaultValue="2"
+            android:defaultValue="4"
             android:max="6"
-            settings:min="2" />
+            settings:min="3" />
 
         <com.blaze.house.preferences.SystemSettingSeekBarPreference
             android:key="qs_columns_landscape"

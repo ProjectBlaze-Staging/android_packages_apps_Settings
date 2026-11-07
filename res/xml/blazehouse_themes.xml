@@ -14,8 +14,9 @@
 
         <Preference
             android:key="blaze_goodlock_studio_entry"
-            android:title="✨ Blaze Good Lock Studio (Make Up &amp; Life Up)"
-            android:summary="LockStar, Home Up (DIY Home), QuickStar, Edge Lighting+, Wonderland 3D, SoundAssistant, One Hand Operation+ ve Nice Catch"
+            android:icon="@drawable/ic_settings_system_dashboard_filled"
+            android:title="Home Up ve Modüler Arayüz Stüdyosu"
+            android:summary="Launcher3 yaylanma fiziği (Stiffness/Damping), canlı yörünge önizlemesi, Pop-up klasör, ızgara/ikon ölçeği ve Task Changer"
             android:fragment="com.blaze.house.fragments.BlazeGoodLockStudioFragment" />
 
         <com.blaze.house.preferences.SecureSettingListPreference

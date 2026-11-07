@@ -291,26 +291,26 @@
     <string name="lockscreen_clock_source_custom">BlazeHouse Özel Saatleri</string>
 
     <!-- Liquid Glass Design & Luminous Motion Engine -->
-    <string name="blaze_liquid_glass_category_title">ColorOS ve Liquid Glass Motoru</string>
+    <string name="blaze_liquid_glass_category_title">Cam Yüzey ve Hareket Motoru</string>
     <string name="blaze_glass_style_title">Arayüz Yüzey ve Cam Stili</string>
-    <string name="blaze_glass_style_summary">Amiral gemisi GPU Liquid Glass kırılma efekti, dengeli ColorOS buzlu cam veya hafif Stok Material 3 arasında seçim yapın</string>
-    <string name="blaze_ui_glass_style_liquid">ColorOS Düzeni + iOS Liquid Glass (Amiral Gemisi GPU)</string>
-    <string name="blaze_ui_glass_style_ios27_dark_crystal">iOS 27 Koyu Füme Kristal + Aktif İç Mercek Kapsülü (Apple Native Stili)</string>
-    <string name="blaze_ui_glass_style_frosted">ColorOS Buzlu Cam (Dengeli)</string>
-    <string name="blaze_ui_glass_style_m3">Stok Material 3 (Hafif / Performans)</string>
+    <string name="blaze_glass_style_summary">Akıcı kırılmalı Liquid Glass, koyu füme kristal cam, yumuşak buzlu cam veya hafif standart Material 3 arasında seçim yapın</string>
+    <string name="blaze_ui_glass_style_liquid">Akıcı Liquid Glass (Kırılmalı Cam Yüzey)</string>
+    <string name="blaze_ui_glass_style_ios27_dark_crystal">Koyu Füme Kristal Cam (Mercek Kapsülü)</string>
+    <string name="blaze_ui_glass_style_frosted">Yumuşak Buzlu Cam (Dengeli)</string>
+    <string name="blaze_ui_glass_style_m3">Standart Material 3 (Hafif / Performans)</string>
     <string name="dynamic_bar_notification_mode_title">Gelen Mesaj ve Bildirim Gösterim Stili</string>
-    <string name="dynamic_bar_notif_mode_island_compact">Dinamik Ada Kapsülü (OriginOS / ColorOS Kompakt Önizleme + Tıklayınca Detay)</string>
-    <string name="dynamic_bar_notif_mode_island_expanded">Dinamik Ada Otomatik Açılır Kart (iOS Canlı Mesaj Kartı)</string>
-    <string name="dynamic_bar_notif_mode_stock_headsup">Stok Android Bildirimi (Standart Yüzen Başlık)</string>
+    <string name="dynamic_bar_notif_mode_island_compact">Dinamik Ada Kapsülü (Kompakt Önizleme + Dokununca Detay)</string>
+    <string name="dynamic_bar_notif_mode_island_expanded">Dinamik Ada Otomatik Açılır Kart (Canlı Mesaj Kartı)</string>
+    <string name="dynamic_bar_notif_mode_stock_headsup">Standart Android Bildirimi (Yüzen Başlık)</string>
     <string name="blaze_floating_bottom_nav_title">Yüzen Liquid Glass Alt Bar</string>
-    <string name="blaze_floating_bottom_nav_summary">Uygulama alt gezinme çubuklarını (YouTube, Instagram, WhatsApp vb.) basılı tutup kaydırılabilen etkileşimli Liquid Glass kapsülüne dönüştürün</string>
+    <string name="blaze_floating_bottom_nav_summary">Uygulama alt gezinme çubuklarını basılı tutup kaydırılabilen etkileşimli cam kapsüle dönüştürün</string>
     <string name="blaze_animation_engine_title">Hareket ve Yay Fiziği Motoru</string>
-    <string name="blaze_animation_engine_summary">RenderThread Luminous yay fiziğini ve ColorOS duvar kağıdı geçiş ölçeklemesini kontrol edin</string>
-    <string name="blaze_animation_engine_luminous">Luminous + ColorOS Yay Fiziği (Amiral Gemisi)</string>
+    <string name="blaze_animation_engine_summary">RenderThread hızlandırmalı yay fiziğini ve duvar kağıdı geçiş ölçeklemesini kontrol edin</string>
+    <string name="blaze_animation_engine_luminous">Dinamik Yay Fiziği (Yüksek Akıcılık)</string>
     <string name="blaze_animation_engine_standard">Standart Akıcı (Hafif)</string>
     <string name="blaze_auto_lite_on_battery_saver_title">Pil tasarrufunda ağır efektleri otomatik askıya al</string>
     <string name="blaze_auto_lite_on_battery_saver_summary">Pil Tasarrufu açıldığında GPU kırılma efektlerini ve ağır animasyonları otomatik olarak hafif moda geçirir</string>
-    <string name="dynamic_bar_cos_island_title">ColorOS Kamera Deliği Animasyonu</string>
+    <string name="dynamic_bar_cos_island_title">Kamera Deliği Dalga Animasyonu</string>
     <string name="dynamic_bar_cos_island_summary">Dinamik Adayı ön kamera deliğinden yumuşakça büyüterek çıkartır ve canlı ses dalgalarıyla medya kartı sunar</string>
 
     <!-- BlazeHouse Treble & Multi-Device Hardware Compatibility -->
@@ -358,9 +358,9 @@
     <string name="blaze_about_device_image_title">Telefon Hakkında Cihaz Görseli</string>
     <string name="blaze_about_device_image_summary">Cihaz/marka modelini otomatik algıla, hazır 3D modellerden seç veya galeriden özel PNG yükle</string>
     <string name="blaze_about_hero_bg_title">Telefon Hakkında Üst Kart Arka Planı</string>
-    <string name="blaze_about_hero_bg_summary">ColorOS 17 Living Flow canlı cam dalgaları, duvar kağıdı eşitleme veya kırpılıp boyutlandırılabilen özel görsel</string>
+    <string name="blaze_about_hero_bg_summary">Canlı cam dalgaları, duvar kağıdı eşitleme veya kırpılıp boyutlandırılabilen özel görsel</string>
 
-    <!-- ColorOS 17 Living Flow Yazılım Güncellemesi Ekranı -->
+    <!-- Yazılım Güncellemesi Ekranı -->
     <string name="blaze_software_update_title">Yazılım güncellemesi</string>
     <string name="blaze_update_software_version_label">Yazılım sürümü</string>
     <string name="blaze_update_about_this_update">Bu güncelleme hakkında</string>
@@ -368,10 +368,10 @@
     <string name="blaze_update_status_up_to_date">Sürüm güncel • Son denetleme: %1$s</string>
     <string name="blaze_update_btn_checking">Güncellemeler denetleniyor…</string>
     <string name="blaze_update_btn_check_again">Güncellemeleri Denetle</string>
-    <string name="blaze_update_changelog_headline">BlazeAOSP 17. İpeksi Akıcılık. Living Flow.</string>
-    <string name="blaze_update_changelog_p1">BlazeAOSP 17, yepyeni bir görünüm.\n\nİlk andan itibaren pürüzsüz, zamanla daha da akıcı. Yepyeni Living Flow Tasarım Dili. Hareket halinde ipeksi, doğası gereği canlı.</string>
-    <string name="blaze_update_changelog_p2">Laminar Flow Engine; RenderThread hızlandırmalı Luminous yay fiziği ve adaptif bellek zamanlaması ile hem ön planda hem arka planda kesintisiz kararlılık ve akıcı performans sunar.</string>
-    <string name="blaze_update_changelog_p3">Material 3 Expressive ikon ve formlar, iOS 27 Koyu Kristal mercek yüzeyleri ve Dinamik Ada canlı zamanlayıcı ve mesaj sistemi kusursuz uyumla bir araya getirildi.</string>
+    <string name="blaze_update_changelog_headline">BlazeAOSP 17 • İpeksi Akıcılık</string>
+    <string name="blaze_update_changelog_p1">BlazeAOSP 17, yepyeni bir görünüm.\n\nİlk andan itibaren pürüzsüz, zamanla daha da akıcı. Hareket halinde ipeksi, doğası gereği canlı tasarım dili.</string>
+    <string name="blaze_update_changelog_p2">RenderThread hızlandırmalı yay fiziği ve adaptif bellek zamanlaması ile hem ön planda hem arka planda kesintisiz kararlılık ve akıcı performans sunar.</string>
+    <string name="blaze_update_changelog_p3">Material 3 Expressive ikon ve formlar, koyu kristal cam yüzeyler ve Dinamik Ada canlı zamanlayıcı ve mesaj sistemi kusursuz uyumla bir araya getirildi.</string>
     <string name="blaze_update_changelog_p4">Android 17 (API 37) • Resmi Sürüm</string>
     <string name="blaze_update_changelog_p4_formatted">Güvenlik yaması: %1$s • Çekirdek: %2$s\nYapı: %3$s • BlazeAOSP OTA tarafından doğrulandı</string>
     <string name="blaze_update_menu_check_now">Güncellemeleri şimdi denetle</string>
@@ -379,11 +379,11 @@
     <string name="blaze_update_menu_system_updater">Android sistem güncelleyicisini aç</string>
     <string name="blaze_update_local_ota_unavailable">Dosya seçici açılamadı</string>
     <string name="blaze_update_already_latest_toast">BlazeAOSP 17 sisteminiz zaten en güncel sürümde</string>
-    <string name="status_bar_battery_style_ios27_capsule">iOS 27 Kapsül Pil (Liquid Glass)</string>
-    <string name="status_bar_battery_style_coloros17_capsule">ColorOS 17 Canlı Kapsül</string>
-    <string name="status_bar_battery_style_oneui9_pill">One UI 9 Hap Pil</string>
-    <string name="blaze_dolby_atmos_title">Dolby Atmos ve Uzamsal Ses Stüdyosu</string>
-    <string name="blaze_dolby_atmos_summary">3B uzamsal ses sahnesi, Dinamik/Sinema/Müzik/Oyun/Ses DSP profilleri ve 10 bantlı stüdyo ekolayzer</string>
+    <string name="status_bar_battery_style_ios27_capsule">Yatay Cam Kapsül Pil</string>
+    <string name="status_bar_battery_style_coloros17_capsule">Yumuşak Canlı Kapsül Pil</string>
+    <string name="status_bar_battery_style_oneui9_pill">Modern Hap Pil</string>
+    <string name="blaze_dolby_atmos_title">Ses Efektleri ve Ekolayzer</string>
+    <string name="blaze_dolby_atmos_summary">Çok bantlı ekolayzer, bas güçlendirme, sanallaştırıcı ve akustik ses profilleri</string>
     <string name="blaze_gamespace_fps_hud_title">Yüzen Canlı FPS ve CPU Göstergesi (HUD)</string>
     <string name="blaze_gamespace_fps_hud_summary">Oyunlarda ve uygulamalarda gerçek zamanlı FPS, yenileme hızı ve CPU/sıcaklık telemetri kapsülünü göster</string>
     <string name="blaze_gamespace_touch_boost_title">HyperTouch 360Hz Dokunma İvmesi</string>

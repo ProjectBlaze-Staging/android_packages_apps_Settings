@@ -32,8 +32,20 @@ public class LineageSystemSettingListPreference extends ListPreference {
     @Override
     public void setValue(String value) {
         super.setValue(value);
-        if (mAutoSummary || TextUtils.isEmpty(getSummary())) {
+        if (mAutoSummary || TextUtils.isEmpty(super.getSummary())) {
             setSummary(getEntry(), true);
+        }
+    }
+
+    @Override
+    public CharSequence getSummary() {
+        if (mAutoSummary) {
+            return getEntry();
+        }
+        try {
+            return super.getSummary();
+        } catch (java.util.IllegalFormatException e) {
+            return getEntry();
         }
     }
 

@@ -5,22 +5,22 @@
 
 package com.blaze.house.fragments;
 
+import android.animation.ValueAnimator;
 import android.app.AlertDialog;
 import android.app.AppOpsManager;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.LinearGradient;
+import android.graphics.DashPathEffect;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.RectF;
-import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.media.AudioAttributes;
@@ -28,24 +28,21 @@ import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioPlaybackConfiguration;
 import android.media.AudioTrack;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.SystemProperties;
 import android.os.UserHandle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.provider.Settings;
-import android.text.InputType;
-import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
@@ -54,9 +51,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.internal.logging.nano.MetricsProto.MetricsEvent;
+import com.android.settings.R;
 import com.android.settings.SettingsPreferenceFragment;
 import com.android.settings.core.SubSettingLauncher;
-import com.blaze.house.utils.LivingFlowTouchHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -67,34 +64,68 @@ import java.util.Locale;
 import java.util.Random;
 
 /**
- * Blaze Good Lock Studio (OneUI 9 Make Up & Life Up + ColorOS 17 / OriginOS 6 / HyperOS 4)
- *
- * Modular customization laboratory divided into two suites:
- *  1. Make Up (Visual & Aesthetic): LockStar, Home Up (DIY Home), QuickStar, Edge Lighting+, Wonderland 3D
- *  2. Life Up (Productivity, Audio & Diagnostics): SoundAssistant + O-Relax, One Hand Operation+ & Smart Sidebar,
- *     MultiStar, RegiStar, Nice Catch System Detective.
+ * Home Up & Modüler Sistem Araçları Stüdyosu.
+ * Every control in this fragment is wired directly to Launcher3 (BlazeHomeUpController,
+ * RectFSpringAnim, QuickstepTransitionManager, ScalingWorkspaceRevealAnim, Folder,
+ * InvariantDeviceProfile, RecentsView) or Android 17 framework services.
  */
 public class BlazeGoodLockStudioFragment extends SettingsPreferenceFragment {
 
-    private static final int TAB_MAKE_UP = 0;
-    private static final int TAB_LIFE_UP = 1;
+    private static final int TAB_HOMEUP_GESTURE = 0;
+    private static final int TAB_HOMEUP_LAYOUT = 1;
+    private static final int TAB_SYSTEM = 2;
+
+    // Shared Settings.Secure keys with Launcher3 BlazeHomeUpController
+    private static final String KEY_GESTURE_MODE = "blaze_homeup_gesture_mode";
+    private static final String KEY_SIMPLE_PROGRESS = "blaze_homeup_simple_progress";
+    private static final String KEY_DAMPING_X = "blaze_homeup_damping_x";
+    private static final String KEY_DAMPING_Y = "blaze_homeup_damping_y";
+    private static final String KEY_STIFFNESS_X = "blaze_homeup_stiffness_x";
+    private static final String KEY_STIFFNESS_Y = "blaze_homeup_stiffness_y";
+    private static final String KEY_SCALE_DAMPING = "blaze_homeup_scale_damping";
+    private static final String KEY_SCALE_STIFFNESS = "blaze_homeup_scale_stiffness";
+    private static final String KEY_TRACKING_MODE = "blaze_homeup_tracking_mode";
+    private static final String KEY_APP_OPEN_DURATION = "blaze_homeup_app_open_duration";
+    private static final String KEY_HOME_DURATION = "blaze_homeup_home_duration";
+    private static final String KEY_HOME_SCALE = "blaze_homeup_home_scale";
+    private static final String KEY_WALLPAPER_DURATION = "blaze_homeup_wallpaper_duration";
+    private static final String KEY_WALLPAPER_BLUR = "blaze_homeup_wallpaper_blur";
+
+    private static final String KEY_POPUP_FOLDER = "blaze_homeup_popup_folder";
+    private static final String KEY_FOLDER_GRID = "blaze_homeup_folder_grid";
+    private static final String KEY_ICON_SCALE_PCT = "blaze_homeup_icon_scale_pct";
+    private static final String KEY_GRID_NAME = "blaze_homeup_grid_name";
+    private static final String KEY_HIDE_LABELS = "blaze_homeup_hide_labels";
+    private static final String KEY_TASK_CHANGER_STYLE = "blaze_homeup_task_changer_style";
+    private static final String KEY_RECENTS_FOCUS_PREV = "blaze_homeup_recents_focus_prev";
 
     private Context mContext;
     private ContentResolver mResolver;
-    private int mCurrentTab = TAB_MAKE_UP;
+    private int mCurrentTab = TAB_HOMEUP_GESTURE;
 
-    private LinearLayout mMakeUpContainer;
-    private LinearLayout mLifeUpContainer;
-    private TextView mTabMakeUpBtn;
-    private TextView mTabLifeUpBtn;
+    private boolean mIsNight;
+    private int mColorBg;
+    private int mColorSurface;
+    private int mColorSurfaceVariant;
+    private int mColorBorder;
+    private int mColorAccent;
+    private int mColorTextPrimary;
+    private int mColorTextSecondary;
+
+    private LinearLayout mGestureContainer;
+    private LinearLayout mLayoutContainer;
+    private LinearLayout mSystemContainer;
+    private TextView mTabGestureBtn;
+    private TextView mTabLayoutBtn;
+    private TextView mTabSystemBtn;
     private TextView mActiveModulesBadge;
 
-    // O-Relax Procedural Ambient Soundscape Synthesizer (Stage 2)
+    private HomeUpSpringPreviewView mSpringPreviewView;
+    private TextView mPhysicsTelemetryText;
+
     private volatile boolean mAmbientPlaying = false;
-    private volatile int mAmbientMode = 0; // 0=Off, 1=Night Rain, 2=Ocean Waves, 3=Campfire, 4=Deep Space
     private Thread mAmbientThread;
     private TextView mAmbientStatusText;
-    private final Handler mHandler = new Handler(Looper.getMainLooper());
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -102,24 +133,55 @@ public class BlazeGoodLockStudioFragment extends SettingsPreferenceFragment {
         mContext = requireContext();
         mResolver = mContext.getContentResolver();
         if (savedInstanceState != null) {
-            mCurrentTab = savedInstanceState.getInt("goodlock_tab", TAB_MAKE_UP);
+            mCurrentTab = savedInstanceState.getInt("modular_tab", TAB_HOMEUP_GESTURE);
         }
         if (getActivity() != null) {
-            getActivity().setTitle("Blaze Good Lock Studio");
+            getActivity().setTitle("Home Up ve Sistem Araçları");
         }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt("goodlock_tab", mCurrentTab);
+        outState.putInt("modular_tab", mCurrentTab);
+    }
+
+    private void resolveThemePalette() {
+        int uiMode = mContext.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        mIsNight = (uiMode == Configuration.UI_MODE_NIGHT_YES);
+        mColorBg = resolveAttrColor(android.R.attr.colorBackground, mIsNight ? 0xFF111318 : 0xFFF8F9FC);
+        mColorAccent = resolveAttrColor(android.R.attr.colorAccent, mIsNight ? 0xFFA8C7FA : 0xFF1B6EF3);
+        mColorTextPrimary = resolveAttrColor(android.R.attr.textColorPrimary, mIsNight ? 0xFFE2E2E9 : 0xFF1A1C20);
+        mColorTextSecondary = resolveAttrColor(android.R.attr.textColorSecondary, mIsNight ? 0xFFC4C6D0 : 0xFF44474F);
+        mColorSurface = mIsNight ? 0xFF1C1F26 : 0xFFFFFFFF;
+        mColorSurfaceVariant = mIsNight ? 0xFF252932 : 0xFFEEF1F7;
+        mColorBorder = mIsNight ? 0x22FFFFFF : 0x16000000;
+    }
+
+    private int resolveAttrColor(int attr, int fallback) {
+        TypedValue tv = new TypedValue();
+        if (mContext.getTheme().resolveAttribute(attr, tv, true)) {
+            if (tv.resourceId != 0) {
+                try {
+                    return mContext.getColor(tv.resourceId);
+                } catch (Exception ignored) {}
+            }
+            return tv.data;
+        }
+        return fallback;
+    }
+
+    private int withAlpha(int color, int alpha) {
+        return (color & 0x00FFFFFF) | ((alpha & 0xFF) << 24);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        resolveThemePalette();
+
         ScrollView scrollView = new ScrollView(mContext);
         scrollView.setFillViewport(true);
-        scrollView.setBackgroundColor(Color.parseColor("#080D16"));
+        scrollView.setBackgroundColor(mColorBg);
 
         LinearLayout root = new LinearLayout(mContext);
         root.setOrientation(LinearLayout.VERTICAL);
@@ -127,21 +189,23 @@ public class BlazeGoodLockStudioFragment extends SettingsPreferenceFragment {
         root.setPadding(padH, dp(12), padH, dp(40));
         scrollView.addView(root);
 
-        // 1. Hero Banner + Dual Suite Switcher (Make Up / Life Up)
         root.addView(buildHeroBanner());
         root.addView(buildSuiteTabSwitcher());
 
-        // 2. Make Up Container (Stage 1 & Stage 4)
-        mMakeUpContainer = new LinearLayout(mContext);
-        mMakeUpContainer.setOrientation(LinearLayout.VERTICAL);
-        populateMakeUpModules(mMakeUpContainer);
-        root.addView(mMakeUpContainer);
+        mGestureContainer = new LinearLayout(mContext);
+        mGestureContainer.setOrientation(LinearLayout.VERTICAL);
+        populateHomeUpGestureTab(mGestureContainer);
+        root.addView(mGestureContainer);
 
-        // 3. Life Up Container (Stage 2, Stage 3 & Stage 5)
-        mLifeUpContainer = new LinearLayout(mContext);
-        mLifeUpContainer.setOrientation(LinearLayout.VERTICAL);
-        populateLifeUpModules(mLifeUpContainer);
-        root.addView(mLifeUpContainer);
+        mLayoutContainer = new LinearLayout(mContext);
+        mLayoutContainer.setOrientation(LinearLayout.VERTICAL);
+        populateHomeUpLayoutTab(mLayoutContainer);
+        root.addView(mLayoutContainer);
+
+        mSystemContainer = new LinearLayout(mContext);
+        mSystemContainer.setOrientation(LinearLayout.VERTICAL);
+        populateSystemModules(mSystemContainer);
+        root.addView(mSystemContainer);
 
         switchSuiteTab(mCurrentTab);
         refreshActiveModulesCount();
@@ -151,25 +215,19 @@ public class BlazeGoodLockStudioFragment extends SettingsPreferenceFragment {
     @Override
     public void onDestroyView() {
         stopAmbientSoundscape();
+        if (mSpringPreviewView != null) {
+            mSpringPreviewView.stopAnimation();
+        }
         super.onDestroyView();
     }
-
-    // =========================================================================
-    // HERO BANNER & SUITE SWITCHER
-    // =========================================================================
 
     private View buildHeroBanner() {
         LinearLayout card = new LinearLayout(mContext);
         card.setOrientation(LinearLayout.VERTICAL);
-        GradientDrawable bg = new GradientDrawable(
-                GradientDrawable.Orientation.TL_BR,
-                new int[]{
-                        Color.parseColor("#1D1836"),
-                        Color.parseColor("#111C35"),
-                        Color.parseColor("#0D1526")
-                });
-        bg.setCornerRadius(dp(26));
-        bg.setStroke(dp(1), Color.parseColor("#45A855F7"));
+        GradientDrawable bg = new GradientDrawable();
+        bg.setColor(mColorSurface);
+        bg.setCornerRadius(dp(24));
+        bg.setStroke(dp(1), mColorBorder);
         card.setBackground(bg);
         int pad = dp(20);
         card.setPadding(pad, dp(18), pad, dp(18));
@@ -182,52 +240,80 @@ public class BlazeGoodLockStudioFragment extends SettingsPreferenceFragment {
         topRow.setOrientation(LinearLayout.HORIZONTAL);
         topRow.setGravity(Gravity.CENTER_VERTICAL);
 
+        FrameLayout iconWrap = createIconBadge(R.drawable.ic_settings_system_dashboard_filled);
+        LinearLayout.LayoutParams iconLp = new LinearLayout.LayoutParams(dp(40), dp(40));
+        iconLp.rightMargin = dp(12);
+        topRow.addView(iconWrap, iconLp);
+
+        LinearLayout titleCol = new LinearLayout(mContext);
+        titleCol.setOrientation(LinearLayout.VERTICAL);
+        LinearLayout.LayoutParams titleColLp = new LinearLayout.LayoutParams(
+                0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
+        titleCol.setLayoutParams(titleColLp);
+
         TextView pill = new TextView(mContext);
-        pill.setText("✨ ONE UI 9 GOOD LOCK • BLAZE EDITION");
-        pill.setTextColor(Color.parseColor("#E9D5FF"));
+        pill.setText("HOME UP & GOOD LOCK MİMARİSİ");
+        pill.setTextColor(mColorAccent);
         pill.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10.5f);
         pill.setTypeface(Typeface.create("sans-serif-medium", Typeface.BOLD));
-        GradientDrawable pillBg = new GradientDrawable();
-        pillBg.setColor(Color.parseColor("#33A855F7"));
-        pillBg.setCornerRadius(dp(99));
-        pill.setBackground(pillBg);
-        pill.setPadding(dp(10), dp(4), dp(10), dp(4));
-        LinearLayout.LayoutParams pillLp = new LinearLayout.LayoutParams(
-                0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
-        topRow.addView(pill, pillLp);
-
-        mActiveModulesBadge = new TextView(mContext);
-        mActiveModulesBadge.setTextColor(Color.parseColor("#38BDF8"));
-        mActiveModulesBadge.setTextSize(TypedValue.COMPLEX_UNIT_SP, 11f);
-        mActiveModulesBadge.setTypeface(Typeface.create("sans-serif-medium", Typeface.BOLD));
-        topRow.addView(mActiveModulesBadge);
-        card.addView(topRow);
+        pill.setLetterSpacing(0.05f);
+        titleCol.addView(pill);
 
         TextView title = new TextView(mContext);
-        title.setText("Good Lock Özelleştirme Laboratuvarı");
-        title.setTextColor(Color.WHITE);
-        title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f);
+        title.setText("Home Up ve Sistem Stüdyosu");
+        title.setTextColor(mColorTextPrimary);
+        title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18.5f);
         title.setTypeface(Typeface.create("sans-serif-medium", Typeface.BOLD));
-        title.setPadding(0, dp(10), 0, dp(4));
-        card.addView(title);
+        titleCol.addView(title);
+
+        topRow.addView(titleCol);
+
+        mActiveModulesBadge = new TextView(mContext);
+        mActiveModulesBadge.setTextColor(mColorAccent);
+        mActiveModulesBadge.setTextSize(TypedValue.COMPLEX_UNIT_SP, 11.5f);
+        mActiveModulesBadge.setTypeface(Typeface.create("sans-serif-medium", Typeface.BOLD));
+        GradientDrawable badgeBg = new GradientDrawable();
+        badgeBg.setColor(withAlpha(mColorAccent, 28));
+        badgeBg.setCornerRadius(dp(99));
+        mActiveModulesBadge.setBackground(badgeBg);
+        mActiveModulesBadge.setPadding(dp(10), dp(5), dp(10), dp(5));
+        topRow.addView(mActiveModulesBadge);
+
+        card.addView(topRow);
 
         TextView subtitle = new TextView(mContext);
-        subtitle.setText("Make Up ile kilit ekranı, 3D parçacıklar, kenar ışıkları ve hareket fiziğini; Life Up ile uygulama başına ses mikseri, tek el çapraz hareketleri, akıllı kenar rıhtımı ve Nice Catch sistem dedektifini yönetin.");
-        subtitle.setTextColor(Color.parseColor("#94A3B8"));
-        subtitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f);
+        subtitle.setText("Launcher3 yaylanma fiziği (Stiffness/Damping), uygulama açılış eğrileri, Pop-up klasör düzeni, ızgara/ikon ölçeği, Task Changer kart görünümü ve sistem araçlarını gerçek zamanlı yönetin.");
+        subtitle.setTextColor(mColorTextSecondary);
+        subtitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12.5f);
+        subtitle.setLineSpacing(dp(2), 1.0f);
+        subtitle.setPadding(0, dp(10), 0, 0);
         card.addView(subtitle);
 
-        LivingFlowTouchHelper.attach(card, 0.97f, true);
         return card;
+    }
+
+    private FrameLayout createIconBadge(int drawableResId) {
+        FrameLayout frame = new FrameLayout(mContext);
+        GradientDrawable bg = new GradientDrawable();
+        bg.setColor(withAlpha(mColorAccent, 30));
+        bg.setCornerRadius(dp(12));
+        frame.setBackground(bg);
+
+        ImageView iv = new ImageView(mContext);
+        iv.setImageResource(drawableResId);
+        iv.setColorFilter(mColorAccent);
+        FrameLayout.LayoutParams ivLp = new FrameLayout.LayoutParams(dp(22), dp(22), Gravity.CENTER);
+        frame.addView(iv, ivLp);
+        return frame;
     }
 
     private View buildSuiteTabSwitcher() {
         LinearLayout bar = new LinearLayout(mContext);
         bar.setOrientation(LinearLayout.HORIZONTAL);
         GradientDrawable bg = new GradientDrawable();
-        bg.setColor(Color.parseColor("#131C2E"));
+        bg.setColor(mColorSurfaceVariant);
         bg.setCornerRadius(dp(18));
-        bg.setStroke(dp(1), Color.parseColor("#25FFFFFF"));
+        bg.setStroke(dp(1), mColorBorder);
         bar.setBackground(bg);
         bar.setPadding(dp(4), dp(4), dp(4), dp(4));
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
@@ -235,11 +321,13 @@ public class BlazeGoodLockStudioFragment extends SettingsPreferenceFragment {
         lp.bottomMargin = dp(16);
         bar.setLayoutParams(lp);
 
-        mTabMakeUpBtn = createSuiteTabButton("🎨 Make Up (Görsel & Estetik)", TAB_MAKE_UP);
-        mTabLifeUpBtn = createSuiteTabButton("🚀 Life Up (Ses, Hareket & Dedektif)", TAB_LIFE_UP);
+        mTabGestureBtn = createSuiteTabButton("Home Up • Fizik", TAB_HOMEUP_GESTURE);
+        mTabLayoutBtn = createSuiteTabButton("Home Up • Düzen", TAB_HOMEUP_LAYOUT);
+        mTabSystemBtn = createSuiteTabButton("Sistem Araçları", TAB_SYSTEM);
 
-        bar.addView(mTabMakeUpBtn, new LinearLayout.LayoutParams(0, dp(42), 1f));
-        bar.addView(mTabLifeUpBtn, new LinearLayout.LayoutParams(0, dp(42), 1f));
+        bar.addView(mTabGestureBtn, new LinearLayout.LayoutParams(0, dp(42), 1f));
+        bar.addView(mTabLayoutBtn, new LinearLayout.LayoutParams(0, dp(42), 1f));
+        bar.addView(mTabSystemBtn, new LinearLayout.LayoutParams(0, dp(42), 1f));
         return bar;
     }
 
@@ -258,542 +346,952 @@ public class BlazeGoodLockStudioFragment extends SettingsPreferenceFragment {
 
     private void switchSuiteTab(int tabIndex) {
         mCurrentTab = tabIndex;
-        if (mMakeUpContainer != null) {
-            mMakeUpContainer.setVisibility(tabIndex == TAB_MAKE_UP ? View.VISIBLE : View.GONE);
+        if (mGestureContainer != null) {
+            mGestureContainer.setVisibility(tabIndex == TAB_HOMEUP_GESTURE ? View.VISIBLE : View.GONE);
         }
-        if (mLifeUpContainer != null) {
-            mLifeUpContainer.setVisibility(tabIndex == TAB_LIFE_UP ? View.VISIBLE : View.GONE);
+        if (mLayoutContainer != null) {
+            mLayoutContainer.setVisibility(tabIndex == TAB_HOMEUP_LAYOUT ? View.VISIBLE : View.GONE);
         }
-        styleSuiteTab(mTabMakeUpBtn, tabIndex == TAB_MAKE_UP, "#A855F7");
-        styleSuiteTab(mTabLifeUpBtn, tabIndex == TAB_LIFE_UP, "#38BDF8");
+        if (mSystemContainer != null) {
+            mSystemContainer.setVisibility(tabIndex == TAB_SYSTEM ? View.VISIBLE : View.GONE);
+        }
+        styleSuiteTab(mTabGestureBtn, tabIndex == TAB_HOMEUP_GESTURE);
+        styleSuiteTab(mTabLayoutBtn, tabIndex == TAB_HOMEUP_LAYOUT);
+        styleSuiteTab(mTabSystemBtn, tabIndex == TAB_SYSTEM);
+        if (tabIndex == TAB_HOMEUP_GESTURE && mSpringPreviewView != null) {
+            mSpringPreviewView.triggerPreviewAnimation();
+        }
     }
 
-    private void styleSuiteTab(TextView tv, boolean active, String accentHex) {
+    private void styleSuiteTab(TextView tv, boolean active) {
         if (tv == null) return;
         if (active) {
             GradientDrawable bg = new GradientDrawable();
-            bg.setColor(Color.parseColor("#2E" + accentHex.substring(1)));
+            bg.setColor(mColorSurface);
             bg.setCornerRadius(dp(14));
-            bg.setStroke(dp(1), Color.parseColor(accentHex));
+            bg.setStroke(dp(1), withAlpha(mColorAccent, 90));
             tv.setBackground(bg);
-            tv.setTextColor(Color.WHITE);
+            tv.setTextColor(mColorAccent);
         } else {
             tv.setBackground(null);
-            tv.setTextColor(Color.parseColor("#94A3B8"));
+            tv.setTextColor(mColorTextSecondary);
         }
     }
 
     private void refreshActiveModulesCount() {
         if (mActiveModulesBadge == null) return;
-        int active = 0;
-        if (Settings.System.getIntForUser(mResolver, "depth_wallpaper_enabled", 0, UserHandle.USER_CURRENT) == 1) active++;
-        if (!TextUtils.isEmpty(Settings.Secure.getStringForUser(mResolver, "blaze_lockstar_signature_text", UserHandle.USER_CURRENT))) active++;
-        if (Settings.Secure.getIntForUser(mResolver, "blaze_edgelighting_style", 2, UserHandle.USER_CURRENT) > 0) active++;
-        if (Settings.Secure.getIntForUser(mResolver, "blaze_wonderland_particle_mode", 0, UserHandle.USER_CURRENT) > 0) active++;
-        if (Settings.Secure.getIntForUser(mResolver, "blaze_behavioral_wallpaper_aura", 1, UserHandle.USER_CURRENT) == 1) active++;
-        if (Settings.Secure.getIntForUser(mResolver, "blaze_soundassistant_multisound", 1, UserHandle.USER_CURRENT) == 1) active++;
-        if (Settings.Secure.getIntForUser(mResolver, "blaze_oho_enabled", 1, UserHandle.USER_CURRENT) == 1) active++;
-        if (Settings.Secure.getIntForUser(mResolver, "blaze_smart_sidebar_enabled", 1, UserHandle.USER_CURRENT) == 1) active++;
-        if (Settings.Global.getInt(mResolver, "enable_non_resizable_multi_window", 1) == 1) active++;
-        mActiveModulesBadge.setText(active + " / 9 Modül Aktif");
+        int mode = Settings.Secure.getInt(mResolver, KEY_GESTURE_MODE, 0);
+        String[] modeNames = {"Dinamik", "Klasik", "Canlı", "Yumuşak", "Basit", "Gelişmiş"};
+        String modeLabel = (mode >= 0 && mode < modeNames.length) ? modeNames[mode] : "Dinamik";
+        mActiveModulesBadge.setText("Profil: " + modeLabel);
     }
 
     // =========================================================================
-    // SUITE 1: MAKE UP MODULES (LockStar, Home Up, QuickStar, Edge Lighting+, Wonderland)
+    // TAB 1: HOME UP • HAREKET VE YAYLANMA FİZİĞİ (GESTURE TUNING)
     // =========================================================================
 
-    private void populateMakeUpModules(LinearLayout parent) {
+    private void populateHomeUpGestureTab(LinearLayout parent) {
         parent.removeAllViews();
 
-        // MODULE 1: LockStar & HyperOS 4 Magazine Lockscreen
-        LinearLayout lockStarCard = createModuleCard(
-                "🔒 LockStar & HyperOS Dergi Stüdyosu",
-                "MAKE UP • KİLİT EKRANI SERBEST TASARIM & İMZA BAŞLIĞI",
-                "#A855F7");
+        // CARD 1: Canlı Yaylanma ve Yörünge Simülatörü (IconMovePreview + IconScalePreview)
+        LinearLayout previewCard = createModuleCard(
+                R.drawable.ic_settings_gestures,
+                "Canlı Yaylanma ve Yörünge Önizlemesi",
+                "GERÇEK ZAMANLI SPRINGANIMATION SİMÜLATÖRÜ");
 
-        String currentSig = Settings.Secure.getStringForUser(
-                mResolver, "blaze_lockstar_signature_text", UserHandle.USER_CURRENT);
-        if (currentSig == null) currentSig = "PROJECT BLAZE 17 • BEYOND INFINITY";
+        mPhysicsTelemetryText = new TextView(mContext);
+        mPhysicsTelemetryText.setTextColor(mColorTextSecondary);
+        mPhysicsTelemetryText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 11.5f);
+        mPhysicsTelemetryText.setPadding(0, 0, 0, dp(8));
+        previewCard.addView(mPhysicsTelemetryText);
 
-        final TextView sigSummary = new TextView(mContext);
-        addActionRow(lockStarCard,
-                "✍️ Kilit Ekranı Dergi İmza / Motto Başlığı",
-                "Saatin altında sinematik dergi imzası gösterir (" + (TextUtils.isEmpty(currentSig) ? "Kapalı" : currentSig) + ")",
-                sigSummary,
-                v -> showLockStarSignatureDialog(sigSummary));
+        mSpringPreviewView = new HomeUpSpringPreviewView(mContext);
+        LinearLayout.LayoutParams prevLp = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, dp(164));
+        prevLp.bottomMargin = dp(8);
+        previewCard.addView(mSpringPreviewView, prevLp);
 
-        int timeoutSec = Settings.Secure.getIntForUser(
-                mResolver, "blaze_lockstar_timeout_sec", 30, UserHandle.USER_CURRENT);
-        final TextView timeoutSummary = new TextView(mContext);
-        addActionRow(lockStarCard,
-                "⏱️ LockStar Kilit Ekranı Zaman Aşımı",
-                "Kilit ekranında bildirimleri ve duvar kağıdını incelerken ekranın erken kapanmasını önler (" + timeoutSec + " sn)",
-                timeoutSummary,
-                v -> showLockStarTimeoutDialog(timeoutSummary));
+        TextView tapHint = new TextView(mContext);
+        tapHint.setText("Simülasyonu tekrar oynatmak için önizleme alanına dokunun veya aşağıdaki fizik parametrelerini değiştirin.");
+        tapHint.setTextColor(mColorTextSecondary);
+        tapHint.setTextSize(TypedValue.COMPLEX_UNIT_SP, 11f);
+        previewCard.addView(tapHint);
 
-        addActionRow(lockStarCard,
-                "🖼️ Derinlik & Saat Konum Stüdyosunu Aç (Canlı Tuval)",
-                "Üst üste saat örtülme koruması, parmakla özne/saat taşıma ve kilit/ana ekran önizlemesi",
+        parent.addView(previewCard);
+
+        // CARD 2: Home Up Hareket Modu ve Hazır Profiller
+        LinearLayout modeCard = createModuleCard(
+                R.drawable.ic_settings_display_filled,
+                "Hareket Fiziği ve Yaylanma Profili",
+                "HOME UP 17 ORİJİNAL PRESET VE ENTERPOLASYON MOTORU");
+
+        int currentMode = Settings.Secure.getInt(mResolver, KEY_GESTURE_MODE, 0);
+        final String[] modeTitles = {
+                "Dinamik (Hızlı ve Dengeli — Varsayılan)",
+                "Klasik (Kritik Sönümlü • Sıfır Salınım)",
+                "Canlı (Esnek • Yüksek Yaylanma)",
+                "Yumuşak (Geniş ve Sakin Geçiş)",
+                "Basit Kaydırıcı (0–100 Tek Çubuk Senkronizasyonu)",
+                "Gelişmiş Fizik Ayarları (Tam Manuel Kontrol)"
+        };
+
+        HorizontalScrollView chipScroll = new HorizontalScrollView(mContext);
+        chipScroll.setHorizontalScrollBarEnabled(false);
+        LinearLayout chipRow = new LinearLayout(mContext);
+        chipRow.setOrientation(LinearLayout.HORIZONTAL);
+        chipRow.setPadding(0, dp(4), 0, dp(10));
+
+        final String[] shortLabels = {
+                "Dinamik", "Klasik", "Canlı", "Yumuşak", "Basit Çubuk", "Gelişmiş"
+        };
+        for (int i = 0; i < shortLabels.length; i++) {
+            final int modeIdx = i;
+            TextView chip = new TextView(mContext);
+            chip.setText(shortLabels[i]);
+            boolean selected = (currentMode == modeIdx);
+            chip.setTextColor(selected ? mColorAccent : mColorTextSecondary);
+            chip.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f);
+            chip.setTypeface(Typeface.create("sans-serif-medium", Typeface.BOLD));
+            GradientDrawable chipBg = new GradientDrawable();
+            chipBg.setColor(selected ? withAlpha(mColorAccent, 28) : mColorSurfaceVariant);
+            chipBg.setCornerRadius(dp(99));
+            chipBg.setStroke(dp(1), selected ? mColorAccent : mColorBorder);
+            chip.setBackground(chipBg);
+            chip.setPadding(dp(14), dp(8), dp(14), dp(8));
+            LinearLayout.LayoutParams clp = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            clp.rightMargin = dp(8);
+            chip.setLayoutParams(clp);
+            chip.setOnClickListener(v -> {
+                vibrateTick();
+                Settings.Secure.putInt(mResolver, KEY_GESTURE_MODE, modeIdx);
+                refreshActiveModulesCount();
+                populateHomeUpGestureTab(parent);
+                if (mSpringPreviewView != null) {
+                    mSpringPreviewView.triggerPreviewAnimation();
+                }
+            });
+            chipRow.addView(chip);
+        }
+        chipScroll.addView(chipRow);
+        modeCard.addView(chipScroll);
+
+        TextView activeProfileDesc = new TextView(mContext);
+        int safeMode = Math.max(0, Math.min(modeTitles.length - 1, currentMode));
+        activeProfileDesc.setText("Seçili Mod: " + modeTitles[safeMode]);
+        activeProfileDesc.setTextColor(mColorAccent);
+        activeProfileDesc.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12.5f);
+        activeProfileDesc.setTypeface(Typeface.create("sans-serif-medium", Typeface.BOLD));
+        activeProfileDesc.setPadding(0, dp(2), 0, dp(8));
+        modeCard.addView(activeProfileDesc);
+
+        // If Mode == 4 (Simple Tuning Slider 0..100), show the unified slider
+        if (currentMode == 4) {
+            int curProgress = Settings.Secure.getInt(mResolver, KEY_SIMPLE_PROGRESS, 50);
+            addSliderControl(modeCard,
+                    "Hız ve Yaylanma Dengesi (SimpleTuningLogic)",
+                    0, 100, curProgress,
+                    val -> "%" + val + (val < 35 ? " (Yumuşak)" : (val > 70 ? " (Çok Hızlı & Esnek)" : " (Dengeli)")),
+                    val -> {
+                        Settings.Secure.putInt(mResolver, KEY_SIMPLE_PROGRESS, val);
+                        updateTelemetryAndPreview();
+                    });
+        }
+
+        boolean blurEnabled = Settings.Secure.getInt(mResolver, KEY_WALLPAPER_BLUR, 1) == 1;
+        addSwitchRow(modeCard,
+                "Uygulama Geçişlerinde Canlı Arka Plan Bulanıklığı",
+                "Uygulama açılış ve ana ekrana dönüşte duvar kağıdı derinlik bulanıklığını çalıştırır",
+                blurEnabled,
+                checked -> {
+                    Settings.Secure.putInt(mResolver, KEY_WALLPAPER_BLUR, checked ? 1 : 0);
+                    updateTelemetryAndPreview();
+                });
+
+        parent.addView(modeCard);
+
+        // CARD 3: Gelişmiş Fizik Ayarları (Shown expanded when Mode == 5, or quick button to switch to Mode 5)
+        LinearLayout advCard = createModuleCard(
+                R.drawable.ic_settings_system_dashboard_expressive,
+                "Gelişmiş Yay ve Süre Parametreleri",
+                "STIFFNESS, DAMPING, ÖLÇEK VE SÜRE KATSAYILARI");
+
+        if (currentMode != 5) {
+            TextView note = new TextView(mContext);
+            note.setText("Şu anda hazır profil veya basit kaydırıcı aktif. Tüm X/Y yay sertliği, sönümleme oranı, ikon takip noktası ve süreleri tek tek ayarlamak için Gelişmiş Fizik modunu etkinleştirin.");
+            note.setTextColor(mColorTextSecondary);
+            note.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f);
+            note.setPadding(0, dp(2), 0, dp(8));
+            advCard.addView(note);
+
+            addActionRow(advCard,
+                    "Gelişmiş Manuel Fizik Kontrollerini Aç",
+                    "Mevcut profilin katsayılarını temel alarak 11 parametreyi bağımsız düzenle",
+                    null,
+                    v -> {
+                        vibrateTick();
+                        seedAdvancedFromCurrentPhysics();
+                        Settings.Secure.putInt(mResolver, KEY_GESTURE_MODE, 5);
+                        refreshActiveModulesCount();
+                        populateHomeUpGestureTab(parent);
+                    });
+        } else {
+            int dampX = Math.round(Settings.Secure.getFloat(mResolver, KEY_DAMPING_X, 0.82f) * 100f);
+            addSliderControl(advCard,
+                    "Yatay Sönümleme Oranı (Damping X)",
+                    50, 100, clamp(dampX, 50, 100),
+                    val -> String.format(Locale.US, "%.2f", val / 100f),
+                    val -> {
+                        Settings.Secure.putFloat(mResolver, KEY_DAMPING_X, val / 100f);
+                        updateTelemetryAndPreview();
+                    });
+
+            int dampY = Math.round(Settings.Secure.getFloat(mResolver, KEY_DAMPING_Y, 0.82f) * 100f);
+            addSliderControl(advCard,
+                    "Dikey Sönümleme Oranı (Damping Y)",
+                    50, 100, clamp(dampY, 50, 100),
+                    val -> String.format(Locale.US, "%.2f", val / 100f),
+                    val -> {
+                        Settings.Secure.putFloat(mResolver, KEY_DAMPING_Y, val / 100f);
+                        updateTelemetryAndPreview();
+                    });
+
+            int stiffX = Math.round(Settings.Secure.getFloat(mResolver, KEY_STIFFNESS_X, 240f));
+            addSliderControl(advCard,
+                    "Yatay Yay Sertliği (Stiffness X)",
+                    50, 900, clamp(stiffX, 50, 900),
+                    val -> val + " N/m",
+                    val -> {
+                        Settings.Secure.putFloat(mResolver, KEY_STIFFNESS_X, (float) val);
+                        updateTelemetryAndPreview();
+                    });
+
+            int stiffY = Math.round(Settings.Secure.getFloat(mResolver, KEY_STIFFNESS_Y, 240f));
+            addSliderControl(advCard,
+                    "Dikey Yay Sertliği (Stiffness Y)",
+                    50, 900, clamp(stiffY, 50, 900),
+                    val -> val + " N/m",
+                    val -> {
+                        Settings.Secure.putFloat(mResolver, KEY_STIFFNESS_Y, (float) val);
+                        updateTelemetryAndPreview();
+                    });
+
+            int scaleDamp = Math.round(Settings.Secure.getFloat(mResolver, KEY_SCALE_DAMPING, 0.86f) * 100f);
+            addSliderControl(advCard,
+                    "İkon Küçülme Sönümlemesi (Scale Damping)",
+                    50, 100, clamp(scaleDamp, 50, 100),
+                    val -> String.format(Locale.US, "%.2f", val / 100f),
+                    val -> {
+                        Settings.Secure.putFloat(mResolver, KEY_SCALE_DAMPING, val / 100f);
+                        updateTelemetryAndPreview();
+                    });
+
+            int scaleStiff = Math.round(Settings.Secure.getFloat(mResolver, KEY_SCALE_STIFFNESS, 300f));
+            addSliderControl(advCard,
+                    "İkon Küçülme Yay Sertliği (Scale Stiffness)",
+                    50, 900, clamp(scaleStiff, 50, 900),
+                    val -> val + " N/m",
+                    val -> {
+                        Settings.Secure.putFloat(mResolver, KEY_SCALE_STIFFNESS, (float) val);
+                        updateTelemetryAndPreview();
+                    });
+
+            int tracking = Settings.Secure.getInt(mResolver, KEY_TRACKING_MODE, 1);
+            final String[] trackLabels = {"Üst Kenar (0.0)", "Merkez (0.5)", "Alt Kenar (1.0)"};
+            final TextView trackSummary = new TextView(mContext);
+            addActionRow(advCard,
+                    "İkon Yörünge Takip Noktası (Tracking)",
+                    "Aktif hizalama: " + trackLabels[clamp(tracking, 0, 2)],
+                    trackSummary,
+                    v -> {
+                        int cur = clamp(Settings.Secure.getInt(mResolver, KEY_TRACKING_MODE, 1), 0, 2);
+                        new AlertDialog.Builder(mContext)
+                                .setTitle("İkon Yörünge Takip Noktası")
+                                .setSingleChoiceItems(trackLabels, cur, (d, which) -> {
+                                    Settings.Secure.putInt(mResolver, KEY_TRACKING_MODE, which);
+                                    trackSummary.setText("Aktif hizalama: " + trackLabels[which]);
+                                    vibrateTick();
+                                    updateTelemetryAndPreview();
+                                    d.dismiss();
+                                })
+                                .show();
+                    });
+
+            int appOpenMs = Settings.Secure.getInt(mResolver, KEY_APP_OPEN_DURATION, 450);
+            addSliderControl(advCard,
+                    "Uygulama Açılış Süresi (App Open Duration)",
+                    180, 1000, clamp(appOpenMs, 180, 1000),
+                    val -> val + " ms",
+                    val -> {
+                        Settings.Secure.putInt(mResolver, KEY_APP_OPEN_DURATION, val);
+                        updateTelemetryAndPreview();
+                    });
+
+            int homeMs = Settings.Secure.getInt(mResolver, KEY_HOME_DURATION, 480);
+            addSliderControl(advCard,
+                    "Ana Ekran Dönüş Süresi (Home Reveal Duration)",
+                    180, 1500, clamp(homeMs, 180, 1500),
+                    val -> val + " ms",
+                    val -> {
+                        Settings.Secure.putInt(mResolver, KEY_HOME_DURATION, val);
+                        updateTelemetryAndPreview();
+                    });
+
+            int homeScalePct = Math.round(Settings.Secure.getFloat(mResolver, KEY_HOME_SCALE, 0.88f) * 100f);
+            addSliderControl(advCard,
+                    "Ana Ekran Derinlik Ölçeği (Home Scale)",
+                    70, 98, clamp(homeScalePct, 70, 98),
+                    val -> "%" + val,
+                    val -> {
+                        Settings.Secure.putFloat(mResolver, KEY_HOME_SCALE, val / 100f);
+                        updateTelemetryAndPreview();
+                    });
+
+            int wpMs = Settings.Secure.getInt(mResolver, KEY_WALLPAPER_DURATION, 850);
+            addSliderControl(advCard,
+                    "Duvar Kağıdı Zoom Süresi (Wallpaper Duration)",
+                    200, 1800, clamp(wpMs, 200, 1800),
+                    val -> val + " ms",
+                    val -> {
+                        Settings.Secure.putInt(mResolver, KEY_WALLPAPER_DURATION, val);
+                        updateTelemetryAndPreview();
+                    });
+        }
+
+        addActionRow(advCard,
+                "Hareket Fiziğini Fabrika Değerlerine Sıfırla",
+                "Home Up Dinamik (Preset 0) standart değerlerine geri döner",
                 null,
                 v -> {
-                    new SubSettingLauncher(mContext)
-                            .setDestination("org.evolution.settings.fragments.lockscreen.WallpaperDepth")
-                            .setTitleText("Derinlik & Saat Konum Stüdyosu")
-                            .setSourceMetricsCategory(getMetricsCategory())
-                            .launch();
-                });
-        parent.addView(lockStarCard);
-
-        // MODULE 2: Home Up (DIY Home & Gesture Animation Physics)
-        LinearLayout homeUpCard = createModuleCard(
-                "🏠 Home Up (DIY Home & Hareket Fiziği)",
-                "MAKE UP • ANA EKRAN YAY FİZİĞİ & GÖREV DEĞİŞTİRİCİ",
-                "#EC4899");
-
-        int physicsProfile = Settings.Secure.getIntForUser(
-                mResolver, "blaze_homeup_gesture_physics", 1, UserHandle.USER_CURRENT);
-        final String[] physicsNames = {
-                "Klasik Hızlı (0.75x Keskin)",
-                "OneUI 9 Dinamik Yay (damping=0.82, Önerilen)",
-                "OriginOS 6 Zarif Akış (Atomik Esneme)",
-                "ColorOS 17 Aquamorphic (Ultra Yumuşak 1.15x)"
-        };
-        final TextView physicsSummary = new TextView(mContext);
-        addActionRow(homeUpCard,
-                "🌀 Ana Ekran Hareket & Yay Fiziği Profili",
-                "Aktif: " + physicsNames[Math.max(0, Math.min(3, physicsProfile))],
-                physicsSummary,
-                v -> showHomeUpPhysicsDialog(physicsNames, physicsSummary));
-
-        boolean wpZoom = Settings.Secure.getIntForUser(
-                mResolver, "blaze_homeup_wallpaper_zoom", 1, UserHandle.USER_CURRENT) == 1;
-        addSwitchRow(homeUpCard,
-                "🔍 Duvar Kağıdı Derinlik Yakınlaştırması (Wallpaper Zoom)",
-                "Uygulama açılış/kapanışlarında arka plan duvar kağıdına yumuşak perspektif ölçekleme uygular",
-                wpZoom,
-                checked -> {
-                    Settings.Secure.putIntForUser(
-                            mResolver, "blaze_homeup_wallpaper_zoom", checked ? 1 : 0, UserHandle.USER_CURRENT);
+                    vibrateTick();
+                    Settings.Secure.putInt(mResolver, KEY_GESTURE_MODE, 0);
+                    Settings.Secure.putInt(mResolver, KEY_SIMPLE_PROGRESS, 50);
+                    Settings.Secure.putInt(mResolver, KEY_WALLPAPER_BLUR, 1);
                     refreshActiveModulesCount();
+                    populateHomeUpGestureTab(parent);
+                    Toast.makeText(mContext, "Home Up hareket fiziği sıfırlandı", Toast.LENGTH_SHORT).show();
                 });
 
-        boolean recentsBlur = Settings.Secure.getIntForUser(
-                mResolver, "blaze_homeup_recents_blur", 1, UserHandle.USER_CURRENT) == 1;
-        addSwitchRow(homeUpCard,
-                "🪟 Task Changer Gerçek Zamanlı Buzlu Cam",
-                "Son uygulamalar (Recents) ekranında arka planı Unified Blur Arbitrator ile bulanıklaştırır",
-                recentsBlur,
-                checked -> Settings.Secure.putIntForUser(
-                        mResolver, "blaze_homeup_recents_blur", checked ? 1 : 0, UserHandle.USER_CURRENT));
-        parent.addView(homeUpCard);
+        parent.addView(advCard);
+        updateTelemetryAndPreview();
+    }
 
-        // MODULE 3: Edge Lighting+ & Brief Pop-up
-        LinearLayout edgeCard = createModuleCard(
-                "🌈 Edge Lighting+ & Brief Pop-up",
-                "MAKE UP • KENAR IŞIK DALGASI & AKILLI BİLDİRİM HAPI",
-                "#38BDF8");
+    private void seedAdvancedFromCurrentPhysics() {
+        float[] vals = resolveCurrentPhysicsArray();
+        Settings.Secure.putFloat(mResolver, KEY_DAMPING_X, vals[0]);
+        Settings.Secure.putFloat(mResolver, KEY_DAMPING_Y, vals[1]);
+        Settings.Secure.putFloat(mResolver, KEY_STIFFNESS_X, vals[2]);
+        Settings.Secure.putFloat(mResolver, KEY_STIFFNESS_Y, vals[3]);
+        Settings.Secure.putFloat(mResolver, KEY_SCALE_DAMPING, vals[4]);
+        Settings.Secure.putFloat(mResolver, KEY_SCALE_STIFFNESS, vals[5]);
+        Settings.Secure.putInt(mResolver, KEY_APP_OPEN_DURATION, Math.round(vals[6]));
+        Settings.Secure.putInt(mResolver, KEY_HOME_DURATION, Math.round(vals[7]));
+        Settings.Secure.putFloat(mResolver, KEY_HOME_SCALE, vals[8]);
+        Settings.Secure.putInt(mResolver, KEY_WALLPAPER_DURATION, Math.round(vals[9]));
+    }
 
-        int edgeStyle = Settings.Secure.getIntForUser(
-                mResolver, "blaze_edgelighting_style", 2, UserHandle.USER_CURRENT);
-        final String[] edgeStyleNames = {
-                "Kapalı",
-                "Eclipse (Yumuşak Speküler Hale)",
-                "Cyber Neon (Çift Kutup Akış Dalgası)",
-                "Aurora Wave (Kuzey Işıkları Kırılması)",
-                "Prism Pulse (Kristal Prizma)"
+    /**
+     * Returns [dampingX, dampingY, stiffnessX, stiffnessY, scaleDamping, scaleStiffness,
+     *          appOpenMs, homeMs, homeScale, wallpaperMs]
+     */
+    private float[] resolveCurrentPhysicsArray() {
+        int mode = Settings.Secure.getInt(mResolver, KEY_GESTURE_MODE, 0);
+        switch (mode) {
+            case 1: // Classic
+                return new float[]{1.00f, 1.00f, 150f, 150f, 1.00f, 150f, 500f, 700f, 0.82f, 1100f};
+            case 2: // Playful
+                return new float[]{0.66f, 0.66f, 330f, 330f, 0.68f, 650f, 420f, 320f, 0.76f, 620f};
+            case 3: // Sweet
+                return new float[]{0.96f, 0.96f, 65f, 65f, 0.98f, 110f, 680f, 1050f, 0.85f, 1500f};
+            case 4: { // Simple Slider
+                int p = clamp(Settings.Secure.getInt(mResolver, KEY_SIMPLE_PROGRESS, 50), 0, 100);
+                int inv = 100 - p;
+                return new float[]{
+                        (inv * 0.0021f) + 0.78f,
+                        (inv * 0.0021f) + 0.78f,
+                        (p * 5.5f) + 50f,
+                        (p * 5.5f) + 50f,
+                        (inv * 0.0019f) + 0.80f,
+                        (p * 6.0f) + 100f,
+                        650f - (p * 3f),
+                        700f - (p * 4f),
+                        0.84f + (p * 0.001f),
+                        1300f - (p * 10f)
+                };
+            }
+            case 5: // Advanced
+                return new float[]{
+                        clampF(Settings.Secure.getFloat(mResolver, KEY_DAMPING_X, 0.82f), 0.50f, 1.00f),
+                        clampF(Settings.Secure.getFloat(mResolver, KEY_DAMPING_Y, 0.82f), 0.50f, 1.00f),
+                        clampF(Settings.Secure.getFloat(mResolver, KEY_STIFFNESS_X, 240f), 50f, 900f),
+                        clampF(Settings.Secure.getFloat(mResolver, KEY_STIFFNESS_Y, 240f), 50f, 900f),
+                        clampF(Settings.Secure.getFloat(mResolver, KEY_SCALE_DAMPING, 0.86f), 0.50f, 1.00f),
+                        clampF(Settings.Secure.getFloat(mResolver, KEY_SCALE_STIFFNESS, 300f), 50f, 900f),
+                        clamp(Settings.Secure.getInt(mResolver, KEY_APP_OPEN_DURATION, 450), 180, 1200),
+                        clamp(Settings.Secure.getInt(mResolver, KEY_HOME_DURATION, 480), 180, 1800),
+                        clampF(Settings.Secure.getFloat(mResolver, KEY_HOME_SCALE, 0.88f), 0.65f, 0.98f),
+                        clamp(Settings.Secure.getInt(mResolver, KEY_WALLPAPER_DURATION, 850), 200, 2000)
+                };
+            case 0: // Dynamic
+            default:
+                return new float[]{0.80f, 0.80f, 300f, 300f, 0.75f, 350f, 380f, 350f, 0.90f, 450f};
+        }
+    }
+
+    private void updateTelemetryAndPreview() {
+        float[] v = resolveCurrentPhysicsArray();
+        if (mPhysicsTelemetryText != null) {
+            mPhysicsTelemetryText.setText(String.format(Locale.US,
+                    "Stiffness X/Y: %.0f / %.0f  •  Damping X/Y: %.2f / %.2f  •  Scale: %.0f (%.2f)  •  Açılış: %.0f ms",
+                    v[2], v[3], v[0], v[1], v[5], v[4], v[6]));
+        }
+        if (mSpringPreviewView != null) {
+            mSpringPreviewView.setPhysics(v[0], v[1], v[2], v[3], v[4], v[5]);
+            mSpringPreviewView.triggerPreviewAnimation();
+        }
+    }
+
+    // =========================================================================
+    // TAB 2: HOME UP • ANA EKRAN, KLASÖR VE GÖREV DEĞİŞTİRİCİ (TASK CHANGER)
+    // =========================================================================
+
+    private void populateHomeUpLayoutTab(LinearLayout parent) {
+        parent.removeAllViews();
+
+        // CARD 1: Ana Ekran Izgarası ve İkon Ölçekleme
+        LinearLayout homeCard = createModuleCard(
+                R.drawable.ic_settings_display_filled,
+                "Ana Ekran Izgarası ve İkon Boyutu",
+                "INVARIANTDEVICEPROFILE CANLI IZGARA VE ÖLÇEK MOTORU");
+
+        String curGrid = Settings.Secure.getString(mResolver, KEY_GRID_NAME);
+        if (curGrid == null || curGrid.isEmpty()) curGrid = "4_by_4";
+        final TextView gridSummary = new TextView(mContext);
+        addActionRow(homeCard,
+                "Ana Ekran Sütun ve Satır Izgarası",
+                "Aktif ızgara düzeni: " + formatGridLabel(curGrid),
+                gridSummary,
+                v -> showHomeGridDialog(gridSummary));
+
+        int iconScalePct = clamp(Settings.Secure.getInt(mResolver, KEY_ICON_SCALE_PCT, 100), 80, 115);
+        addSliderControl(homeCard,
+                "Uygulama İkon Boyutu Ölçeği",
+                80, 115, iconScalePct,
+                val -> "%" + val + (val == 100 ? " (Standart)" : ""),
+                val -> Settings.Secure.putInt(mResolver, KEY_ICON_SCALE_PCT, val));
+
+        boolean hideLabels = Settings.Secure.getInt(mResolver, KEY_HIDE_LABELS, 0) == 1;
+        addSwitchRow(homeCard,
+                "Ana Ekran İkon Etiketlerini Gizle",
+                "Ana ekrandaki uygulama ve klasör isimlerini gizleyerek minimal görünüm sağlar",
+                hideLabels,
+                checked -> Settings.Secure.putInt(mResolver, KEY_HIDE_LABELS, checked ? 1 : 0));
+
+        parent.addView(homeCard);
+
+        // CARD 2: Home Up Pop-up Klasör Düzeni
+        LinearLayout folderCard = createModuleCard(
+                R.drawable.ic_settings_system_dashboard_filled,
+                "Pop-up Klasör ve Klasör İçi Izgara",
+                "HOME UP POPUP FOLDER MİMARİSİ");
+
+        boolean popupFolder = Settings.Secure.getInt(mResolver, KEY_POPUP_FOLDER, 0) == 1;
+        addSwitchRow(folderCard,
+                "Pop-up Klasör Görünümü",
+                "Klasörleri tam ekran ortalamak yerine dokunulan klasör ikonunun hemen yanında açılır pencere olarak açar",
+                popupFolder,
+                checked -> Settings.Secure.putInt(mResolver, KEY_POPUP_FOLDER, checked ? 1 : 0));
+
+        int folderGrid = clamp(Settings.Secure.getInt(mResolver, KEY_FOLDER_GRID, 0), 0, 3);
+        final String[] folderGridLabels = {
+                "Otomatik (Ana Ekran Izgarasına Uyumlu)",
+                "3x3 Kompakt Klasör Düzeni",
+                "4x4 Geniş Klasör Düzeni",
+                "4x5 Maksimum Yoğunluklu Klasör"
         };
-        final TextView edgeSummary = new TextView(mContext);
-        addActionRow(edgeCard,
-                "✨ Edge Lighting+ Efekt Stili",
-                "Aktif: " + edgeStyleNames[Math.max(0, Math.min(4, edgeStyle))],
-                edgeSummary,
-                v -> showEdgeLightingStyleDialog(edgeStyleNames, edgeSummary));
+        final TextView folderGridSummary = new TextView(mContext);
+        addActionRow(folderCard,
+                "Klasör İçi Sütun ve Satır Yoğunluğu",
+                folderGridLabels[folderGrid],
+                folderGridSummary,
+                v -> {
+                    int cur = clamp(Settings.Secure.getInt(mResolver, KEY_FOLDER_GRID, 0), 0, 3);
+                    new AlertDialog.Builder(mContext)
+                            .setTitle("Klasör İçi Izgara Yoğunluğu")
+                            .setSingleChoiceItems(folderGridLabels, cur, (d, which) -> {
+                                Settings.Secure.putInt(mResolver, KEY_FOLDER_GRID, which);
+                                folderGridSummary.setText(folderGridLabels[which]);
+                                vibrateTick();
+                                d.dismiss();
+                            })
+                            .show();
+                });
+
+        parent.addView(folderCard);
+
+        // CARD 3: Task Changer (Son Kullanılanlar / Recents Görünümü)
+        LinearLayout recentsCard = createModuleCard(
+                R.drawable.ic_settings_system_dashboard_expressive,
+                "Görev Değiştirici (Task Changer)",
+                "RECENTSVIEW VE TASKVIEW DÖNÜŞÜM MOTORU");
+
+        int taskStyle = clamp(Settings.Secure.getInt(mResolver, KEY_TASK_CHANGER_STYLE, 0), 0, 2);
+        final String[] taskStyleLabels = {
+                "Standart Kart (Varsayılan AOSP/Lineage Görünümü)",
+                "Yığın / Stack (3B Derinlikli Üst Üste binen Kartlar)",
+                "Kompakt Şerit / Mini Mod (Çoklu Görev Görünümü)"
+        };
+        final TextView taskStyleSummary = new TextView(mContext);
+        addActionRow(recentsCard,
+                "Son Kullanılanlar Kart Düzeni",
+                taskStyleLabels[taskStyle],
+                taskStyleSummary,
+                v -> {
+                    int cur = clamp(Settings.Secure.getInt(mResolver, KEY_TASK_CHANGER_STYLE, 0), 0, 2);
+                    new AlertDialog.Builder(mContext)
+                            .setTitle("Son Kullanılanlar Kart Düzeni")
+                            .setSingleChoiceItems(taskStyleLabels, cur, (d, which) -> {
+                                Settings.Secure.putInt(mResolver, KEY_TASK_CHANGER_STYLE, which);
+                                taskStyleSummary.setText(taskStyleLabels[which]);
+                                vibrateTick();
+                                d.dismiss();
+                            })
+                            .show();
+                });
+
+        boolean focusPrev = Settings.Secure.getInt(mResolver, KEY_RECENTS_FOCUS_PREV, 0) == 1;
+        addSwitchRow(recentsCard,
+                "Açılışta Önceki Uygulamayı Ortala",
+                "Son kullanılanlar ekranı açıldığında aktif uygulama yerine bir önceki uygulamaya odaklanır",
+                focusPrev,
+                checked -> Settings.Secure.putInt(mResolver, KEY_RECENTS_FOCUS_PREV, checked ? 1 : 0));
+
+        parent.addView(recentsCard);
+    }
+
+    private String formatGridLabel(String gridName) {
+        if ("3_by_3".equals(gridName)) return "3x3 (Büyük İkonlar)";
+        if ("5_by_5".equals(gridName)) return "5x5 (Geniş Düzen)";
+        if ("6_by_5".equals(gridName)) return "6x5 (Yüksek Yoğunluk)";
+        return "4x4 (Standart Dengeli)";
+    }
+
+    private void showHomeGridDialog(final TextView summaryView) {
+        final String[] labels = {
+                "3x3 (Büyük İkonlar)",
+                "4x4 (Standart Dengeli)",
+                "5x5 (Geniş Düzen)",
+                "6x5 (Yüksek Yoğunluk)"
+        };
+        final String[] values = {"3_by_3", "4_by_4", "5_by_5", "6_by_5"};
+        String cur = Settings.Secure.getString(mResolver, KEY_GRID_NAME);
+        int checked = 1;
+        for (int i = 0; i < values.length; i++) {
+            if (values[i].equals(cur)) checked = i;
+        }
+        new AlertDialog.Builder(mContext)
+                .setTitle("Ana Ekran Sütun ve Satır Izgarası")
+                .setSingleChoiceItems(labels, checked, (d, which) -> {
+                    String chosen = values[which];
+                    Settings.Secure.putString(mResolver, KEY_GRID_NAME, chosen);
+                    try {
+                        ContentValues cv = new ContentValues();
+                        cv.put("name", chosen);
+                        mResolver.update(
+                                Uri.parse("content://com.android.launcher3.grid_control/default_grid"),
+                                cv, null, null);
+                    } catch (Throwable ignored) {}
+                    if (summaryView != null) {
+                        summaryView.setText("Aktif ızgara düzeni: " + labels[which]);
+                    }
+                    vibrateTick();
+                    d.dismiss();
+                })
+                .show();
+    }
+
+    // =========================================================================
+    // TAB 3: SİSTEM ARAÇLARI VE MODÜLLER
+    // =========================================================================
+
+    private void populateSystemModules(LinearLayout parent) {
+        parent.removeAllViews();
+
+        // MODULE 1: Kilit Ekranı ve Bildirim Düzeni
+        LinearLayout lockCard = createModuleCard(
+                R.drawable.ic_settings_security_filled,
+                "Kilit Ekranı ve Bildirim Düzeni",
+                "DERİNLİK KATMANI, EKRAN ZAMAN AŞIMI VE KOMPAKT BİLDİRİMLER");
+
+        int timeoutMs = Settings.System.getIntForUser(
+                mResolver, Settings.System.SCREEN_OFF_TIMEOUT, 30000, UserHandle.USER_CURRENT);
+        int timeoutSec = Math.max(15, timeoutMs / 1000);
+        final TextView timeoutSummary = new TextView(mContext);
+        addActionRow(lockCard,
+                "Ekran Zaman Aşımı Süresi",
+                "Hareketsizlik sonrası ekranın kapanma süresi (" + timeoutSec + " sn)",
+                timeoutSummary,
+                v -> showScreenTimeoutDialog(timeoutSummary));
 
         boolean briefPopup = Settings.Secure.getIntForUser(
                 mResolver, "ax_dynamic_bar_compact_notifications", 1, UserHandle.USER_CURRENT) == 1;
-        addSwitchRow(edgeCard,
-                "💊 OneUI 9 Brief Pop-up (İnce Neon Bildirim Hapı)",
-                "Ekranı kaplayan bildirim kutuları yerine uygulama renginde zarif cam hap gösterir",
+        addSwitchRow(lockCard,
+                "Kompakt Bildirim Hapı",
+                "Üst bildirimleri ekranı kaplamayan kompakt hap biçiminde gösterir",
                 briefPopup,
                 checked -> Settings.Secure.putIntForUser(
                         mResolver, "ax_dynamic_bar_compact_notifications", checked ? 1 : 0, UserHandle.USER_CURRENT));
 
-        boolean otpAutoCopy = Settings.Secure.getIntForUser(
-                mResolver, "blaze_smart_otp_autocopy", 1, UserHandle.USER_CURRENT) == 1;
-        addSwitchRow(edgeCard,
-                "🔑 HyperOS 4 Akıllı OTP / Doğrulama Kodu Yakalayıcı",
-                "Mesaj ve bildirimlerdeki 4–8 haneli doğrulama kodlarını otomatik algılar ve hızlı kopyalama sunar",
-                otpAutoCopy,
-                checked -> Settings.Secure.putIntForUser(
-                        mResolver, "blaze_smart_otp_autocopy", checked ? 1 : 0, UserHandle.USER_CURRENT));
-        parent.addView(edgeCard);
+        addActionRow(lockCard,
+                "Derinlik ve Saat Konum Stüdyosunu Aç",
+                "Üst üste saat örtülme koruması, özne/saat hizalama ve canlı önizleme",
+                null,
+                v -> new SubSettingLauncher(mContext)
+                        .setDestination("org.evolution.settings.fragments.lockscreen.WallpaperDepth")
+                        .setTitleText("Derinlik ve Saat Konum Stüdyosu")
+                        .setSourceMetricsCategory(getMetricsCategory())
+                        .launch());
+        parent.addView(lockCard);
 
-        // MODULE 4: Wonderland 3D & OriginOS 6 Behavioral Wallpaper
-        LinearLayout wonderlandCard = createModuleCard(
-                "🌌 Wonderland 3D & Behavioral Duvar Kağıdı",
-                "MAKE UP • 3D JİROSKOP PARÇACIK & CANLI TELEMETRİ AURA",
-                "#10B981");
+        // MODULE 2: Sistem Geçiş Hızı ve Hızlı Panel
+        LinearLayout qsCard = createModuleCard(
+                R.drawable.ic_settings_display_filled,
+                "Sistem Geçiş Hızı ve Hızlı Panel",
+                "PENCERE ANİMASYON ÖLÇEĞİ, IZGARA YOĞUNLUĞU VE MEDYA ÇUBUĞU");
 
-        int particleMode = Settings.Secure.getIntForUser(
-                mResolver, "blaze_wonderland_particle_mode", 2, UserHandle.USER_CURRENT);
-        final String[] particleNames = {
-                "Kapalı",
-                "🌸 Sakura Yaprakları (Jiroskop Duyarlı)",
-                "✨ Ateşböceği Işık Parçacıkları (Fireflies)",
-                "🌌 Kozmik Yıldız Tozu (Stardust)",
-                "❄️ Kristal Kar Taneleri"
-        };
-        final TextView particleSummary = new TextView(mContext);
-        addActionRow(wonderlandCard,
-                "🪐 Wonderland 3D Hareketli Parçacık Katmanı",
-                "Aktif: " + particleNames[Math.max(0, Math.min(4, particleMode))],
-                particleSummary,
-                v -> showWonderlandParticleDialog(particleNames, particleSummary));
-
-        boolean behavioralAura = Settings.Secure.getIntForUser(
-                mResolver, "blaze_behavioral_wallpaper_aura", 1, UserHandle.USER_CURRENT) == 1;
-        addSwitchRow(wonderlandCard,
-                "🌺 OriginOS 6 Behavioral (Davranışsal) Telemetri Aurası",
-                "Kilit ekranı ışık kristallerinin rengini ve açılımını pil seviyesi, şarj durumu ve günün saatine göre canlı evrimleştirir",
-                behavioralAura,
-                checked -> {
-                    Settings.Secure.putIntForUser(
-                            mResolver, "blaze_behavioral_wallpaper_aura", checked ? 1 : 0, UserHandle.USER_CURRENT);
-                    refreshActiveModulesCount();
-                });
-        parent.addView(wonderlandCard);
-
-        // MODULE 5: QuickStar (Quick Settings & Status Bar Surgeon)
-        LinearLayout quickStarCard = createModuleCard(
-                "⚡ QuickStar (Hızlı Panel & Durum Çubuğu Cerrahı)",
-                "MAKE UP • IZGARALAR, BÖLÜNMÜŞ PANEL & İKON KONTROLÜ",
-                "#F59E0B");
+        float curScale = Settings.Global.getFloat(mResolver, Settings.Global.WINDOW_ANIMATION_SCALE, 1.0f);
+        final TextView animSummary = new TextView(mContext);
+        addActionRow(qsCard,
+                "Sistem Pencere ve Geçiş Animasyon Hızı",
+                "Aktif ölçek: " + formatAnimScaleLabel(curScale),
+                animSummary,
+                v -> showAnimationScaleDialog(animSummary));
 
         int qsCols = Settings.System.getIntForUser(
                 mResolver, "qs_columns_portrait", 4, UserHandle.USER_CURRENT);
+        if (qsCols < 3) qsCols = 4;
         final TextView qsColSummary = new TextView(mContext);
-        addActionRow(quickStarCard,
-                "📐 Hızlı Ayarlar (QS) Sütun Yoğunluğu",
+        addActionRow(qsCard,
+                "Hızlı Ayarlar Sütun Yoğunluğu",
                 "Portre modunda satır başına " + qsCols + " kare gösteriliyor",
                 qsColSummary,
-                v -> showQuickStarColumnsDialog(qsColSummary));
+                v -> showQsColumnsDialog(qsColSummary));
 
         boolean waveform = Settings.System.getIntForUser(
                 mResolver, "media_waveform_seekbar", 1, UserHandle.USER_CURRENT) == 1;
-        addSwitchRow(quickStarCard,
-                "🎵 Hızlı Panel Medya Dalga Formu Çubuğu",
-                "Medya oynatıcı ilerleme çubuğunu canlı ses dalgası olarak çizer",
+        addSwitchRow(qsCard,
+                "Medya Dalga Formu Çubuğu",
+                "Medya oynatıcı ilerleme çubuğunu dinamik ses dalgası olarak çizer",
                 waveform,
                 checked -> Settings.System.putIntForUser(
                         mResolver, "media_waveform_seekbar", checked ? 1 : 0, UserHandle.USER_CURRENT));
-        parent.addView(quickStarCard);
-    }
+        parent.addView(qsCard);
 
-    // =========================================================================
-    // SUITE 2: LIFE UP MODULES (SoundAssistant + O-Relax, One Hand Operation+ & Smart Sidebar, MultiStar, RegiStar, Nice Catch)
-    // =========================================================================
-
-    private void populateLifeUpModules(LinearLayout parent) {
-        parent.removeAllViews();
-
-        // MODULE 6: SoundAssistant & ColorOS 17 O-Relax Studio (Stage 2)
+        // MODULE 3: Ses Kanal Mikseri ve Ortam Sentezleyici
         LinearLayout soundCard = createModuleCard(
-                "🔊 SoundAssistant & O-Relax Ses Laboratuvarı",
-                "LIFE UP • UYGULAMA BAŞINA SES, SES ADIMI & DOĞA SESLERİ",
-                "#38BDF8");
-
-        int volStep = Settings.Secure.getIntForUser(
-                mResolver, "blaze_soundassistant_vol_step", 2, UserHandle.USER_CURRENT);
-        final TextView stepSummary = new TextView(mContext);
-        addActionRow(soundCard,
-                "🎚️ Ses Tuşu Adım Hassasiyeti (Change Step Volume)",
-                "Her ses tuşu basışında " + volStep + " birim ince ayar yapılır (Standart Android: 7-10 birim)",
-                stepSummary,
-                v -> showVolumeStepDialog(stepSummary));
-
-        boolean multiSound = Settings.Secure.getIntForUser(
-                mResolver, "blaze_soundassistant_multisound", 1, UserHandle.USER_CURRENT) == 1;
-        addSwitchRow(soundCard,
-                "🎶 Multi-Sound (Çoklu Uygulama Ses Odağı)",
-                "Oyun veya sosyal medya açıldığında arka planda çalan müziğin duraklatılmasını önler",
-                multiSound,
-                checked -> {
-                    Settings.Secure.putIntForUser(
-                            mResolver, "blaze_soundassistant_multisound", checked ? 1 : 0, UserHandle.USER_CURRENT);
-                    SystemProperties.set("persist.sys.blaze.multisound", checked ? "1" : "0");
-                    refreshActiveModulesCount();
-                });
+                R.drawable.ic_settings_voice_calls,
+                "Ses Mikseri ve Ortam Sentezleyici",
+                "KANAL BAZLI SES DENGESİ VE CANLI DSP ODAK SESLERİ");
 
         addActionRow(soundCard,
-                "🎛️ Aktif Uygulama & Kanal Ses Mikseri (Canlı Mikser)",
-                "Medya, Bildirim, Zil, Alarm ve aktif ses oturumlarını tek ekranda bağımsız dengele",
+                "Bağımsız Kanal ve Oturum Ses Mikseri",
+                "Medya, Zil, Bildirim, Alarm düzeylerini ve aktif ses oturumlarını dengele",
                 null,
                 v -> showPerStreamAndAppVolumeMixerDialog());
 
-        // ColorOS 17 O-Relax Built-in Procedural Soundscape Bar
-        soundCard.addView(buildORelaxSoundscapeWidget());
+        soundCard.addView(buildAmbientSoundscapeWidget());
         parent.addView(soundCard);
 
-        // MODULE 7: One Hand Operation+ & ColorOS 17 Smart Sidebar / File Dock (Stage 3 & 5)
-        LinearLayout ohoCard = createModuleCard(
-                "🤚 One Hand Operation+ & Smart Sidebar (File Dock)",
-                "LIFE UP • ÇAPRAZ KENAR HAREKETLERİ & EVRENSEL PANO RIHTIMI",
-                "#A855F7");
-
-        boolean ohoEnabled = Settings.Secure.getIntForUser(
-                mResolver, "blaze_oho_enabled", 1, UserHandle.USER_CURRENT) == 1;
-        addSwitchRow(ohoCard,
-                "↗️ One Hand Operation+ Çapraz Kenar Kısayolları",
-                "Kenardan düz çekme Geri yapar; Yukarı Çapraz (↗) ve Aşağı Çapraz (↘) özel kısayol tetikler",
-                ohoEnabled,
-                checked -> {
-                    Settings.Secure.putIntForUser(
-                            mResolver, "blaze_oho_enabled", checked ? 1 : 0, UserHandle.USER_CURRENT);
-                    refreshActiveModulesCount();
-                });
-
-        final String[] gestureActions = {
-                "Smart Sidebar & File Dock Aç (Pano & Araçlar)",
-                "Bildirim Panelini İndir",
-                "Hızlı Ayarları (QS) Aç",
-                "El Fenerini Aç/Kapat",
-                "Ekran Görüntüsü Al",
-                "Son Uygulamalar / Önceki Uygulama"
-        };
-        int diagUp = Settings.Secure.getIntForUser(
-                mResolver, "blaze_oho_diagonal_up_action", 0, UserHandle.USER_CURRENT);
-        final TextView upSummary = new TextView(mContext);
-        addActionRow(ohoCard,
-                "↗️ Yukarı Çapraz Kaydırma (+25°..+65°) İşlevi",
-                "Atanan: " + gestureActions[Math.max(0, Math.min(gestureActions.length - 1, diagUp))],
-                upSummary,
-                v -> showOhoActionPicker("blaze_oho_diagonal_up_action", "↗️ Yukarı Çapraz Hareketi", gestureActions, upSummary));
-
-        int diagDown = Settings.Secure.getIntForUser(
-                mResolver, "blaze_oho_diagonal_down_action", 1, UserHandle.USER_CURRENT);
-        final TextView downSummary = new TextView(mContext);
-        addActionRow(ohoCard,
-                "↘️ Aşağı Çapraz Kaydırma (-25°..-65°) İşlevi",
-                "Atanan: " + gestureActions[Math.max(0, Math.min(gestureActions.length - 1, diagDown))],
-                downSummary,
-                v -> showOhoActionPicker("blaze_oho_diagonal_down_action", "↘️ Aşağı Çapraz Hareketi", gestureActions, downSummary));
-
-        boolean sidebarEnabled = Settings.Secure.getIntForUser(
-                mResolver, "blaze_smart_sidebar_enabled", 1, UserHandle.USER_CURRENT) == 1;
-        addSwitchRow(ohoCard,
-                "🗂️ ColorOS 17 Smart Sidebar & File Dock (Pano Rıhtımı)",
-                "Ekranın sağ üst-orta kenarındaki yarı-saydam rıhtımdan son kopyalanan metinlere, OTP kodlarına ve hızlı araçlara erişin",
-                sidebarEnabled,
-                checked -> {
-                    Settings.Secure.putIntForUser(
-                            mResolver, "blaze_smart_sidebar_enabled", checked ? 1 : 0, UserHandle.USER_CURRENT);
-                    refreshActiveModulesCount();
-                });
-
-        addActionRow(ohoCard,
-                "📋 File Dock Pano Rıhtımını Şimdi Aç (Önizleme)",
-                "Mevcut panodaki metni/OTP kodunu ve hızlı araçları görüntüle",
-                null,
-                v -> showFileDockQuickModal());
-        parent.addView(ohoCard);
-
-        // MODULE 8: MultiStar (Advanced Multi-Window & Multi-Focus)
-        LinearLayout multiStarCard = createModuleCard(
-                "🪟 MultiStar (Süper Çoklu Pencere Motoru)",
-                "LIFE UP • ZORUNLU BÖLÜNMÜŞ EKRAN & ÇOKLU ODAK (MULTI-RESUME)",
-                "#10B981");
+        // MODULE 4: Donanım Kısayolu ve Çoklu Pencere Motoru
+        LinearLayout multiWindowCard = createModuleCard(
+                R.drawable.ic_settings_system_dashboard_expressive,
+                "Çoklu Pencere ve Donanım Kısayolları",
+                "ZORUNLU BÖLÜNMÜŞ EKRAN VE GÜÇ TUŞU FENERİ");
 
         boolean forceResizable = Settings.Global.getInt(
-                mResolver, "enable_non_resizable_multi_window", 1) == 1;
-        addSwitchRow(multiStarCard,
-                "🔓 I Love Multi Window (Tüm Uygulamalarda Zorunlu Çoklu Pencere)",
-                "Bölünmüş ekranı veya serbest pencereyi engelleyen uygulamaları (Instagram, Oyunlar vb.) zorla çoklu pencere uyumlu yapar",
+                mResolver, "enable_non_resizable_multi_window", 0) == 1;
+        addSwitchRow(multiWindowCard,
+                "Tüm Uygulamalarda Zorunlu Çoklu Pencere",
+                "Bölünmüş ekranı veya serbest pencereyi desteklemeyen uygulamaları çoklu pencere uyumlu yapar",
                 forceResizable,
                 checked -> {
                     Settings.Global.putInt(mResolver, "enable_non_resizable_multi_window", checked ? 1 : 0);
+                    Settings.Global.putInt(mResolver, "force_resizable_activities", checked ? 1 : 0);
                     Settings.Global.putInt(mResolver, "enable_freeform_support", checked ? 1 : 0);
-                    refreshActiveModulesCount();
                 });
-
-        boolean multiResume = Settings.Secure.getIntForUser(
-                mResolver, "blaze_multistar_multi_resume", 1, UserHandle.USER_CURRENT) == 1;
-        addSwitchRow(multiStarCard,
-                "⚡ Multi-Focus (Aktif Olmayan Pencereyi Duraklatma)",
-                "Bölünmüş ekranda bir pencerede yazarken diğer penceredeki oyunun/videonun donmasını engeller",
-                multiResume,
-                checked -> {
-                    Settings.Secure.putIntForUser(
-                            mResolver, "blaze_multistar_multi_resume", checked ? 1 : 0, UserHandle.USER_CURRENT);
-                    SystemProperties.set("persist.wm.debug.multi_resume", checked ? "true" : "false");
-                });
-        parent.addView(multiStarCard);
-
-        // MODULE 9: RegiStar (Back-Tap & Side Key Customization)
-        LinearLayout regiStarCard = createModuleCard(
-                "⚙️ RegiStar (Arka Kapak Dokunuşu & Yan Tuş)",
-                "LIFE UP • BACK-TAP TETİKLEYİCİSİ & GÜÇ TUŞU ATAMALARI",
-                "#F59E0B");
-
-        final String[] backTapActions = {
-                "Kapalı",
-                "Ekran Görüntüsü Al (Nice Shot)",
-                "El Fenerini Aç/Kapat",
-                "Bildirim Panelini İndir",
-                "Kamera Uygulamasını Başlat",
-                "Pil Sağlığı & Termal Stüdyoyu Aç"
-        };
-        int backTap = Settings.Secure.getIntForUser(
-                mResolver, "blaze_registar_backtap_action", 1, UserHandle.USER_CURRENT);
-        final TextView backTapSummary = new TextView(mContext);
-        addActionRow(regiStarCard,
-                "👆 Arka Kapağa Çift Dokunuş (Back-Tap Action)",
-                "Atanan: " + backTapActions[Math.max(0, Math.min(backTapActions.length - 1, backTap))],
-                backTapSummary,
-                v -> showOhoActionPicker("blaze_registar_backtap_action", "👆 Arka Kapak Çift Dokunuş", backTapActions, backTapSummary));
 
         boolean torchPower = Settings.System.getIntForUser(
-                mResolver, "torch_long_press_power_gesture", 1, UserHandle.USER_CURRENT) == 1;
-        addSwitchRow(regiStarCard,
-                "🔦 Ekran Kapalıyken Güç Tuşuna Basılı Tutunca El Feneri",
-                "RegiStar Side Key: Kilit ekranını açmadan güç tuşuna basılı tutarak feneri yakar",
+                mResolver, "torch_long_press_power_gesture", 0, UserHandle.USER_CURRENT) == 1;
+        addSwitchRow(multiWindowCard,
+                "Ekran Kapalıyken Güç Tuşuyla El Feneri",
+                "Kilit ekranını açmadan güç tuşuna basılı tutarak el fenerini yakar",
                 torchPower,
                 checked -> Settings.System.putIntForUser(
                         mResolver, "torch_long_press_power_gesture", checked ? 1 : 0, UserHandle.USER_CURRENT));
-        parent.addView(regiStarCard);
+        parent.addView(multiWindowCard);
 
-        // MODULE 10: Nice Catch (System Detective: Vibration, Wakeup & Clipboard History)
-        LinearLayout niceCatchCard = createModuleCard(
-                "🕵️ Nice Catch (Sistem & Gizlilik Dedektifi)",
-                "LIFE UP • GİZLİ TİTREŞİM, EKRAN UYANDIRMA & SENSÖR GÜNLÜĞÜ",
-                "#F43F5E");
+        // MODULE 5: Arka Plan Etkinlik ve Uyandırma Günlüğü
+        LinearLayout logCard = createModuleCard(
+                R.drawable.ic_settings_privacy_filled,
+                "Arka Plan Etkinlik ve Uyandırma Günlüğü",
+                "TİTREŞİM, EKRAN UYANDIRMA VE İZİN DENETİMİ");
 
         TextView detectiveDesc = new TextView(mContext);
-        detectiveDesc.setText("Cihazınız durup dururken titrediğinde, ekran kendi kendine uyandığında veya arka planda pil tükettiğinde hangi uygulamanın bunu tetiklediğini gerçek zamanlı AppOps & UsageStats telemetrisiyle yakalar.");
-        detectiveDesc.setTextColor(Color.parseColor("#94A3B8"));
-        detectiveDesc.setTextSize(TypedValue.COMPLEX_UNIT_SP, 11.5f);
-        detectiveDesc.setPadding(0, dp(4), 0, dp(10));
-        niceCatchCard.addView(detectiveDesc);
+        detectiveDesc.setText("Son saatlerde hangi uygulamaların etkinleştiğini ve titreşim izni kullandığını gerçek zamanlı UsageStats ve AppOps verileriyle listeler.");
+        detectiveDesc.setTextColor(mColorTextSecondary);
+        detectiveDesc.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f);
+        detectiveDesc.setPadding(0, dp(2), 0, dp(10));
+        logCard.addView(detectiveDesc);
 
         LinearLayout liveLogBox = new LinearLayout(mContext);
         liveLogBox.setOrientation(LinearLayout.VERTICAL);
         GradientDrawable logBg = new GradientDrawable();
-        logBg.setColor(Color.parseColor("#0B111E"));
+        logBg.setColor(mColorSurfaceVariant);
         logBg.setCornerRadius(dp(16));
-        logBg.setStroke(dp(1), Color.parseColor("#28F43F5E"));
+        logBg.setStroke(dp(1), mColorBorder);
         liveLogBox.setBackground(logBg);
-        liveLogBox.setPadding(dp(12), dp(10), dp(12), dp(10));
-        populateNiceCatchLiveLogs(liveLogBox);
-        niceCatchCard.addView(liveLogBox);
+        liveLogBox.setPadding(dp(14), dp(10), dp(14), dp(10));
+        populateLiveActivityLogs(liveLogBox);
+        logCard.addView(liveLogBox);
 
-        addActionRow(niceCatchCard,
-                "🔄 Nice Catch Dedektif Raporunu Yenile",
-                "Son titreşim, ekran uyandırma (Wakelock) ve ses odağı geçmişini tekrar tara",
+        addActionRow(logCard,
+                "Etkinlik Günlüğünü Yenile",
+                "Uygulama etkinlik ve izin geçmişini yeniden tara",
                 null,
                 v -> {
                     vibrateTick();
-                    populateNiceCatchLiveLogs(liveLogBox);
-                    Toast.makeText(mContext, "Nice Catch günlüğü güncellendi", Toast.LENGTH_SHORT).show();
+                    populateLiveActivityLogs(liveLogBox);
+                    Toast.makeText(mContext, "Etkinlik günlüğü güncellendi", Toast.LENGTH_SHORT).show();
                 });
 
-        parent.addView(niceCatchCard);
+        parent.addView(logCard);
     }
 
     // =========================================================================
-    // DIALOGS & INTERACTIVE TOOLS (STAGE 1, 2, 3)
+    // LIVE SPRING PHYSICS PREVIEW VIEW (Modeled on Home Up IconMovePreview)
     // =========================================================================
 
-    private void showLockStarSignatureDialog(final TextView summaryView) {
-        LinearLayout box = new LinearLayout(mContext);
-        box.setOrientation(LinearLayout.VERTICAL);
-        int pad = dp(20);
-        box.setPadding(pad, dp(12), pad, dp(8));
+    private final class HomeUpSpringPreviewView extends View {
+        private final Paint mGridPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        private final Paint mPathPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        private final Paint mTargetPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        private final Paint mIconPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        private final Paint mIconBorderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        private final Path mTrajectoryPath = new Path();
+        private final RectF mRect = new RectF();
 
-        final EditText input = new EditText(mContext);
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
-        String current = Settings.Secure.getStringForUser(
-                mResolver, "blaze_lockstar_signature_text", UserHandle.USER_CURRENT);
-        if (current == null) current = "PROJECT BLAZE 17 • BEYOND INFINITY";
-        input.setText(current);
-        input.setHint("Örn: PROJECT BLAZE 17 • STAY HUNGRY");
-        box.addView(input);
+        private float mDampX = 0.80f;
+        private float mDampY = 0.80f;
+        private float mStiffX = 300f;
+        private float mStiffY = 300f;
+        private float mScaleDamp = 0.75f;
+        private float mScaleStiff = 350f;
 
-        final String[] presets = {
-                "PROJECT BLAZE 17 • BEYOND INFINITY",
-                "STAY HUNGRY • STAY FOOLISH",
-                "HYPEROS 4 • MAGAZINE EDITION",
-                "CARPE DIEM • MEMENTO MORI",
-                ""
-        };
-        final String[] presetLabels = {
-                "✨ Project Blaze 17 • Beyond Infinity",
-                "🚀 Stay Hungry • Stay Foolish",
-                "📰 HyperOS 4 • Magazine Edition",
-                "🏛️ Carpe Diem • Memento Mori",
-                "🚫 İmza Başlığını Gizle (Kapalı)"
-        };
+        private float mProgressTimeSec = 1.0f;
+        private ValueAnimator mAnimator;
 
-        for (int i = 0; i < presets.length; i++) {
-            final String val = presets[i];
-            TextView chip = new TextView(mContext);
-            chip.setText(presetLabels[i]);
-            chip.setTextColor(Color.parseColor("#38BDF8"));
-            chip.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12.5f);
-            chip.setPadding(dp(8), dp(8), dp(8), dp(8));
-            chip.setOnClickListener(v -> input.setText(val));
-            box.addView(chip);
+        HomeUpSpringPreviewView(Context context) {
+            super(context);
+            GradientDrawable bg = new GradientDrawable();
+            bg.setColor(mColorSurfaceVariant);
+            bg.setCornerRadius(dp(18));
+            bg.setStroke(dp(1), mColorBorder);
+            setBackground(bg);
+
+            mGridPaint.setStyle(Paint.Style.STROKE);
+            mGridPaint.setStrokeWidth(dp(1));
+            mGridPaint.setColor(mColorBorder);
+
+            mPathPaint.setStyle(Paint.Style.STROKE);
+            mPathPaint.setStrokeWidth(dp(2));
+            mPathPaint.setColor(withAlpha(mColorAccent, 110));
+            mPathPaint.setPathEffect(new DashPathEffect(new float[]{dp(6), dp(4)}, 0));
+
+            mTargetPaint.setStyle(Paint.Style.STROKE);
+            mTargetPaint.setStrokeWidth(dp(2));
+            mTargetPaint.setColor(withAlpha(mColorTextSecondary, 110));
+
+            mIconPaint.setStyle(Paint.Style.FILL);
+            mIconPaint.setColor(withAlpha(mColorAccent, 55));
+
+            mIconBorderPaint.setStyle(Paint.Style.STROKE);
+            mIconBorderPaint.setStrokeWidth(dp(2));
+            mIconBorderPaint.setColor(mColorAccent);
+
+            float[] init = resolveCurrentPhysicsArray();
+            setPhysics(init[0], init[1], init[2], init[3], init[4], init[5]);
+
+            setOnClickListener(v -> {
+                vibrateTick();
+                triggerPreviewAnimation();
+            });
         }
 
-        new AlertDialog.Builder(mContext)
-                .setTitle("✍️ LockStar & HyperOS Dergi İmza Başlığı")
-                .setView(box)
-                .setPositiveButton("Kaydet", (d, w) -> {
-                    String text = input.getText().toString().trim();
-                    Settings.Secure.putStringForUser(
-                            mResolver, "blaze_lockstar_signature_text", text, UserHandle.USER_CURRENT);
-                    if (summaryView != null) {
-                        summaryView.setText("Saatin altında sinematik dergi imzası gösterir ("
-                                + (TextUtils.isEmpty(text) ? "Kapalı" : text) + ")");
-                    }
-                    refreshActiveModulesCount();
-                })
-                .setNegativeButton("İptal", null)
-                .show();
+        void setPhysics(float dx, float dy, float sx, float sy, float sd, float ss) {
+            mDampX = dx;
+            mDampY = dy;
+            mStiffX = sx;
+            mStiffY = sy;
+            mScaleDamp = sd;
+            mScaleStiff = ss;
+            invalidate();
+        }
+
+        void triggerPreviewAnimation() {
+            stopAnimation();
+            mAnimator = ValueAnimator.ofFloat(0f, 1.15f);
+            mAnimator.setDuration(1150L);
+            mAnimator.setInterpolator(new LinearInterpolator());
+            mAnimator.addUpdateListener(anim -> {
+                mProgressTimeSec = (float) anim.getAnimatedValue();
+                invalidate();
+            });
+            mAnimator.start();
+        }
+
+        void stopAnimation() {
+            if (mAnimator != null) {
+                mAnimator.cancel();
+                mAnimator = null;
+            }
+        }
+
+        private float evalSpring(float stiffness, float damping, float tSec) {
+            double w = Math.sqrt(Math.max(10f, stiffness));
+            double z = Math.max(0.35, Math.min(1.5, damping));
+            if (z < 0.999) {
+                double wd = w * Math.sqrt(1.0 - z * z);
+                return (float) (1.0 - Math.exp(-z * w * tSec)
+                        * (Math.cos(wd * tSec) + (z * w / wd) * Math.sin(wd * tSec)));
+            } else {
+                return (float) (1.0 - (1.0 + w * tSec) * Math.exp(-w * tSec));
+            }
+        }
+
+        @Override
+        protected void onDraw(Canvas canvas) {
+            super.onDraw(canvas);
+            int w = getWidth();
+            int h = getHeight();
+            if (w <= 0 || h <= 0) return;
+
+            // 1. Subtle 8x4 coordinate grid
+            int cols = 8;
+            int rows = 4;
+            for (int i = 1; i < cols; i++) {
+                float x = (w * i) / (float) cols;
+                canvas.drawLine(x, 0, x, h, mGridPaint);
+            }
+            for (int j = 1; j < rows; j++) {
+                float y = (h * j) / (float) rows;
+                canvas.drawLine(0, y, w, y, mGridPaint);
+            }
+
+            float startX = w * 0.78f;
+            float startY = h * 0.74f;
+            float targetX = w * 0.22f;
+            float targetY = h * 0.30f;
+
+            float startSize = dp(68);
+            float targetSize = dp(38);
+
+            // 2. Target slot outline
+            float halfTarget = targetSize / 2f;
+            mRect.set(targetX - halfTarget, targetY - halfTarget,
+                    targetX + halfTarget, targetY + halfTarget);
+            canvas.drawRoundRect(mRect, dp(10), dp(10), mTargetPaint);
+
+            // 3. Analytic trajectory path
+            mTrajectoryPath.reset();
+            int steps = 48;
+            for (int i = 0; i <= steps; i++) {
+                float t = (i / (float) steps) * 1.0f;
+                float px = startX + (targetX - startX) * evalSpring(mStiffX, mDampX, t);
+                float py = startY + (targetY - startY) * evalSpring(mStiffY, mDampY, t);
+                if (i == 0) mTrajectoryPath.moveTo(px, py);
+                else mTrajectoryPath.lineTo(px, py);
+            }
+            canvas.drawPath(mTrajectoryPath, mPathPaint);
+
+            // 4. Current animated window/icon position & scale
+            float progX = evalSpring(mStiffX, mDampX, mProgressTimeSec);
+            float progY = evalSpring(mStiffY, mDampY, mProgressTimeSec);
+            float progS = evalSpring(mScaleStiff, mScaleDamp, mProgressTimeSec);
+
+            float cx = startX + (targetX - startX) * progX;
+            float cy = startY + (targetY - startY) * progY;
+            float curSize = Math.max(dp(18), startSize + (targetSize - startSize) * progS);
+            float half = curSize / 2f;
+            float corner = dp(10) + (1f - Math.min(1f, progS)) * dp(8);
+
+            mRect.set(cx - half, cy - half, cx + half, cy + half);
+            canvas.drawRoundRect(mRect, corner, corner, mIconPaint);
+            canvas.drawRoundRect(mRect, corner, corner, mIconBorderPaint);
+        }
     }
 
-    private void showLockStarTimeoutDialog(final TextView summaryView) {
-        final String[] labels = {"15 Saniye (Standart)", "30 Saniye (LockStar Önerilen)", "60 Saniye (1 Dakika)", "120 Saniye (2 Dakika)"};
-        final int[] values = {15, 30, 60, 120};
-        int cur = Settings.Secure.getIntForUser(mResolver, "blaze_lockstar_timeout_sec", 30, UserHandle.USER_CURRENT);
+    // =========================================================================
+    // DIALOGS & INTERACTIVE SYSTEM TOOLS
+    // =========================================================================
+
+    private void showScreenTimeoutDialog(final TextView summaryView) {
+        final String[] labels = {
+                "15 Saniye",
+                "30 Saniye (Standart)",
+                "60 Saniye (1 Dakika)",
+                "120 Saniye (2 Dakika)",
+                "300 Saniye (5 Dakika)"
+        };
+        final int[] valuesMs = {15000, 30000, 60000, 120000, 300000};
+        int curMs = Settings.System.getIntForUser(
+                mResolver, Settings.System.SCREEN_OFF_TIMEOUT, 30000, UserHandle.USER_CURRENT);
         int checked = 1;
-        for (int i = 0; i < values.length; i++) {
-            if (values[i] == cur) checked = i;
+        for (int i = 0; i < valuesMs.length; i++) {
+            if (valuesMs[i] == curMs) checked = i;
         }
         new AlertDialog.Builder(mContext)
-                .setTitle("⏱️ LockStar Kilit Ekranı Zaman Aşımı")
+                .setTitle("Ekran Zaman Aşımı Süresi")
                 .setSingleChoiceItems(labels, checked, (d, which) -> {
-                    Settings.Secure.putIntForUser(
-                            mResolver, "blaze_lockstar_timeout_sec", values[which], UserHandle.USER_CURRENT);
+                    Settings.System.putIntForUser(
+                            mResolver, Settings.System.SCREEN_OFF_TIMEOUT, valuesMs[which], UserHandle.USER_CURRENT);
                     if (summaryView != null) {
-                        summaryView.setText("Kilit ekranında bildirimleri incelerken ekranın erken kapanmasını önler (" + values[which] + " sn)");
+                        summaryView.setText("Hareketsizlik sonrası ekranın kapanma süresi (" + (valuesMs[which] / 1000) + " sn)");
                     }
+                    vibrateTick();
                     d.dismiss();
                 })
                 .show();
     }
 
-    private void showHomeUpPhysicsDialog(final String[] names, final TextView summaryView) {
-        int cur = Settings.Secure.getIntForUser(mResolver, "blaze_homeup_gesture_physics", 1, UserHandle.USER_CURRENT);
-        final float[] scales = {0.75f, 0.90f, 1.0f, 1.15f};
+    private String formatAnimScaleLabel(float scale) {
+        if (scale <= 0.6f) return "0.5x (Çok Hızlı)";
+        if (scale <= 0.92f) return "0.85x (Akıcı ve Hızlı)";
+        if (scale <= 1.05f) return "1.0x (Standart Dengeli)";
+        return "1.25x (Yumuşak Geçiş)";
+    }
+
+    private void showAnimationScaleDialog(final TextView summaryView) {
+        final String[] names = {
+                "0.5x (Çok Hızlı)",
+                "0.85x (Akıcı ve Hızlı)",
+                "1.0x (Standart Dengeli)",
+                "1.25x (Yumuşak Geçiş)"
+        };
+        final float[] scales = {0.5f, 0.85f, 1.0f, 1.25f};
+        float cur = Settings.Global.getFloat(mResolver, Settings.Global.WINDOW_ANIMATION_SCALE, 1.0f);
+        int checked = 2;
+        if (cur <= 0.6f) checked = 0;
+        else if (cur <= 0.92f) checked = 1;
+        else if (cur > 1.05f) checked = 3;
+
         new AlertDialog.Builder(mContext)
-                .setTitle("🌀 Home Up Hareket & Yay Fiziği Profili")
-                .setSingleChoiceItems(names, Math.max(0, Math.min(3, cur)), (d, which) -> {
-                    Settings.Secure.putIntForUser(
-                            mResolver, "blaze_homeup_gesture_physics", which, UserHandle.USER_CURRENT);
+                .setTitle("Sistem Pencere ve Geçiş Animasyon Hızı")
+                .setSingleChoiceItems(names, checked, (d, which) -> {
                     Settings.Global.putFloat(mResolver, Settings.Global.WINDOW_ANIMATION_SCALE, scales[which]);
                     Settings.Global.putFloat(mResolver, Settings.Global.TRANSITION_ANIMATION_SCALE, scales[which]);
                     Settings.Global.putFloat(mResolver, Settings.Global.ANIMATOR_DURATION_SCALE, scales[which]);
                     if (summaryView != null) {
-                        summaryView.setText("Aktif: " + names[which]);
+                        summaryView.setText("Aktif ölçek: " + names[which]);
                     }
                     vibrateTick();
                     d.dismiss();
@@ -801,89 +1299,22 @@ public class BlazeGoodLockStudioFragment extends SettingsPreferenceFragment {
                 .show();
     }
 
-    private void showEdgeLightingStyleDialog(final String[] names, final TextView summaryView) {
-        int cur = Settings.Secure.getIntForUser(mResolver, "blaze_edgelighting_style", 2, UserHandle.USER_CURRENT);
-        new AlertDialog.Builder(mContext)
-                .setTitle("🌈 Edge Lighting+ Efekt Stili")
-                .setSingleChoiceItems(names, Math.max(0, Math.min(4, cur)), (d, which) -> {
-                    Settings.Secure.putIntForUser(
-                            mResolver, "blaze_edgelighting_style", which, UserHandle.USER_CURRENT);
-                    // Trigger live preview pulse Timestamp so SystemUI flashes the edge lighting immediately
-                    Settings.Secure.putLongForUser(
-                            mResolver, "blaze_edgelighting_preview_pulse", System.currentTimeMillis(), UserHandle.USER_CURRENT);
-                    if (summaryView != null) {
-                        summaryView.setText("Aktif: " + names[which]);
-                    }
-                    refreshActiveModulesCount();
-                    vibrateTick();
-                    d.dismiss();
-                })
-                .show();
-    }
-
-    private void showWonderlandParticleDialog(final String[] names, final TextView summaryView) {
-        int cur = Settings.Secure.getIntForUser(mResolver, "blaze_wonderland_particle_mode", 2, UserHandle.USER_CURRENT);
-        new AlertDialog.Builder(mContext)
-                .setTitle("🪐 Wonderland 3D Hareketli Parçacık Katmanı")
-                .setSingleChoiceItems(names, Math.max(0, Math.min(4, cur)), (d, which) -> {
-                    Settings.Secure.putIntForUser(
-                            mResolver, "blaze_wonderland_particle_mode", which, UserHandle.USER_CURRENT);
-                    if (summaryView != null) {
-                        summaryView.setText("Aktif: " + names[which]);
-                    }
-                    refreshActiveModulesCount();
-                    vibrateTick();
-                    d.dismiss();
-                })
-                .show();
-    }
-
-    private void showQuickStarColumnsDialog(final TextView summaryView) {
+    private void showQsColumnsDialog(final TextView summaryView) {
         final String[] labels = {
-                "3 Sütun (Geniş OneUI Kartları)",
+                "3 Sütun (Geniş Kart Düzeni)",
                 "4 Sütun (Standart Dengeli)",
-                "5 Sütun (QuickStar Kompakt Yoğun)"
+                "5 Sütun (Kompakt Yoğun Düzen)"
         };
         final int[] vals = {3, 4, 5};
         int cur = Settings.System.getIntForUser(mResolver, "qs_columns_portrait", 4, UserHandle.USER_CURRENT);
         int idx = cur == 3 ? 0 : (cur == 5 ? 2 : 1);
         new AlertDialog.Builder(mContext)
-                .setTitle("📐 QuickStar Hızlı Ayarlar Sütun Yoğunluğu")
+                .setTitle("Hızlı Ayarlar Sütun Yoğunluğu")
                 .setSingleChoiceItems(labels, idx, (d, which) -> {
                     Settings.System.putIntForUser(
                             mResolver, "qs_columns_portrait", vals[which], UserHandle.USER_CURRENT);
                     if (summaryView != null) {
                         summaryView.setText("Portre modunda satır başına " + vals[which] + " kare gösteriliyor");
-                    }
-                    vibrateTick();
-                    d.dismiss();
-                })
-                .show();
-    }
-
-    private void showVolumeStepDialog(final TextView summaryView) {
-        final String[] labels = {
-                "1 Birim (Ultra Hassas Stüdyo Kontrolü — 150 Adım)",
-                "2 Birim (SoundAssistant Önerilen — 75 Adım)",
-                "5 Birim (Dengeli — 30 Adım)",
-                "10 Birim (Standart Hızlı — 15 Adım)"
-        };
-        final int[] steps = {1, 2, 5, 10};
-        int cur = Settings.Secure.getIntForUser(mResolver, "blaze_soundassistant_vol_step", 2, UserHandle.USER_CURRENT);
-        int checked = 1;
-        for (int i = 0; i < steps.length; i++) {
-            if (steps[i] == cur) checked = i;
-        }
-        new AlertDialog.Builder(mContext)
-                .setTitle("🎚️ SoundAssistant Ses Tuşu Adım Hassasiyeti")
-                .setSingleChoiceItems(labels, checked, (d, which) -> {
-                    int step = steps[which];
-                    Settings.Secure.putIntForUser(
-                            mResolver, "blaze_soundassistant_vol_step", step, UserHandle.USER_CURRENT);
-                    int mediaSteps = Math.max(15, 150 / step);
-                    SystemProperties.set("ro.config.media_vol_steps", String.valueOf(mediaSteps));
-                    if (summaryView != null) {
-                        summaryView.setText("Her ses tuşu basışında " + step + " birim ince ayar yapılır");
                     }
                     vibrateTick();
                     d.dismiss();
@@ -907,10 +1338,10 @@ public class BlazeGoodLockStudioFragment extends SettingsPreferenceFragment {
                 AudioManager.STREAM_ALARM
         };
         final String[] streamTitles = {
-                "🎵 Medya & Müzik Sesi",
-                "📞 Zil Sesi",
-                "🔔 Bildirim Sesi",
-                "⏰ Alarm Sesi"
+                "Medya ve Müzik Sesi",
+                "Zil Sesi",
+                "Bildirim Sesi",
+                "Alarm Sesi"
         };
 
         for (int i = 0; i < streams.length; i++) {
@@ -921,7 +1352,7 @@ public class BlazeGoodLockStudioFragment extends SettingsPreferenceFragment {
             TextView label = new TextView(mContext);
             int pct = (int) Math.round((cur * 100.0) / max);
             label.setText(streamTitles[i] + "  •  %" + pct);
-            label.setTextColor(Color.WHITE);
+            label.setTextColor(mColorTextPrimary);
             label.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f);
             label.setTypeface(Typeface.create("sans-serif-medium", Typeface.BOLD));
             label.setPadding(0, dp(8), 0, dp(2));
@@ -946,11 +1377,10 @@ public class BlazeGoodLockStudioFragment extends SettingsPreferenceFragment {
             box.addView(sb);
         }
 
-        // Active App Playback Sessions from AudioManager
         List<AudioPlaybackConfiguration> configs = am.getActivePlaybackConfigurations();
         TextView activeHeader = new TextView(mContext);
-        activeHeader.setText("🎧 Aktif Ses Oynatan Uygulamalar (" + configs.size() + " oturum)");
-        activeHeader.setTextColor(Color.parseColor("#38BDF8"));
+        activeHeader.setText("Aktif Ses Oynatan Uygulamalar (" + configs.size() + " oturum)");
+        activeHeader.setTextColor(mColorAccent);
         activeHeader.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f);
         activeHeader.setTypeface(Typeface.create("sans-serif-medium", Typeface.BOLD));
         activeHeader.setPadding(0, dp(14), 0, dp(4));
@@ -958,8 +1388,8 @@ public class BlazeGoodLockStudioFragment extends SettingsPreferenceFragment {
 
         if (configs.isEmpty()) {
             TextView empty = new TextView(mContext);
-            empty.setText("Şu anda arka planda aktif medya oynatan bir uygulama yok. Müzik veya video başlattığınızda uygulama başına ses kontrolü burada listelenir.");
-            empty.setTextColor(Color.parseColor("#94A3B8"));
+            empty.setText("Şu anda arka planda aktif medya oynatan bir uygulama yok.");
+            empty.setTextColor(mColorTextSecondary);
             empty.setTextSize(TypedValue.COMPLEX_UNIT_SP, 11.5f);
             box.addView(empty);
         } else {
@@ -967,8 +1397,8 @@ public class BlazeGoodLockStudioFragment extends SettingsPreferenceFragment {
                 AudioPlaybackConfiguration cfg = configs.get(i);
                 int usage = cfg.getAudioAttributes() != null ? cfg.getAudioAttributes().getUsage() : 0;
                 TextView row = new TextView(mContext);
-                row.setText("• Aktif Ses Oturumu #" + (i + 1) + " (Usage ID: " + usage + ") — Çalıyor");
-                row.setTextColor(Color.parseColor("#E2E8F0"));
+                row.setText("• Aktif Ses Oturumu #" + (i + 1) + " (Kanal: " + usage + ") — Çalıyor");
+                row.setTextColor(mColorTextPrimary);
                 row.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f);
                 row.setPadding(0, dp(3), 0, dp(3));
                 box.addView(row);
@@ -976,23 +1406,19 @@ public class BlazeGoodLockStudioFragment extends SettingsPreferenceFragment {
         }
 
         new AlertDialog.Builder(mContext)
-                .setTitle("🎛️ SoundAssistant Ses Mikseri")
+                .setTitle("Bağımsız Ses Mikseri")
                 .setView(box)
                 .setPositiveButton("Tamam", null)
                 .show();
     }
 
-    // =========================================================================
-    // COLOROS 17 O-RELAX PROCEDURAL AMBIENT SOUNDSCAPE SYNTHESIZER (STAGE 2)
-    // =========================================================================
-
-    private View buildORelaxSoundscapeWidget() {
+    private View buildAmbientSoundscapeWidget() {
         LinearLayout container = new LinearLayout(mContext);
         container.setOrientation(LinearLayout.VERTICAL);
         GradientDrawable bg = new GradientDrawable();
-        bg.setColor(Color.parseColor("#0B1322"));
+        bg.setColor(mColorSurfaceVariant);
         bg.setCornerRadius(dp(18));
-        bg.setStroke(dp(1), Color.parseColor("#2E38BDF8"));
+        bg.setStroke(dp(1), mColorBorder);
         container.setBackground(bg);
         int pad = dp(14);
         container.setPadding(pad, dp(12), pad, dp(12));
@@ -1002,16 +1428,16 @@ public class BlazeGoodLockStudioFragment extends SettingsPreferenceFragment {
         container.setLayoutParams(lp);
 
         TextView header = new TextView(mContext);
-        header.setText("🌊 ColorOS 17 O-Relax — Gerçek Zamanlı Doğa & Odak Sentezleyicisi");
-        header.setTextColor(Color.WHITE);
+        header.setText("Doğal Odak ve Ortam Ses Sentezleyicisi");
+        header.setTextColor(mColorTextPrimary);
         header.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f);
         header.setTypeface(Typeface.create("sans-serif-medium", Typeface.BOLD));
         container.addView(header);
 
         mAmbientStatusText = new TextView(mContext);
-        mAmbientStatusText.setText("Durum: Hazır (Harici dosya gerektirmeyen canlı AudioTrack DSP sentezleyici)");
-        mAmbientStatusText.setTextColor(Color.parseColor("#94A3B8"));
-        mAmbientStatusText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 11f);
+        mAmbientStatusText.setText("Durum: Hazır (Gerçek zamanlı DSP ses sentezleyici)");
+        mAmbientStatusText.setTextColor(mColorTextSecondary);
+        mAmbientStatusText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 11.5f);
         mAmbientStatusText.setPadding(0, dp(2), 0, dp(8));
         container.addView(mAmbientStatusText);
 
@@ -1020,20 +1446,20 @@ public class BlazeGoodLockStudioFragment extends SettingsPreferenceFragment {
         LinearLayout chipRow = new LinearLayout(mContext);
         chipRow.setOrientation(LinearLayout.HORIZONTAL);
 
-        final String[] labels = {"⏹️ Durdur", "🌧️ Gece Yağmuru", "🌊 Okyanus Dalgası", "🔥 Kamp Ateşi", "🪐 Derin Uzay"};
+        final String[] labels = {"Durdur", "Gece Yağmuru", "Okyanus Dalgası", "Kamp Ateşi", "Derin Uzay"};
         for (int i = 0; i < labels.length; i++) {
             final int mode = i;
             TextView chip = new TextView(mContext);
             chip.setText(labels[i]);
-            chip.setTextColor(Color.WHITE);
-            chip.setTextSize(TypedValue.COMPLEX_UNIT_SP, 11.5f);
+            chip.setTextColor(i == 0 ? mColorTextSecondary : mColorAccent);
+            chip.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f);
             chip.setTypeface(Typeface.create("sans-serif-medium", Typeface.BOLD));
             GradientDrawable chipBg = new GradientDrawable();
-            chipBg.setColor(i == 0 ? Color.parseColor("#2A3447") : Color.parseColor("#1E293B"));
+            chipBg.setColor(mColorSurface);
             chipBg.setCornerRadius(dp(99));
-            chipBg.setStroke(dp(1), Color.parseColor("#38BDF8"));
+            chipBg.setStroke(dp(1), i == 0 ? mColorBorder : withAlpha(mColorAccent, 90));
             chip.setBackground(chipBg);
-            chip.setPadding(dp(12), dp(7), dp(12), dp(7));
+            chip.setPadding(dp(14), dp(7), dp(14), dp(7));
             LinearLayout.LayoutParams clp = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             clp.rightMargin = dp(8);
@@ -1055,11 +1481,10 @@ public class BlazeGoodLockStudioFragment extends SettingsPreferenceFragment {
 
     private void startAmbientSoundscape(final int mode, final String modeLabel) {
         stopAmbientSoundscape();
-        mAmbientMode = mode;
         mAmbientPlaying = true;
         if (mAmbientStatusText != null) {
-            mAmbientStatusText.setText("Çalıyor: " + modeLabel + " (Canlı DSP Sentezi Aktif)");
-            mAmbientStatusText.setTextColor(Color.parseColor("#38BDF8"));
+            mAmbientStatusText.setText("Çalıyor: " + modeLabel + " (DSP Sentezi Aktif)");
+            mAmbientStatusText.setTextColor(mColorAccent);
         }
 
         mAmbientThread = new Thread(() -> {
@@ -1099,18 +1524,14 @@ public class BlazeGoodLockStudioFragment extends SettingsPreferenceFragment {
 
                         double sample;
                         if (mode == 1) {
-                            // Night Rain: pink-filtered noise + gentle droplet envelope
                             sample = (lp1 * 0.55 + brown * 0.45) * 0.35;
                         } else if (mode == 2) {
-                            // Ocean Waves: slow 0.14 Hz swell modulating brown/pink noise
                             double waveEnv = 0.25 + 0.75 * (0.5 + 0.5 * Math.sin(phase * 2.0 * Math.PI * 0.14));
                             sample = (brown * 0.75 + lp1 * 0.25) * waveEnv * 0.55;
                         } else if (mode == 3) {
-                            // Campfire: warm low rumble + soft random crackles
                             double crackle = (rng.nextDouble() > 0.9975) ? (white * 0.65) : 0.0;
                             sample = (brown * 0.65 + crackle) * 0.40;
                         } else {
-                            // Deep Space: ultra-smooth deep brownian drone
                             sample = brown * 0.55;
                         }
                         int pcm = (int) (Math.max(-1.0, Math.min(1.0, sample)) * 14000);
@@ -1126,7 +1547,7 @@ public class BlazeGoodLockStudioFragment extends SettingsPreferenceFragment {
                 } catch (Exception ignored) {
                 }
             }
-        }, "BlazeORelaxSynth");
+        }, "BlazeAmbientSynth");
         mAmbientThread.start();
     }
 
@@ -1138,68 +1559,11 @@ public class BlazeGoodLockStudioFragment extends SettingsPreferenceFragment {
         }
         if (mAmbientStatusText != null) {
             mAmbientStatusText.setText("Durum: Durduruldu");
-            mAmbientStatusText.setTextColor(Color.parseColor("#94A3B8"));
+            mAmbientStatusText.setTextColor(mColorTextSecondary);
         }
     }
 
-    // =========================================================================
-    // ONE HAND OPERATION+, FILE DOCK & NICE CATCH DETECTIVE (STAGE 3)
-    // =========================================================================
-
-    private void showOhoActionPicker(
-            final String settingKey,
-            final String title,
-            final String[] actions,
-            final TextView summaryView) {
-        int cur = Settings.Secure.getIntForUser(mResolver, settingKey, 0, UserHandle.USER_CURRENT);
-        new AlertDialog.Builder(mContext)
-                .setTitle(title)
-                .setSingleChoiceItems(actions, Math.max(0, Math.min(actions.length - 1, cur)), (d, which) -> {
-                    Settings.Secure.putIntForUser(mResolver, settingKey, which, UserHandle.USER_CURRENT);
-                    if (summaryView != null) {
-                        summaryView.setText("Atanan: " + actions[which]);
-                    }
-                    vibrateTick();
-                    d.dismiss();
-                })
-                .show();
-    }
-
-    private void showFileDockQuickModal() {
-        ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-        String clipText = "";
-        if (cm != null && cm.hasPrimaryClip()) {
-            ClipData cd = cm.getPrimaryClip();
-            if (cd != null && cd.getItemCount() > 0 && cd.getItemAt(0).getText() != null) {
-                clipText = cd.getItemAt(0).getText().toString();
-            }
-        }
-
-        LinearLayout box = new LinearLayout(mContext);
-        box.setOrientation(LinearLayout.VERTICAL);
-        int pad = dp(20);
-        box.setPadding(pad, dp(14), pad, dp(10));
-
-        TextView clipLabel = new TextView(mContext);
-        clipLabel.setText("📌 Pano Rıhtımı (Aktif Pano İçeriği):");
-        clipLabel.setTextColor(Color.parseColor("#38BDF8"));
-        clipLabel.setTypeface(Typeface.create("sans-serif-medium", Typeface.BOLD));
-        box.addView(clipLabel);
-
-        TextView clipContent = new TextView(mContext);
-        clipContent.setText(TextUtils.isEmpty(clipText) ? "(Pano şu anda boş)" : clipText);
-        clipContent.setTextColor(Color.WHITE);
-        clipContent.setPadding(0, dp(6), 0, dp(12));
-        box.addView(clipContent);
-
-        new AlertDialog.Builder(mContext)
-                .setTitle("🗂️ ColorOS 17 File Dock & Pano Rıhtımı")
-                .setView(box)
-                .setPositiveButton("Kapat", null)
-                .show();
-    }
-
-    private void populateNiceCatchLiveLogs(LinearLayout container) {
+    private void populateLiveActivityLogs(LinearLayout container) {
         container.removeAllViews();
         PackageManager pm = mContext.getPackageManager();
         UsageStatsManager usm = (UsageStatsManager) mContext.getSystemService(Context.USAGE_STATS_SERVICE);
@@ -1234,14 +1598,14 @@ public class BlazeGoodLockStudioFragment extends SettingsPreferenceFragment {
                 StringBuilder tags = new StringBuilder();
                 if (appOps != null) {
                     int vibMode = appOps.checkOpNoThrow(AppOpsManager.OPSTR_VIBRATE, ai.uid, pkg);
-                    if (vibMode == AppOpsManager.MODE_ALLOWED) tags.append("📳 Titreşim • ");
+                    if (vibMode == AppOpsManager.MODE_ALLOWED) tags.append("Titreşim • ");
                 }
-                tags.append("⚡ Uyandırma / Etkinlik");
+                tags.append("Etkinlik / Uyandırma");
 
                 TextView row = new TextView(mContext);
-                row.setText("[" + timeStr + "]  " + appName + "  —  " + tags);
-                row.setTextColor(Color.parseColor("#E2E8F0"));
-                row.setTextSize(TypedValue.COMPLEX_UNIT_SP, 11.5f);
+                row.setText(timeStr + "  •  " + appName + "  —  " + tags);
+                row.setTextColor(mColorTextPrimary);
+                row.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f);
                 row.setPadding(0, dp(4), 0, dp(4));
                 container.addView(row);
                 count++;
@@ -1251,8 +1615,8 @@ public class BlazeGoodLockStudioFragment extends SettingsPreferenceFragment {
 
         if (count == 0) {
             TextView empty = new TextView(mContext);
-            empty.setText("Son saatlerde şüpheli arka plan titreşimi veya ekran uyandırma tetikleyicisi saptanmadı.");
-            empty.setTextColor(Color.parseColor("#94A3B8"));
+            empty.setText("Son saatlerde olağandışı arka plan titreşimi veya ekran uyandırma tetikleyicisi saptanmadı.");
+            empty.setTextColor(mColorTextSecondary);
             empty.setTextSize(TypedValue.COMPLEX_UNIT_SP, 11.5f);
             container.addView(empty);
         }
@@ -1262,13 +1626,13 @@ public class BlazeGoodLockStudioFragment extends SettingsPreferenceFragment {
     // UI CARD & ROW BUILDERS
     // =========================================================================
 
-    private LinearLayout createModuleCard(String title, String badgeText, String accentHex) {
+    private LinearLayout createModuleCard(int iconResId, String title, String badgeText) {
         LinearLayout card = new LinearLayout(mContext);
         card.setOrientation(LinearLayout.VERTICAL);
         GradientDrawable bg = new GradientDrawable();
-        bg.setColor(Color.parseColor("#121A2B"));
+        bg.setColor(mColorSurface);
         bg.setCornerRadius(dp(24));
-        bg.setStroke(dp(1), Color.parseColor("#35" + accentHex.substring(1)));
+        bg.setStroke(dp(1), mColorBorder);
         card.setBackground(bg);
         int pad = dp(18);
         card.setPadding(pad, dp(16), pad, dp(16));
@@ -1277,27 +1641,106 @@ public class BlazeGoodLockStudioFragment extends SettingsPreferenceFragment {
         lp.bottomMargin = dp(14);
         card.setLayoutParams(lp);
 
+        LinearLayout headerRow = new LinearLayout(mContext);
+        headerRow.setOrientation(LinearLayout.HORIZONTAL);
+        headerRow.setGravity(Gravity.CENTER_VERTICAL);
+        headerRow.setPadding(0, 0, 0, dp(8));
+
+        FrameLayout iconBadge = createIconBadge(iconResId);
+        LinearLayout.LayoutParams iconLp = new LinearLayout.LayoutParams(dp(38), dp(38));
+        iconLp.rightMargin = dp(12);
+        headerRow.addView(iconBadge, iconLp);
+
+        LinearLayout titleCol = new LinearLayout(mContext);
+        titleCol.setOrientation(LinearLayout.VERTICAL);
+        titleCol.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+
         TextView badge = new TextView(mContext);
         badge.setText(badgeText);
-        badge.setTextColor(Color.parseColor(accentHex));
+        badge.setTextColor(mColorAccent);
         badge.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10f);
         badge.setTypeface(Typeface.create("sans-serif-medium", Typeface.BOLD));
-        card.addView(badge);
+        badge.setLetterSpacing(0.04f);
+        titleCol.addView(badge);
 
         TextView header = new TextView(mContext);
         header.setText(title);
-        header.setTextColor(Color.WHITE);
-        header.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16.5f);
+        header.setTextColor(mColorTextPrimary);
+        header.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f);
         header.setTypeface(Typeface.create("sans-serif-medium", Typeface.BOLD));
-        header.setPadding(0, dp(2), 0, dp(6));
-        card.addView(header);
+        header.setPadding(0, dp(1), 0, 0);
+        titleCol.addView(header);
 
-        LivingFlowTouchHelper.attach(card, 0.97f, true);
+        headerRow.addView(titleCol);
+        card.addView(headerRow);
+
         return card;
     }
 
     private interface OnToggleChanged {
         void onChanged(boolean checked);
+    }
+
+    private interface SliderValueFormatter {
+        String format(int value);
+    }
+
+    private interface OnSliderChanged {
+        void onChanged(int value);
+    }
+
+    private void addSliderControl(
+            LinearLayout parent,
+            String title,
+            final int min,
+            final int max,
+            int initialValue,
+            final SliderValueFormatter formatter,
+            final OnSliderChanged listener) {
+        LinearLayout wrap = new LinearLayout(mContext);
+        wrap.setOrientation(LinearLayout.VERTICAL);
+        wrap.setPadding(0, dp(8), 0, dp(6));
+
+        LinearLayout topRow = new LinearLayout(mContext);
+        topRow.setOrientation(LinearLayout.HORIZONTAL);
+        topRow.setGravity(Gravity.CENTER_VERTICAL);
+
+        TextView titleView = new TextView(mContext);
+        titleView.setText(title);
+        titleView.setTextColor(mColorTextPrimary);
+        titleView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13.5f);
+        titleView.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
+        topRow.addView(titleView, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+
+        final TextView valView = new TextView(mContext);
+        valView.setText(formatter.format(initialValue));
+        valView.setTextColor(mColorAccent);
+        valView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12.5f);
+        valView.setTypeface(Typeface.create("sans-serif-medium", Typeface.BOLD));
+        topRow.addView(valView);
+
+        wrap.addView(topRow);
+
+        SeekBar sb = new SeekBar(mContext);
+        sb.setMax(Math.max(1, max - min));
+        sb.setProgress(Math.max(0, Math.min(max - min, initialValue - min)));
+        sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                int actual = min + progress;
+                valView.setText(formatter.format(actual));
+                if (fromUser && listener != null) {
+                    listener.onChanged(actual);
+                }
+            }
+            @Override public void onStartTrackingTouch(SeekBar seekBar) {}
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                vibrateTick();
+            }
+        });
+        wrap.addView(sb);
+        parent.addView(wrap);
     }
 
     private void addSwitchRow(
@@ -1309,25 +1752,26 @@ public class BlazeGoodLockStudioFragment extends SettingsPreferenceFragment {
         LinearLayout row = new LinearLayout(mContext);
         row.setOrientation(LinearLayout.HORIZONTAL);
         row.setGravity(Gravity.CENTER_VERTICAL);
-        row.setPadding(0, dp(9), 0, dp(9));
+        row.setPadding(0, dp(10), 0, dp(10));
 
         LinearLayout textCol = new LinearLayout(mContext);
         textCol.setOrientation(LinearLayout.VERTICAL);
         LinearLayout.LayoutParams colLp = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
-        colLp.rightMargin = dp(10);
+        colLp.rightMargin = dp(12);
         textCol.setLayoutParams(colLp);
 
         TextView t = new TextView(mContext);
         t.setText(title);
-        t.setTextColor(Color.parseColor("#F1F5F9"));
-        t.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13.5f);
+        t.setTextColor(mColorTextPrimary);
+        t.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f);
         t.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
         textCol.addView(t);
 
         TextView s = new TextView(mContext);
         s.setText(summary);
-        s.setTextColor(Color.parseColor("#94A3B8"));
-        s.setTextSize(TypedValue.COMPLEX_UNIT_SP, 11.5f);
+        s.setTextColor(mColorTextSecondary);
+        s.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f);
+        s.setPadding(0, dp(2), 0, 0);
         textCol.addView(s);
 
         final Switch sw = new Switch(mContext);
@@ -1352,36 +1796,45 @@ public class BlazeGoodLockStudioFragment extends SettingsPreferenceFragment {
         LinearLayout row = new LinearLayout(mContext);
         row.setOrientation(LinearLayout.HORIZONTAL);
         row.setGravity(Gravity.CENTER_VERTICAL);
-        row.setPadding(0, dp(9), 0, dp(9));
+        row.setPadding(0, dp(10), 0, dp(10));
 
         LinearLayout textCol = new LinearLayout(mContext);
         textCol.setOrientation(LinearLayout.VERTICAL);
         LinearLayout.LayoutParams colLp = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
-        colLp.rightMargin = dp(10);
+        colLp.rightMargin = dp(12);
         textCol.setLayoutParams(colLp);
 
         TextView t = new TextView(mContext);
         t.setText(title);
-        t.setTextColor(Color.parseColor("#F1F5F9"));
-        t.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13.5f);
+        t.setTextColor(mColorTextPrimary);
+        t.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f);
         t.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
         textCol.addView(t);
 
         TextView s = customSummaryRef != null ? customSummaryRef : new TextView(mContext);
         s.setText(summary);
-        s.setTextColor(Color.parseColor("#38BDF8"));
-        s.setTextSize(TypedValue.COMPLEX_UNIT_SP, 11.5f);
+        s.setTextColor(mColorAccent);
+        s.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f);
+        s.setPadding(0, dp(2), 0, 0);
         textCol.addView(s);
 
         TextView chev = new TextView(mContext);
         chev.setText("›");
-        chev.setTextColor(Color.parseColor("#64748B"));
+        chev.setTextColor(mColorTextSecondary);
         chev.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f);
 
         row.addView(textCol);
         row.addView(chev);
         row.setOnClickListener(clickListener);
         parent.addView(row);
+    }
+
+    private int clamp(int val, int min, int max) {
+        return Math.max(min, Math.min(max, val));
+    }
+
+    private float clampF(float val, float min, float max) {
+        return Math.max(min, Math.min(max, val));
     }
 
     private void vibrateTick() {

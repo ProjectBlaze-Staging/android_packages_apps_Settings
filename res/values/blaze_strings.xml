@@ -254,26 +254,26 @@
     <string name="lockscreen_clock_source_custom">BlazeHouse Custom Clocks</string>
 
     <!-- Liquid Glass Design & Luminous Motion Engine -->
-    <string name="blaze_liquid_glass_category_title">ColorOS &amp; Liquid Glass Engine</string>
+    <string name="blaze_liquid_glass_category_title">Glass Surface &amp; Motion Engine</string>
     <string name="blaze_glass_style_title">UI Surface &amp; Glass Style</string>
-    <string name="blaze_glass_style_summary">Choose between flagship GPU Liquid Glass refraction, balanced ColorOS frosted glass, or lightweight Stock Material 3</string>
-    <string name="blaze_ui_glass_style_liquid">ColorOS Layout + iOS Liquid Glass (Flagship GPU)</string>
-    <string name="blaze_ui_glass_style_ios27_dark_crystal">iOS 27 Native Dark Smoked Crystal + Active Lens Pill (Apple Style)</string>
-    <string name="blaze_ui_glass_style_frosted">ColorOS Frosted Glass (Balanced)</string>
-    <string name="blaze_ui_glass_style_m3">Stock Material 3 (Lightweight)</string>
+    <string name="blaze_glass_style_summary">Choose between refractive Liquid Glass, dark smoked crystal glass, soft frosted glass, or lightweight Material 3</string>
+    <string name="blaze_ui_glass_style_liquid">Fluid Liquid Glass (Refractive Glass)</string>
+    <string name="blaze_ui_glass_style_ios27_dark_crystal">Dark Smoked Crystal Glass (Active Lens)</string>
+    <string name="blaze_ui_glass_style_frosted">Soft Frosted Glass (Balanced)</string>
+    <string name="blaze_ui_glass_style_m3">Standard Material 3 (Lightweight)</string>
     <string name="dynamic_bar_notification_mode_title">Incoming Message &amp; Notification Delivery</string>
-    <string name="dynamic_bar_notif_mode_island_compact">Dynamic Island Capsule (OriginOS / ColorOS Compact Preview + Tap for Detail)</string>
-    <string name="dynamic_bar_notif_mode_island_expanded">Dynamic Island Auto-Expand Card (iOS Live Message Card)</string>
-    <string name="dynamic_bar_notif_mode_stock_headsup">Stock Android Notification (Standard Heads-Up Banner)</string>
+    <string name="dynamic_bar_notif_mode_island_compact">Dynamic Island Capsule (Compact Preview + Tap for Detail)</string>
+    <string name="dynamic_bar_notif_mode_island_expanded">Dynamic Island Auto-Expand Card (Live Message Card)</string>
+    <string name="dynamic_bar_notif_mode_stock_headsup">Standard Android Notification (Heads-Up Banner)</string>
     <string name="blaze_floating_bottom_nav_title">Floating Liquid Glass Tab Bar</string>
-    <string name="blaze_floating_bottom_nav_summary">Transform app bottom navigation bars (YouTube, Instagram, WhatsApp, etc.) into an interactive Liquid Glass capsule with spring slide &amp; hold-to-scrub</string>
+    <string name="blaze_floating_bottom_nav_summary">Transform app bottom navigation bars into an interactive glass capsule with spring slide &amp; hold-to-scrub</string>
     <string name="blaze_animation_engine_title">Motion &amp; Spring Physics Engine</string>
-    <string name="blaze_animation_engine_summary">Control RenderThread Luminous spring physics and ColorOS wallpaper transition scaling</string>
-    <string name="blaze_animation_engine_luminous">Luminous + ColorOS Spring Physics (Flagship)</string>
+    <string name="blaze_animation_engine_summary">Control RenderThread spring physics and wallpaper transition scaling</string>
+    <string name="blaze_animation_engine_luminous">Dynamic Spring Physics (High Fluidity)</string>
     <string name="blaze_animation_engine_standard">Standard Smooth (Lightweight)</string>
     <string name="blaze_auto_lite_on_battery_saver_title">Auto-suspend heavy effects on Battery Saver</string>
     <string name="blaze_auto_lite_on_battery_saver_summary">Automatically switch to lightweight mode when Battery Saver is active to save power</string>
-    <string name="dynamic_bar_cos_island_title">ColorOS Punch-Hole Expansion</string>
+    <string name="dynamic_bar_cos_island_title">Camera Cutout Wave Expansion</string>
     <string name="dynamic_bar_cos_island_summary">Smoothly expand Dynamic Island directly from the front camera cutout with live audio reactive waveform and media cards</string>
 
     <!-- Power Menu Actions -->
@@ -346,11 +346,11 @@
     <string name="blaze_update_menu_system_updater">Open Android system updater</string>
     <string name="blaze_update_local_ota_unavailable">Document picker is unavailable</string>
     <string name="blaze_update_already_latest_toast">Your BlazeAOSP 17 system is already up to date</string>
-    <string name="status_bar_battery_style_ios27_capsule">iOS 27 Capsule (Liquid Glass)</string>
-    <string name="status_bar_battery_style_coloros17_capsule">ColorOS 17 Living Capsule</string>
-    <string name="status_bar_battery_style_oneui9_pill">One UI 9 Pill Battery</string>
-    <string name="blaze_dolby_atmos_title">Dolby Atmos &amp; Spatial Audio Studio</string>
-    <string name="blaze_dolby_atmos_summary">3D spatial sound stage, Dynamic/Movie/Music/Game/Voice DSP profiles, and 10-band studio equalizer</string>
+    <string name="status_bar_battery_style_ios27_capsule">Glass Capsule Battery</string>
+    <string name="status_bar_battery_style_coloros17_capsule">Soft Rounded Capsule Battery</string>
+    <string name="status_bar_battery_style_oneui9_pill">Modern Pill Battery</string>
+    <string name="blaze_dolby_atmos_title">Audio Effects &amp; Equalizer</string>
+    <string name="blaze_dolby_atmos_summary">Multi-band equalizer, bass boost, virtualizer, and acoustic presets</string>
     <string name="blaze_gamespace_fps_hud_title">Floating Live FPS &amp; CPU HUD</string>
     <string name="blaze_gamespace_fps_hud_summary">Display real-time refresh rate, frame pacing, and CPU/battery telemetry pill over games and apps</string>
     <string name="blaze_gamespace_touch_boost_title">HyperTouch 360Hz Sampling Boost</string>

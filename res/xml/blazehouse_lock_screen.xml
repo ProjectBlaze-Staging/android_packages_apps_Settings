@@ -39,21 +39,10 @@
             android:summary="@string/depthwall_wallpaper_enabled_summary"
             android:fragment="org.evolution.settings.fragments.lockscreen.WallpaperDepth" />
 
-        <Preference
-            android:key="blaze_nowbar_position_selector"
-            android:title="OneUI 9 Now Bar &amp; Atomic Island Konum Yöneticisi"
-            android:summary="Tek elle kullanım (alt konum), görsel odak (orta-alt) veya Dynamic Island hibrit rol paylaşımı" />
-
     </PreferenceCategory>
 
     <PreferenceCategory
         android:title="@string/lock_screen_media_category">
-
-        <com.blaze.house.preferences.SystemSettingSwitchPreference
-            android:key="blaze_media_live_waveform"
-            android:title="OneUI 9 Medya Kartı Canlı Ses Dalgası (Live Waveform)"
-            android:summary="Kilit ekranı ve Hızlı Ayarlar medya kartında çalan müziğe duyarlı dinamik frekans dalgası"
-            android:defaultValue="true" />
 
         <Preference
             android:key="nowplaying_settings"
