@@ -84,8 +84,7 @@ class PeakRefreshRateSwitchPreference :
     override fun getAvailabilityStability() = PreconditionStability.STABLE_UNTIL_APK_UPDATE
 
     override fun isAvailable(context: Context) =
-        context.resources.getBoolean(R.bool.config_show_smooth_display) &&
-            context.peakRefreshRate > DEFAULT_REFRESH_RATE
+        context.peakRefreshRate > DEFAULT_REFRESH_RATE
 
     override fun getSummary(context: Context): CharSequence? =
         context.getString(R.string.peak_refresh_rate_summary, context.peakRefreshRate.roundToInt())
@@ -134,15 +133,17 @@ class PeakRefreshRateSwitchPreference :
         }
 
         private fun Float.refreshRateAsBoolean(context: Context) =
-            this.isInfinite() || roundToInt() == context.peakRefreshRate.roundToInt()
+            this.isInfinite() || roundToInt() >= context.peakRefreshRate.roundToInt() || this > DEFAULT_REFRESH_RATE
 
         override fun <T : Any> setValue(key: String, valueType: Class<T>, value: T?) =
             when {
                 key != KEY -> {}
                 value == null -> settingsStore.setFloat(KEY, null)
                 else -> {
+                    val enabled = value as Boolean
                     val peakRefreshRate =
-                        if (value as Boolean) context.refreshRateIfON() else DEFAULT_REFRESH_RATE
+                        if (enabled) context.refreshRateIfON() else DEFAULT_REFRESH_RATE
+                    settingsStore.setFloat(android.provider.Settings.System.MIN_REFRESH_RATE, if (enabled) 0f else DEFAULT_REFRESH_RATE)
                     settingsStore.setFloat(KEY, peakRefreshRate)
                 }
             }

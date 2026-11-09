@@ -88,11 +88,7 @@ public class PeakRefreshRatePreferenceController extends TogglePreferenceControl
 
     @Override
     public int getAvailabilityStatus() {
-        if (mContext.getResources().getBoolean(R.bool.config_show_smooth_display)) {
-            return mPeakRefreshRate > DEFAULT_REFRESH_RATE ? AVAILABLE : UNSUPPORTED_ON_DEVICE;
-        } else {
-            return UNSUPPORTED_ON_DEVICE;
-        }
+        return mPeakRefreshRate > DEFAULT_REFRESH_RATE ? AVAILABLE : UNSUPPORTED_ON_DEVICE;
     }
 
     @Override
@@ -102,8 +98,9 @@ public class PeakRefreshRatePreferenceController extends TogglePreferenceControl
                         mContext.getContentResolver(),
                         Settings.System.PEAK_REFRESH_RATE,
                         getDefaultPeakRefreshRate());
-        return Math.round(peakRefreshRate) == Math.round(mPeakRefreshRate)
-                || Float.isInfinite(peakRefreshRate);
+        return Math.round(peakRefreshRate) >= Math.round(mPeakRefreshRate)
+                || Float.isInfinite(peakRefreshRate)
+                || peakRefreshRate > DEFAULT_REFRESH_RATE;
     }
 
     @Override
@@ -112,6 +109,10 @@ public class PeakRefreshRatePreferenceController extends TogglePreferenceControl
         final float peakRefreshRate = isChecked ? valueIfChecked : DEFAULT_REFRESH_RATE;
         Log.d(TAG, "setChecked to : " + peakRefreshRate);
 
+        Settings.System.putFloat(
+                mContext.getContentResolver(),
+                Settings.System.MIN_REFRESH_RATE,
+                isChecked ? 0f : DEFAULT_REFRESH_RATE);
         return Settings.System.putFloat(
                 mContext.getContentResolver(), Settings.System.PEAK_REFRESH_RATE, peakRefreshRate);
     }

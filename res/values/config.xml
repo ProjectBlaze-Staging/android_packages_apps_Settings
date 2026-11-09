@@ -601,7 +601,7 @@
     <bool name="config_nfc_detection_point">false</bool>
 
     <!-- Whether to show Smooth Display feature in Settings Options -->
-    <bool name="config_show_smooth_display">false</bool>
+    <bool name="config_show_smooth_display">true</bool>
 
     <!-- Whether to show emergency settings in top-level Settings -->
     <bool name="config_show_emergency_settings">true</bool>
