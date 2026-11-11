@@ -8,6 +8,19 @@
     xmlns:settings="http://schemas.android.com/apk/res-auto"
     android:title="@string/miscellaneous_title">
 
+    <!-- Universal GSI & Device Hardware Compatibility (TrebleSettings) -->
+    <PreferenceCategory
+        android:title="Cihaz ve GSI Donanım Uyumluluğu">
+
+        <Preference
+            android:key="blaze_treble_hardware_settings"
+            android:icon="@drawable/ic_settings_cpu"
+            android:title="Cihaz ve GSI Donanım Uyumluluğu (Treble)"
+            android:summary="60/90/120 Hz ekran yenileme hızı, parlaklık ölçeği, ekran altı parmak izi, VoLTE ve ses uyumluluğu"
+            android:fragment="com.blaze.house.fragments.TrebleSettings" />
+
+    </PreferenceCategory>
+
     <!-- Haptic feedback on gesture -->
     <PreferenceCategory
         android:title="@string/haptic_feedback_title">
@@ -116,14 +129,14 @@
             android:summary="@string/aggressive_doze_summary"
             android:defaultValue="true" />
 
-        <com.blaze.house.preferences.SystemSettingSwitchPreference
+        <com.blaze.house.preferences.LineageSystemSettingSwitchPreference
             android:key="charging_control_enabled"
             android:title="@string/charging_control_title"
             android:summary="@string/charging_control_summary"
             android:defaultValue="false" />
 
-        <com.blaze.house.preferences.SystemSettingListPreference
-            android:key="charging_control_limit"
+        <com.blaze.house.preferences.LineageSystemSettingListPreference
+            android:key="charging_control_charging_limit"
             android:title="@string/charging_control_limit_title"
             android:entries="@array/charging_control_limit_entries"
             android:entryValues="@array/charging_control_limit_values"

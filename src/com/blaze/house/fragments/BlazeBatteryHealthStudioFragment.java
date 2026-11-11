@@ -285,6 +285,10 @@ public class BlazeBatteryHealthStudioFragment extends SettingsPreferenceFragment
                 context.getContentResolver(), "peak_refresh_rate", 90.0f, UserHandle.USER_CURRENT);
         refreshSwitch.setChecked(curPeak > 65.0f);
         refreshSwitch.setOnCheckedChangeListener((btn, checked) -> {
+            Settings.Secure.putIntForUser(
+                    context.getContentResolver(), Settings.Secure.MATCH_CONTENT_FRAME_RATE, 2, UserHandle.USER_CURRENT);
+            Settings.System.putFloatForUser(
+                    context.getContentResolver(), "min_refresh_rate", checked ? 0.0f : 60.0f, UserHandle.USER_CURRENT);
             Settings.System.putFloatForUser(
                     context.getContentResolver(), "peak_refresh_rate", checked ? 120.0f : 60.0f, UserHandle.USER_CURRENT);
             triggerHaptic(context);
@@ -405,25 +409,25 @@ public class BlazeBatteryHealthStudioFragment extends SettingsPreferenceFragment
     private void applyBatteryProtectionTier(Context context, int tier) {
         Settings.System.putIntForUser(
                 context.getContentResolver(), "blaze_battery_protection_tier", tier, UserHandle.USER_CURRENT);
-        if (tier == 0) {
+        int enabled = (tier == 0) ? 0 : 1;
+        int limit = (tier == 1) ? 95 : ((tier == 2) ? 85 : 80);
+        int mode = (tier == 2) ? 1 : 3; // 1 = MODE_AUTO (overnight), 3 = MODE_LIMIT
+        Settings.System.putIntForUser(
+                context.getContentResolver(), "charging_control_enabled", enabled, UserHandle.USER_CURRENT);
+        if (enabled == 1) {
             Settings.System.putIntForUser(
-                    context.getContentResolver(), "charging_control_enabled", 0, UserHandle.USER_CURRENT);
-        } else if (tier == 1) {
-            Settings.System.putIntForUser(
-                    context.getContentResolver(), "charging_control_enabled", 1, UserHandle.USER_CURRENT);
-            Settings.System.putIntForUser(
-                    context.getContentResolver(), "charging_control_limit", 95, UserHandle.USER_CURRENT);
-        } else if (tier == 2) {
-            Settings.System.putIntForUser(
-                    context.getContentResolver(), "charging_control_enabled", 1, UserHandle.USER_CURRENT);
-            Settings.System.putIntForUser(
-                    context.getContentResolver(), "charging_control_limit", 85, UserHandle.USER_CURRENT);
-        } else {
-            Settings.System.putIntForUser(
-                    context.getContentResolver(), "charging_control_enabled", 1, UserHandle.USER_CURRENT);
-            Settings.System.putIntForUser(
-                    context.getContentResolver(), "charging_control_limit", 80, UserHandle.USER_CURRENT);
+                    context.getContentResolver(), "charging_control_limit", limit, UserHandle.USER_CURRENT);
         }
+        try {
+            lineageos.providers.LineageSettings.System.putIntForUser(
+                    context.getContentResolver(), "charging_control_enabled", enabled, UserHandle.USER_CURRENT);
+            if (enabled == 1) {
+                lineageos.providers.LineageSettings.System.putIntForUser(
+                        context.getContentResolver(), "charging_control_mode", mode, UserHandle.USER_CURRENT);
+                lineageos.providers.LineageSettings.System.putIntForUser(
+                        context.getContentResolver(), "charging_control_charging_limit", limit, UserHandle.USER_CURRENT);
+            }
+        } catch (Throwable ignored) {}
         Toast.makeText(context, "Pil koruma profili güncellendi", Toast.LENGTH_SHORT).show();
     }
 

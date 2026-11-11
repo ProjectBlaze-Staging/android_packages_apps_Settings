@@ -206,6 +206,7 @@ public class TrebleSettings extends SettingsPreferenceFragment implements
                 hz = Integer.parseInt(String.valueOf(newValue));
             } catch (NumberFormatException ignored) {
             }
+            Settings.Secure.putInt(cr, Settings.Secure.MATCH_CONTENT_FRAME_RATE, 2);
             if (hz <= 0) {
                 Settings.System.putFloat(cr, "min_refresh_rate", 0f);
                 Settings.System.putFloat(cr, "peak_refresh_rate", 120f);

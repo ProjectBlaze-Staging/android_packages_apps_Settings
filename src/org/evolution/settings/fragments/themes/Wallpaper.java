@@ -122,7 +122,7 @@ public class Wallpaper extends SettingsPreferenceFragment
                         "blaze_wallpaper_effects_version", 0) + 1;
                 Settings.System.putInt(ctx.getContentResolver(),
                         "blaze_wallpaper_effects_version", ver);
-                applyLiveWallpaperEffectAsync(ctx.getApplicationContext());
+                cleanupLegacyBackupAsync(ctx.getApplicationContext());
                 Toast.makeText(ctx,
                         "Görsel efekt canlı olarak uygulandı",
                         Toast.LENGTH_SHORT).show();
@@ -130,6 +130,17 @@ public class Wallpaper extends SettingsPreferenceFragment
             return true;
         }
         return false;
+    }
+
+    private void cleanupLegacyBackupAsync(final Context appContext) {
+        mExecutor.execute(() -> {
+            try {
+                File backupFile = new File(appContext.getFilesDir(), CLEAN_WALLPAPER_BACKUP);
+                if (backupFile.exists()) {
+                    backupFile.delete();
+                }
+            } catch (Throwable ignored) {}
+        });
     }
 
     private void applyLiveWallpaperEffectAsync(final Context appContext) {

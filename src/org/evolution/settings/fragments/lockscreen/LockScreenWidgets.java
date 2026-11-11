@@ -217,8 +217,11 @@ public class LockScreenWidgets extends SettingsPreferenceFragment implements Pre
     }
 
     private void updateTransparencyPref(String prefValue) {
-        Integer intVal = prefValue != null ? Integer.parseInt(prefValue) : null;
-        boolean shouldShowSlider = (intVal != null && intVal == 2 || intVal == 3);
+        Integer intVal = null;
+        try {
+            intVal = prefValue != null ? Integer.parseInt(prefValue) : null;
+        } catch (NumberFormatException ignored) {}
+        boolean shouldShowSlider = intVal != null && (intVal == 2 || intVal == 3);
         mLockScreenWidgetsTransparencyPref.setVisible(shouldShowSlider);
     }
 

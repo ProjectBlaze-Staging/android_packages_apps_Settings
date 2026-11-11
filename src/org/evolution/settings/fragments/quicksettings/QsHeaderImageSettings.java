@@ -139,7 +139,7 @@ public class QsHeaderImageSettings extends SettingsPreferenceFragment implements
                 int valueIndex = mHeaderProvider.findIndexOfValue(value);
                 mHeaderProvider.setSummary(mHeaderProvider.getEntries()[valueIndex]);
                 mDaylightHeaderPack.setEnabled(value.equals(mDaylightHeaderProvider));
-                mHeaderBrowse.setEnabled(!value.equals(mFileHeaderProvider));
+                mHeaderBrowse.setEnabled(isBrowseHeaderAvailable() && !value.equals(mFileHeaderProvider));
                 mHeaderBrowse.setTitle(valueIndex == 0 ? R.string.quick_settings_header_browse_title : R.string.quick_settings_header_pick_title);
                 mHeaderBrowse.setSummary(valueIndex == 0 ? R.string.quick_settings_header_browse_summary : R.string.quick_settings_header_pick_summary);
                 mFileHeader.setEnabled(value.equals(mFileHeaderProvider));

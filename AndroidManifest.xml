@@ -6317,6 +6317,15 @@
             </intent-filter>
         </service>
 
+        <service
+            android:name="org.evolution.settings.utils.WallpaperSubjectExtractorService"
+            android:exported="false" />
+
+        <activity
+            android:name="org.evolution.settings.fragments.about.ChangelogActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SubSettings" />
+
         <!-- This is the longest AndroidManifest.xml ever. -->
 
     </application>
