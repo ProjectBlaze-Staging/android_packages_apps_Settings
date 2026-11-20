@@ -25,7 +25,7 @@ import android.graphics.drawable.Drawable;
 import android.os.SystemProperties;
 import android.util.Log;
 
-import com.android.internal.util.evolution.PixelPropsUtils;
+import com.android.internal.util.blaze.PixelPropsUtils;
 
 import java.io.BufferedReader;
 import java.io.File;

@@ -331,6 +331,9 @@ public class TopLevelSettings extends DashboardFragment implements SplitLayoutLi
 
     @Override
     protected RecyclerView.Adapter onCreateAdapter(PreferenceScreen preferenceScreen) {
+        if (SettingsThemeHelper.isExpressiveTheme(getContext())) {
+            return super.onCreateAdapter(preferenceScreen);
+        }
         if (mIsEmbeddingActivityEnabled && (getActivity() instanceof SettingsHomepageActivity)) {
             return mHighlightMixin.onCreateAdapter(this, preferenceScreen, mScrollNeeded);
         }

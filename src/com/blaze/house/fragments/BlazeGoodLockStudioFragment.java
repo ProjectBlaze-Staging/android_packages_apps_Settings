@@ -381,13 +381,13 @@ public class BlazeGoodLockStudioFragment extends SettingsPreferenceFragment {
     private void refreshActiveModulesCount() {
         if (mActiveModulesBadge == null) return;
         int mode = Settings.Secure.getInt(mResolver, KEY_GESTURE_MODE, 0);
-        String[] modeNames = {"Dinamik", "Klasik", "Canlı", "Yumuşak", "Basit", "Gelişmiş"};
-        String modeLabel = (mode >= 0 && mode < modeNames.length) ? modeNames[mode] : "Dinamik";
-        mActiveModulesBadge.setText("Profil: " + modeLabel);
+        String[] modeNames = {"Natural", "Casual", "Fast", "Sweet", "Simple", "Custom"};
+        String modeLabel = (mode >= 0 && mode < modeNames.length) ? modeNames[mode] : "Natural";
+        mActiveModulesBadge.setText("Kitchen: " + modeLabel);
     }
 
     // =========================================================================
-    // TAB 1: HOME UP • HAREKET VE YAYLANMA FİZİĞİ (GESTURE TUNING)
+    // TAB 1: HOME UP • ANIMATION KITCHEN & GESTURE TUNING (Figma 9:8999)
     // =========================================================================
 
     private void populateHomeUpGestureTab(LinearLayout parent) {
@@ -396,8 +396,8 @@ public class BlazeGoodLockStudioFragment extends SettingsPreferenceFragment {
         // CARD 1: Canlı Yaylanma ve Yörünge Simülatörü (IconMovePreview + IconScalePreview)
         LinearLayout previewCard = createModuleCard(
                 R.drawable.ic_settings_gestures,
-                "Canlı Yaylanma ve Yörünge Önizlemesi",
-                "GERÇEK ZAMANLI SPRINGANIMATION SİMÜLATÖRÜ");
+                "Animation Kitchen • Live Physics Preview",
+                "BLAZEAOSP × HOME UP 120HZ SPRING SIMULATOR");
 
         mPhysicsTelemetryText = new TextView(mContext);
         mPhysicsTelemetryText.setTextColor(mColorTextSecondary);
@@ -412,27 +412,27 @@ public class BlazeGoodLockStudioFragment extends SettingsPreferenceFragment {
         previewCard.addView(mSpringPreviewView, prevLp);
 
         TextView tapHint = new TextView(mContext);
-        tapHint.setText("Simülasyonu tekrar oynatmak için önizleme alanına dokunun veya aşağıdaki fizik parametrelerini değiştirin.");
+        tapHint.setText("Tap the preview canvas to replay the spring trajectory or choose an Animation Kitchen preset below.");
         tapHint.setTextColor(mColorTextSecondary);
         tapHint.setTextSize(TypedValue.COMPLEX_UNIT_SP, 11f);
         previewCard.addView(tapHint);
 
         parent.addView(previewCard);
 
-        // CARD 2: Home Up Hareket Modu ve Hazır Profiller
+        // CARD 2: AmeOS 16 Animation Kitchen Presets (Natural, Casual, Fast, Custom)
         LinearLayout modeCard = createModuleCard(
                 R.drawable.ic_settings_display_filled,
-                "Hareket Fiziği ve Yaylanma Profili",
-                "HOME UP 17 ORİJİNAL PRESET VE ENTERPOLASYON MOTORU");
+                "Animation Kitchen Presets",
+                "CASUAL • NATURAL • FAST • CUSTOM SPRING ENGINE");
 
         int currentMode = Settings.Secure.getInt(mResolver, KEY_GESTURE_MODE, 0);
         final String[] modeTitles = {
-                "Dinamik (Hızlı ve Dengeli — Varsayılan)",
-                "Klasik (Kritik Sönümlü • Sıfır Salınım)",
-                "Canlı (Esnek • Yüksek Yaylanma)",
-                "Yumuşak (Geniş ve Sakin Geçiş)",
-                "Basit Kaydırıcı (0–100 Tek Çubuk Senkronizasyonu)",
-                "Gelişmiş Fizik Ayarları (Tam Manuel Kontrol)"
+                "Natural (Critically Damped 120Hz Default • Zero Wobble)",
+                "Casual (Relaxed & Organic Motion • Soft Landing)",
+                "Fast (High-Stiffness 480 N/m • Instant Response)",
+                "Sweet (Expressive Long-Tail Glide)",
+                "Simple Slider (0–100 Unified Speed & Bounce)",
+                "Custom (Full Manual Scaling/Bounciness, Speed & BG Scale)"
         };
 
         HorizontalScrollView chipScroll = new HorizontalScrollView(mContext);
@@ -442,11 +442,13 @@ public class BlazeGoodLockStudioFragment extends SettingsPreferenceFragment {
         chipRow.setPadding(0, dp(4), 0, dp(10));
 
         final String[] shortLabels = {
-                "Dinamik", "Klasik", "Canlı", "Yumuşak", "Basit Çubuk", "Gelişmiş"
+                "Natural", "Casual", "Fast", "Sweet", "Simple", "Custom"
         };
+        final TextView[] chipViews = new TextView[shortLabels.length];
         for (int i = 0; i < shortLabels.length; i++) {
             final int modeIdx = i;
             TextView chip = new TextView(mContext);
+            chipViews[i] = chip;
             chip.setText(shortLabels[i]);
             boolean selected = (currentMode == modeIdx);
             chip.setTextColor(selected ? mColorAccent : mColorTextSecondary);
@@ -476,14 +478,78 @@ public class BlazeGoodLockStudioFragment extends SettingsPreferenceFragment {
         chipScroll.addView(chipRow);
         modeCard.addView(chipScroll);
 
-        TextView activeProfileDesc = new TextView(mContext);
+        final TextView activeProfileDesc = new TextView(mContext);
         int safeMode = Math.max(0, Math.min(modeTitles.length - 1, currentMode));
-        activeProfileDesc.setText("Seçili Mod: " + modeTitles[safeMode]);
+        activeProfileDesc.setText("Active Preset: " + modeTitles[safeMode]);
         activeProfileDesc.setTextColor(mColorAccent);
         activeProfileDesc.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12.5f);
         activeProfileDesc.setTypeface(Typeface.create("sans-serif-medium", Typeface.BOLD));
         activeProfileDesc.setPadding(0, dp(2), 0, dp(8));
         modeCard.addView(activeProfileDesc);
+
+        final Runnable markCustomPresetUi = () -> {
+            if (Settings.Secure.getInt(mResolver, KEY_GESTURE_MODE, 0) != 5) {
+                seedAdvancedFromCurrentPhysics();
+                Settings.Secure.putInt(mResolver, KEY_GESTURE_MODE, 5);
+                refreshActiveModulesCount();
+                activeProfileDesc.setText("Active Preset: " + modeTitles[5]);
+                for (int i = 0; i < chipViews.length; i++) {
+                    TextView c = chipViews[i];
+                    if (c == null) continue;
+                    boolean sel = (i == 5);
+                    c.setTextColor(sel ? mColorAccent : mColorTextSecondary);
+                    GradientDrawable bg = new GradientDrawable();
+                    bg.setColor(sel ? withAlpha(mColorAccent, 28) : mColorSurfaceVariant);
+                    bg.setCornerRadius(dp(99));
+                    bg.setStroke(dp(1), sel ? mColorAccent : mColorBorder);
+                    c.setBackground(bg);
+                }
+            }
+        };
+
+        // AmeOS 16 Animation Kitchen (Figma 9:8999) Core Tri-Sliders: Scaling/Bounciness, Speed, BG Scale
+        float[] activeVals = resolveCurrentPhysicsArray();
+        int curBouncePct = clamp(Math.round((1.0f - activeVals[1]) * 200f), 0, 100);
+        addSliderControl(modeCard,
+                "Scaling / Bounciness",
+                0, 100, curBouncePct,
+                val -> val + "%",
+                val -> {
+                    markCustomPresetUi.run();
+                    float dampingY = clampF(1.0f - (val / 200f), 0.50f, 1.00f);
+                    float scaleDamping = clampF(1.0f - (val / 250f), 0.60f, 1.00f);
+                    Settings.Secure.putFloat(mResolver, KEY_DAMPING_Y, dampingY);
+                    Settings.Secure.putFloat(mResolver, KEY_SCALE_DAMPING, scaleDamping);
+                    updateTelemetryAndPreview();
+                });
+
+        int curSpeedPct = clamp(Math.round((activeVals[2] - 100f) / 5f), 0, 100);
+        addSliderControl(modeCard,
+                "Speed",
+                0, 100, curSpeedPct,
+                val -> val + "%",
+                val -> {
+                    markCustomPresetUi.run();
+                    float stiff = 100f + (val * 5f);
+                    int openDur = clamp(520 - (val * 3), 200, 650);
+                    Settings.Secure.putFloat(mResolver, KEY_STIFFNESS_X, stiff);
+                    Settings.Secure.putFloat(mResolver, KEY_STIFFNESS_Y, stiff * 0.85f);
+                    Settings.Secure.putFloat(mResolver, KEY_SCALE_STIFFNESS, stiff);
+                    Settings.Secure.putInt(mResolver, KEY_APP_OPEN_DURATION, openDur);
+                    Settings.Secure.putInt(mResolver, KEY_HOME_DURATION, openDur);
+                    updateTelemetryAndPreview();
+                });
+
+        int curBgScalePct = clamp(Math.round(activeVals[8] * 100f), 75, 98);
+        addSliderControl(modeCard,
+                "BG Scale (Workspace Depth)",
+                75, 98, curBgScalePct,
+                val -> val + "%",
+                val -> {
+                    markCustomPresetUi.run();
+                    Settings.Secure.putFloat(mResolver, KEY_HOME_SCALE, val / 100f);
+                    updateTelemetryAndPreview();
+                });
 
         // If Mode == 4 (Simple Tuning Slider 0..100), show the unified slider
         if (currentMode == 4) {
@@ -518,14 +584,14 @@ public class BlazeGoodLockStudioFragment extends SettingsPreferenceFragment {
 
         if (currentMode != 5) {
             TextView note = new TextView(mContext);
-            note.setText("Şu anda hazır profil veya basit kaydırıcı aktif. Tüm X/Y yay sertliği, sönümleme oranı, ikon takip noktası ve süreleri tek tek ayarlamak için Gelişmiş Fizik modunu etkinleştirin.");
+            note.setText("Şu anda hazır profil veya basit kaydırıcı aktif. Tüm X/Y yay sertliği, sönümleme oranı, ikon takip noktası ve süreleri tek tek ayarlamak için Custom Fizik modunu etkinleştirin.");
             note.setTextColor(mColorTextSecondary);
             note.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f);
             note.setPadding(0, dp(2), 0, dp(8));
             advCard.addView(note);
 
             addActionRow(advCard,
-                    "Gelişmiş Manuel Fizik Kontrollerini Aç",
+                    "Custom Manuel Fizik Kontrollerini Aç",
                     "Mevcut profilin katsayılarını temel alarak 11 parametreyi bağımsız düzenle",
                     null,
                     v -> {
@@ -536,7 +602,7 @@ public class BlazeGoodLockStudioFragment extends SettingsPreferenceFragment {
                         populateHomeUpGestureTab(parent);
                     });
         } else {
-            int dampX = Math.round(Settings.Secure.getFloat(mResolver, KEY_DAMPING_X, 0.82f) * 100f);
+            int dampX = Math.round(Settings.Secure.getFloat(mResolver, KEY_DAMPING_X, 0.96f) * 100f);
             addSliderControl(advCard,
                     "Yatay Sönümleme Oranı (Damping X)",
                     50, 100, clamp(dampX, 50, 100),
@@ -546,7 +612,7 @@ public class BlazeGoodLockStudioFragment extends SettingsPreferenceFragment {
                         updateTelemetryAndPreview();
                     });
 
-            int dampY = Math.round(Settings.Secure.getFloat(mResolver, KEY_DAMPING_Y, 0.82f) * 100f);
+            int dampY = Math.round(Settings.Secure.getFloat(mResolver, KEY_DAMPING_Y, 0.86f) * 100f);
             addSliderControl(advCard,
                     "Dikey Sönümleme Oranı (Damping Y)",
                     50, 100, clamp(dampY, 50, 100),
@@ -556,7 +622,7 @@ public class BlazeGoodLockStudioFragment extends SettingsPreferenceFragment {
                         updateTelemetryAndPreview();
                     });
 
-            int stiffX = Math.round(Settings.Secure.getFloat(mResolver, KEY_STIFFNESS_X, 240f));
+            int stiffX = Math.round(Settings.Secure.getFloat(mResolver, KEY_STIFFNESS_X, 330f));
             addSliderControl(advCard,
                     "Yatay Yay Sertliği (Stiffness X)",
                     50, 900, clamp(stiffX, 50, 900),
@@ -566,7 +632,7 @@ public class BlazeGoodLockStudioFragment extends SettingsPreferenceFragment {
                         updateTelemetryAndPreview();
                     });
 
-            int stiffY = Math.round(Settings.Secure.getFloat(mResolver, KEY_STIFFNESS_Y, 240f));
+            int stiffY = Math.round(Settings.Secure.getFloat(mResolver, KEY_STIFFNESS_Y, 260f));
             addSliderControl(advCard,
                     "Dikey Yay Sertliği (Stiffness Y)",
                     50, 900, clamp(stiffY, 50, 900),
@@ -576,7 +642,7 @@ public class BlazeGoodLockStudioFragment extends SettingsPreferenceFragment {
                         updateTelemetryAndPreview();
                     });
 
-            int scaleDamp = Math.round(Settings.Secure.getFloat(mResolver, KEY_SCALE_DAMPING, 0.86f) * 100f);
+            int scaleDamp = Math.round(Settings.Secure.getFloat(mResolver, KEY_SCALE_DAMPING, 0.96f) * 100f);
             addSliderControl(advCard,
                     "İkon Küçülme Sönümlemesi (Scale Damping)",
                     50, 100, clamp(scaleDamp, 50, 100),
@@ -586,7 +652,7 @@ public class BlazeGoodLockStudioFragment extends SettingsPreferenceFragment {
                         updateTelemetryAndPreview();
                     });
 
-            int scaleStiff = Math.round(Settings.Secure.getFloat(mResolver, KEY_SCALE_STIFFNESS, 300f));
+            int scaleStiff = Math.round(Settings.Secure.getFloat(mResolver, KEY_SCALE_STIFFNESS, 330f));
             addSliderControl(advCard,
                     "İkon Küçülme Yay Sertliği (Scale Stiffness)",
                     50, 900, clamp(scaleStiff, 50, 900),
@@ -617,7 +683,7 @@ public class BlazeGoodLockStudioFragment extends SettingsPreferenceFragment {
                                 .show();
                     });
 
-            int appOpenMs = Settings.Secure.getInt(mResolver, KEY_APP_OPEN_DURATION, 450);
+            int appOpenMs = Settings.Secure.getInt(mResolver, KEY_APP_OPEN_DURATION, 380);
             addSliderControl(advCard,
                     "Uygulama Açılış Süresi (App Open Duration)",
                     180, 1000, clamp(appOpenMs, 180, 1000),
@@ -627,7 +693,7 @@ public class BlazeGoodLockStudioFragment extends SettingsPreferenceFragment {
                         updateTelemetryAndPreview();
                     });
 
-            int homeMs = Settings.Secure.getInt(mResolver, KEY_HOME_DURATION, 480);
+            int homeMs = Settings.Secure.getInt(mResolver, KEY_HOME_DURATION, 380);
             addSliderControl(advCard,
                     "Ana Ekran Dönüş Süresi (Home Reveal Duration)",
                     180, 1500, clamp(homeMs, 180, 1500),
@@ -647,7 +713,7 @@ public class BlazeGoodLockStudioFragment extends SettingsPreferenceFragment {
                         updateTelemetryAndPreview();
                     });
 
-            int wpMs = Settings.Secure.getInt(mResolver, KEY_WALLPAPER_DURATION, 850);
+            int wpMs = Settings.Secure.getInt(mResolver, KEY_WALLPAPER_DURATION, 550);
             addSliderControl(advCard,
                     "Duvar Kağıdı Zoom Süresi (Wallpaper Duration)",
                     200, 1800, clamp(wpMs, 200, 1800),
@@ -660,7 +726,7 @@ public class BlazeGoodLockStudioFragment extends SettingsPreferenceFragment {
 
         addActionRow(advCard,
                 "Hareket Fiziğini Fabrika Değerlerine Sıfırla",
-                "Home Up Dinamik (Preset 0) standart değerlerine geri döner",
+                "Animation Kitchen Natural (Preset 0) standart değerlerine geri döner",
                 null,
                 v -> {
                     vibrateTick();
@@ -669,7 +735,7 @@ public class BlazeGoodLockStudioFragment extends SettingsPreferenceFragment {
                     Settings.Secure.putInt(mResolver, KEY_WALLPAPER_BLUR, 1);
                     refreshActiveModulesCount();
                     populateHomeUpGestureTab(parent);
-                    Toast.makeText(mContext, "Home Up hareket fiziği sıfırlandı", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "Animation Kitchen Natural profiline sıfırlandı", Toast.LENGTH_SHORT).show();
                 });
 
         parent.addView(advCard);
@@ -697,10 +763,10 @@ public class BlazeGoodLockStudioFragment extends SettingsPreferenceFragment {
     private float[] resolveCurrentPhysicsArray() {
         int mode = Settings.Secure.getInt(mResolver, KEY_GESTURE_MODE, 0);
         switch (mode) {
-            case 1: // Classic
-                return new float[]{1.00f, 1.00f, 150f, 150f, 1.00f, 150f, 500f, 700f, 0.82f, 1100f};
-            case 2: // Playful
-                return new float[]{0.66f, 0.66f, 330f, 330f, 0.68f, 650f, 420f, 320f, 0.76f, 620f};
+            case 1: // Casual
+                return new float[]{0.96f, 0.82f, 220f, 200f, 0.92f, 220f, 460f, 480f, 0.85f, 680f};
+            case 2: // Fast
+                return new float[]{1.00f, 0.94f, 480f, 420f, 0.98f, 480f, 260f, 260f, 0.90f, 320f};
             case 3: // Sweet
                 return new float[]{0.96f, 0.96f, 65f, 65f, 0.98f, 110f, 680f, 1050f, 0.85f, 1500f};
             case 4: { // Simple Slider
@@ -719,22 +785,22 @@ public class BlazeGoodLockStudioFragment extends SettingsPreferenceFragment {
                         1300f - (p * 10f)
                 };
             }
-            case 5: // Advanced
+            case 5: // Custom
                 return new float[]{
-                        clampF(Settings.Secure.getFloat(mResolver, KEY_DAMPING_X, 0.82f), 0.50f, 1.00f),
-                        clampF(Settings.Secure.getFloat(mResolver, KEY_DAMPING_Y, 0.82f), 0.50f, 1.00f),
-                        clampF(Settings.Secure.getFloat(mResolver, KEY_STIFFNESS_X, 240f), 50f, 900f),
-                        clampF(Settings.Secure.getFloat(mResolver, KEY_STIFFNESS_Y, 240f), 50f, 900f),
-                        clampF(Settings.Secure.getFloat(mResolver, KEY_SCALE_DAMPING, 0.86f), 0.50f, 1.00f),
-                        clampF(Settings.Secure.getFloat(mResolver, KEY_SCALE_STIFFNESS, 300f), 50f, 900f),
-                        clamp(Settings.Secure.getInt(mResolver, KEY_APP_OPEN_DURATION, 450), 180, 1200),
-                        clamp(Settings.Secure.getInt(mResolver, KEY_HOME_DURATION, 480), 180, 1800),
+                        clampF(Settings.Secure.getFloat(mResolver, KEY_DAMPING_X, 0.96f), 0.50f, 1.00f),
+                        clampF(Settings.Secure.getFloat(mResolver, KEY_DAMPING_Y, 0.86f), 0.50f, 1.00f),
+                        clampF(Settings.Secure.getFloat(mResolver, KEY_STIFFNESS_X, 330f), 50f, 900f),
+                        clampF(Settings.Secure.getFloat(mResolver, KEY_STIFFNESS_Y, 260f), 50f, 900f),
+                        clampF(Settings.Secure.getFloat(mResolver, KEY_SCALE_DAMPING, 0.96f), 0.50f, 1.00f),
+                        clampF(Settings.Secure.getFloat(mResolver, KEY_SCALE_STIFFNESS, 330f), 50f, 900f),
+                        clamp(Settings.Secure.getInt(mResolver, KEY_APP_OPEN_DURATION, 380), 180, 1200),
+                        clamp(Settings.Secure.getInt(mResolver, KEY_HOME_DURATION, 380), 180, 1800),
                         clampF(Settings.Secure.getFloat(mResolver, KEY_HOME_SCALE, 0.88f), 0.65f, 0.98f),
-                        clamp(Settings.Secure.getInt(mResolver, KEY_WALLPAPER_DURATION, 850), 200, 2000)
+                        clamp(Settings.Secure.getInt(mResolver, KEY_WALLPAPER_DURATION, 550), 200, 2000)
                 };
-            case 0: // Dynamic
+            case 0: // Natural (Default)
             default:
-                return new float[]{0.80f, 0.80f, 300f, 300f, 0.75f, 350f, 380f, 350f, 0.90f, 450f};
+                return new float[]{1.00f, 0.86f, 330f, 250f, 0.96f, 330f, 360f, 350f, 0.88f, 450f};
         }
     }
 

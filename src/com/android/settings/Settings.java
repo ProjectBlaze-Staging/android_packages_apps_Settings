@@ -89,6 +89,7 @@ public class Settings extends SettingsActivity {
     */
 
     public static class BlazeHouseActivity extends SettingsActivity { /* empty */ }
+    public static class BlazeIconPackPickerActivity extends SettingsActivity { /* empty */ }
     public static class MemtagPageActivity extends SettingsActivity { /* empty */}
     public static class BluetoothSettingsActivity extends SettingsActivity { /* empty */ }
     public static class BluetoothDashboardActivity extends SettingsActivity { /* empty */ }

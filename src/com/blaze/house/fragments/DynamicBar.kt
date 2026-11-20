@@ -109,6 +109,11 @@ class DynamicBar : SettingsPreferenceFragment() {
     override fun onDestroy() {
         super.onDestroy()
         settingsObserver?.let { resolver.unregisterContentObserver(it) }
+        try {
+            Settings.System.putIntForUser(
+                resolver, "status_bar_dynamic_island_preview", 0, UserHandle.USER_CURRENT
+            )
+        } catch (_: Exception) {}
     }
 
     private fun setupKeyguardSubPrefs() {

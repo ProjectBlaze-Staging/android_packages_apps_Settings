@@ -328,6 +328,24 @@
                 android:value="@string/menu_key_blazehouse" />
         </activity>
 
+        <!-- BlazeHouse Icon Pack Picker -->
+        <activity
+            android:name="com.blaze.house.IconPackPickerActivity"
+            android:label="@string/blaze_icon_pack_title"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:exported="true">
+            <intent-filter android:priority="1">
+                <action android:name="com.blaze.house.action.ICON_PACK_PICKER" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity-alias
+            android:name=".Settings$BlazeIconPackPickerActivity"
+            android:targetActivity="com.blaze.house.IconPackPickerActivity"
+            android:label="@string/blaze_icon_pack_title"
+            android:exported="true" />
+
         <!-- Wireless Controls -->
         <activity
             android:name=".Settings$NetworkDashboardActivity"

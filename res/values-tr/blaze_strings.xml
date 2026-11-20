@@ -312,6 +312,19 @@
     <string name="blaze_auto_lite_on_battery_saver_summary">Pil Tasarrufu açıldığında GPU kırılma efektlerini ve ağır animasyonları otomatik olarak hafif moda geçirir</string>
     <string name="dynamic_bar_cos_island_title">Kamera Deliği Dalga Animasyonu</string>
     <string name="dynamic_bar_cos_island_summary">Dinamik Adayı ön kamera deliğinden yumuşakça büyüterek çıkartır ve canlı ses dalgalarıyla medya kartı sunar</string>
+    <string name="dynamic_bar_alignment_title">Kamera Çentiği ve Konum İnce Ayarı</string>
+    <string name="dynamic_bar_preview_title">Canlı Ekran Önizlemesi</string>
+    <string name="dynamic_bar_preview_summary">Konum ve ölçek ayarı yaparken ekranda canlı test kapsülü gösterir</string>
+    <string name="dynamic_bar_offset_x_title">Yatay Konum (X Ofseti)</string>
+    <string name="dynamic_bar_offset_x_summary">Dinamik adayı kamera deliğinize göre yatayda hassasça hizalayın</string>
+    <string name="dynamic_bar_offset_y_title">Dikey Konum (Y Ofseti)</string>
+    <string name="dynamic_bar_offset_y_summary">Ekranın üst kenarından olan dikey mesafeyi hassasça ayarlayın</string>
+    <string name="dynamic_bar_scale_title">Ada Boyutu ve Ölçek</string>
+    <string name="dynamic_bar_scale_summary">Dinamik ada kapsülünü kamera deliğinizin çapına göre ölçeklendirin</string>
+    <string name="dynamic_bar_width_scale_title">Ada Genişlik Ölçeği</string>
+    <string name="dynamic_bar_width_scale_summary">Dinamik ada kapsülünün yatay genişliğini ince ayarlayın</string>
+    <string name="dynamic_bar_height_scale_title">Ada Yükseklik Ölçeği</string>
+    <string name="dynamic_bar_height_scale_summary">Dinamik ada kapsülünün dikey kalınlığını ince ayarlayın</string>
 
     <!-- BlazeHouse Treble & Multi-Device Hardware Compatibility -->
     <string name="treble_settings_title">Cihaz ve Donanım Uyumluluğu</string>

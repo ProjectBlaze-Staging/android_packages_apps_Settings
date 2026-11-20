@@ -35,7 +35,11 @@ import com.android.settings.SettingsPreferenceFragment;
 import com.android.settings.search.BaseSearchIndexProvider;
 import com.android.settingslib.search.SearchIndexable;
 import com.blaze.house.fragments.Themes;
+import com.blaze.house.fragments.TrebleSettings;
 import com.blaze.house.utils.BlazeDeviceImageHelper;
+import com.blaze.house.utils.BlazeIconPackHelper;
+
+import java.util.List;
 
 import lineageos.providers.LineageSettings;
 
@@ -62,6 +66,7 @@ public class BlazeHouse extends SettingsPreferenceFragment {
 
     private Preference mAboutDeviceImagePref;
     private Preference mAboutHeroBgPref;
+    private Preference mIconPackPref;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -83,6 +88,12 @@ public class BlazeHouse extends SettingsPreferenceFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setupFloatingTabs();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateIconPackSummary();
     }
 
     private void setupFloatingTabs() {
@@ -204,6 +215,17 @@ public class BlazeHouse extends SettingsPreferenceFragment {
                 Toast.makeText(context,
                         enabled ? "Temalı İkonlar (Monokrom) etkinleştirildi" : "Standart uygulama ikonlarına dönüldü",
                         Toast.LENGTH_SHORT).show();
+                return true;
+            });
+        }
+
+        mIconPackPref = findPreference("blaze_icon_pack");
+        if (mIconPackPref != null) {
+            updateIconPackSummary();
+            mIconPackPref.setOnPreferenceClickListener(pref -> {
+                triggerClickHaptic(context);
+                BlazeIconPackHelper.showPickerDialog(
+                        getContext(), this::updateIconPackSummary);
                 return true;
             });
         }
@@ -360,6 +382,9 @@ public class BlazeHouse extends SettingsPreferenceFragment {
         final Context context = getContext();
         if (context == null) return;
 
+        TrebleSettings.hideIfNotGsi(
+                this, "blaze_treble_hardware_category", "blaze_treble_hardware_settings");
+
         Preference ohapticsPref = findPreference("blaze_ohaptics_engine_selector");
         if (ohapticsPref != null) {
             updateOHapticsSummary(context, ohapticsPref);
@@ -438,6 +463,12 @@ public class BlazeHouse extends SettingsPreferenceFragment {
                 : (cur == 1 ? "Aktif: Görsel Odak (Orta-Alt Konum)"
                 : "Aktif: Hibrit Mod (Kilit Ekranı Alt Çubuk + Ana Ekran Dinamik Ada)");
         pref.setSummary(label);
+    }
+
+    private void updateIconPackSummary() {
+        if (mIconPackPref != null && getContext() != null) {
+            mIconPackPref.setSummary(BlazeIconPackHelper.getSelectionLabel(getContext()));
+        }
     }
 
     private void updateAboutDeviceImageSummary() {
@@ -533,5 +564,12 @@ public class BlazeHouse extends SettingsPreferenceFragment {
     }
 
     public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER =
-            new BaseSearchIndexProvider(R.xml.blazehouse_miscellaneous);
+            new BaseSearchIndexProvider(R.xml.blazehouse_miscellaneous) {
+                @Override
+                public List<String> getNonIndexableKeys(Context context) {
+                    List<String> keys = super.getNonIndexableKeys(context);
+                    TrebleSettings.addNonIndexableKeysIfNotGsi(keys);
+                    return keys;
+                }
+            };
 }

@@ -33,10 +33,12 @@ public class Themes extends SettingsPreferenceFragment implements
     private static final String KEY_THEMED_ICONS = "themed_icon_enabled";
     private static final String KEY_ABOUT_DEVICE_IMAGE = "blaze_about_device_image_picker";
     private static final String KEY_ABOUT_HERO_BG = "blaze_about_hero_bg_picker";
+    private static final String KEY_ICON_PACK = "blaze_icon_pack";
     private static final int REQUEST_PICK_CUSTOM_IMAGE = 9402;
     private static final int REQUEST_PICK_CUSTOM_HERO_BG = 9404;
     private Preference mAboutDeviceImagePref;
     private Preference mAboutHeroBgPref;
+    private Preference mIconPackPref;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,6 +50,16 @@ public class Themes extends SettingsPreferenceFragment implements
         Preference themedIcons = findPreference(KEY_THEMED_ICONS);
         if (themedIcons != null) {
             themedIcons.setOnPreferenceChangeListener(this);
+        }
+
+        mIconPackPref = findPreference(KEY_ICON_PACK);
+        if (mIconPackPref != null) {
+            updateIconPackSummary();
+            mIconPackPref.setOnPreferenceClickListener(pref -> {
+                com.blaze.house.utils.BlazeIconPackHelper.showPickerDialog(
+                        getContext(), this::updateIconPackSummary);
+                return true;
+            });
         }
 
         mAboutDeviceImagePref = findPreference(KEY_ABOUT_DEVICE_IMAGE);
@@ -74,6 +86,20 @@ public class Themes extends SettingsPreferenceFragment implements
                 );
                 return true;
             });
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // An icon pack may have been installed or removed while this page was in the background.
+        updateIconPackSummary();
+    }
+
+    private void updateIconPackSummary() {
+        if (mIconPackPref != null && getContext() != null) {
+            mIconPackPref.setSummary(
+                    com.blaze.house.utils.BlazeIconPackHelper.getSelectionLabel(getContext()));
         }
     }
 

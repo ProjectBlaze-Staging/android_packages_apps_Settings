@@ -19,6 +19,8 @@ import com.android.settings.SettingsPreferenceFragment;
 import com.android.settings.search.BaseSearchIndexProvider;
 import com.android.settingslib.search.SearchIndexable;
 
+import java.util.List;
+
 /**
  * Miscellaneous BlazeHouse settings.
  *
@@ -54,6 +56,8 @@ public class Miscellaneous extends SettingsPreferenceFragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.blazehouse_miscellaneous);
+        TrebleSettings.hideIfNotGsi(
+                this, "blaze_treble_hardware_category", "blaze_treble_hardware_settings");
         // All preferences use typed DataStore classes - no manual listener registration needed.
         // They write to their respective Settings.* namespaces automatically.
     }
@@ -71,5 +75,12 @@ public class Miscellaneous extends SettingsPreferenceFragment implements
     }
 
     public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER =
-            new BaseSearchIndexProvider(R.xml.blazehouse_miscellaneous);
+            new BaseSearchIndexProvider(R.xml.blazehouse_miscellaneous) {
+                @Override
+                public List<String> getNonIndexableKeys(Context context) {
+                    List<String> keys = super.getNonIndexableKeys(context);
+                    TrebleSettings.addNonIndexableKeysIfNotGsi(keys);
+                    return keys;
+                }
+            };
 }

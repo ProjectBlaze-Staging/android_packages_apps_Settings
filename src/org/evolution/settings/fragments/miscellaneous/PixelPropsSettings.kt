@@ -61,7 +61,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.android.internal.logging.nano.MetricsProto
 import com.android.internal.util.evolution.PixelDeviceRepository
-import com.android.internal.util.evolution.PixelPropsUtils
+import com.android.internal.util.blaze.PixelPropsUtils
 import com.android.settings.R
 import com.android.settings.SettingsPreferenceFragment
 import com.android.settingslib.spa.framework.theme.SettingsTheme
@@ -165,7 +165,7 @@ private fun PixelPropsContent(context: android.content.Context) {
 
     var globalEnabled by remember {
         mutableStateOf(
-            Settings.Secure.getInt(context.contentResolver, PP_ENABLED_KEY, 1) == 1,
+            Settings.Secure.getInt(context.contentResolver, PP_ENABLED_KEY, 0) == 1,
         )
     }
     var profiles by remember {

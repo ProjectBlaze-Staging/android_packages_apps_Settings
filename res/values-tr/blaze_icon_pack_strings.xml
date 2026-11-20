@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="blaze_icon_pack_title">İkon paketi</string>
+    <string name="blaze_icon_pack_summary">BlazeIcons, stok ikonlar veya yüklü bir ikon paketi seçin</string>
+    <string name="blaze_icon_pack_dialog_title">İkon paketi seç</string>
+    <string name="blaze_icon_pack_default_label">BlazeIcons (varsayılan)</string>
+    <string name="blaze_icon_pack_stock_label">Stok ikonlar (LineageOS)</string>
+    <string name="blaze_icon_pack_get_more">Daha fazla ikon paketi edin\u2026</string>
+    <string name="blaze_icon_pack_applied">İkon paketi uygulandı</string>
+    <string name="blaze_icon_pack_no_store">İkon paketlerine göz atacak uygulama bulunamadı</string>
+</resources>

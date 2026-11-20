@@ -17,7 +17,7 @@
         android:key="penguin_cos_island"
         android:title="@string/dynamic_bar_cos_island_title"
         android:summary="@string/dynamic_bar_cos_island_summary"
-        android:defaultValue="false"
+        android:defaultValue="true"
         android:dependency="ax_dynamic_bar_enabled" />
 
     <com.blaze.house.preferences.SecureSettingListPreference
@@ -42,6 +42,74 @@
         android:entryValues="@array/dynamic_bar_keyguard_battery_chip_values"
         android:defaultValue="1"
         android:dependency="ax_dynamic_bar_keyguard_enabled" />
+
+    <PreferenceCategory
+        android:key="dynamic_bar_alignment_category"
+        android:title="@string/dynamic_bar_alignment_title"
+        android:dependency="ax_dynamic_bar_enabled">
+
+        <com.blaze.house.preferences.SystemSettingSwitchPreference
+            android:key="status_bar_dynamic_island_preview"
+            android:title="@string/dynamic_bar_preview_title"
+            android:summary="@string/dynamic_bar_preview_summary"
+            android:defaultValue="false" />
+
+        <com.blaze.house.preferences.SystemSettingSeekBarPreference
+            android:key="status_bar_dynamic_island_offset_x"
+            android:title="@string/dynamic_bar_offset_x_title"
+            android:summary="@string/dynamic_bar_offset_x_summary"
+            android:max="300"
+            settings:min="-300"
+            settings:interval="1"
+            settings:units="px"
+            settings:continuousUpdates="true"
+            android:defaultValue="0" />
+
+        <com.blaze.house.preferences.SystemSettingSeekBarPreference
+            android:key="status_bar_dynamic_island_offset_y"
+            android:title="@string/dynamic_bar_offset_y_title"
+            android:summary="@string/dynamic_bar_offset_y_summary"
+            android:max="200"
+            settings:min="-80"
+            settings:interval="1"
+            settings:units="px"
+            settings:continuousUpdates="true"
+            android:defaultValue="0" />
+
+        <com.blaze.house.preferences.SystemSettingSeekBarPreference
+            android:key="status_bar_dynamic_island_scale"
+            android:title="@string/dynamic_bar_scale_title"
+            android:summary="@string/dynamic_bar_scale_summary"
+            android:max="140"
+            settings:min="70"
+            settings:interval="1"
+            settings:units="%"
+            settings:continuousUpdates="true"
+            android:defaultValue="100" />
+
+        <com.blaze.house.preferences.SystemSettingSeekBarPreference
+            android:key="status_bar_dynamic_island_width_scale"
+            android:title="@string/dynamic_bar_width_scale_title"
+            android:summary="@string/dynamic_bar_width_scale_summary"
+            android:max="140"
+            settings:min="70"
+            settings:interval="1"
+            settings:units="%"
+            settings:continuousUpdates="true"
+            android:defaultValue="100" />
+
+        <com.blaze.house.preferences.SystemSettingSeekBarPreference
+            android:key="status_bar_dynamic_island_height_scale"
+            android:title="@string/dynamic_bar_height_scale_title"
+            android:summary="@string/dynamic_bar_height_scale_summary"
+            android:max="140"
+            settings:min="70"
+            settings:interval="1"
+            settings:units="%"
+            settings:continuousUpdates="true"
+            android:defaultValue="100" />
+
+    </PreferenceCategory>
 
     <PreferenceCategory
         android:key="dynamic_bar_events_category"

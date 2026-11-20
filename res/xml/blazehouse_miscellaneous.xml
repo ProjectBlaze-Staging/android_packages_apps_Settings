@@ -10,6 +10,7 @@
 
     <!-- Universal GSI & Device Hardware Compatibility (TrebleSettings) -->
     <PreferenceCategory
+        android:key="blaze_treble_hardware_category"
         android:title="Cihaz ve GSI Donanım Uyumluluğu">
 
         <Preference
@@ -54,18 +55,6 @@
             android:key="qs_brightness_slider_haptic"
             android:title="@string/quick_settings_brightness_slider_haptic_title"
             android:summary="@string/quick_settings_brightness_slider_haptic_summary"
-            android:defaultValue="true" />
-
-    </PreferenceCategory>
-
-    <!-- LMO Freeform Windowing & Multitasking -->
-    <PreferenceCategory
-        android:title="@string/freeform_category_title">
-
-        <com.blaze.house.preferences.GlobalSettingSwitchPreference
-            android:key="lmo_freeform_enabled"
-            android:title="@string/freeform_multitasking_title"
-            android:summary="@string/freeform_multitasking_summary"
             android:defaultValue="true" />
 
     </PreferenceCategory>

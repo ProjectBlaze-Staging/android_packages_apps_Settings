@@ -252,8 +252,12 @@ public class CustomSeekBarPreference extends SliderPreference {
         if (slider != null && summaryView != null) {
             slider.addOnChangeListener((s, value, fromUser) -> {
                 if (fromUser) {
-                    summaryView.setText(composeSummary(mUserSummary, (int) value));
+                    int rounded = Math.round(value);
+                    summaryView.setText(composeSummary(mUserSummary, rounded));
                     updatePlusMinusEnabledStates(holder);
+                    if (getUpdatesContinuously()) {
+                        persistInt(rounded);
+                    }
                 }
             });
             slider.addOnSliderTouchListener(new Slider.OnSliderTouchListener() {

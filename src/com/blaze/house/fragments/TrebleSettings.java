@@ -6,6 +6,7 @@
 package com.blaze.house.fragments;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemProperties;
@@ -23,6 +24,7 @@ import com.android.settingslib.search.SearchIndexable;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.List;
 
 /**
  * BlazeHouse Universal GSI & Multi-Device Hardware Compatibility Toolkit (TrebleSettings).
@@ -265,6 +267,38 @@ public class TrebleSettings extends SettingsPreferenceFragment implements
         return MetricsProto.MetricsEvent.VIEW_UNKNOWN;
     }
 
+    public static boolean isGsiBuild() {
+        return SystemProperties.getBoolean("ro.blaze.is_gsi", false);
+    }
+
+    public static void hideIfNotGsi(SettingsPreferenceFragment fragment,
+            String categoryKey, String preferenceKey) {
+        if (fragment == null || isGsiBuild()) {
+            return;
+        }
+        Preference category = categoryKey != null ? fragment.findPreference(categoryKey) : null;
+        if (category != null && fragment.getPreferenceScreen() != null) {
+            fragment.getPreferenceScreen().removePreference(category);
+        } else if (preferenceKey != null) {
+            Preference pref = fragment.findPreference(preferenceKey);
+            if (pref != null) {
+                pref.setVisible(false);
+            }
+        }
+    }
+
+    public static void addNonIndexableKeysIfNotGsi(List<String> keys) {
+        if (!isGsiBuild()) {
+            keys.add("blaze_treble_hardware_category");
+            keys.add("blaze_treble_hardware_settings");
+        }
+    }
+
     public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER =
-            new BaseSearchIndexProvider(R.xml.blazehouse_treble);
+            new BaseSearchIndexProvider(R.xml.blazehouse_treble) {
+                @Override
+                protected boolean isPageSearchEnabled(Context context) {
+                    return isGsiBuild();
+                }
+            };
 }

@@ -1647,4 +1647,14 @@
     <string name="aggressive_doze_summary">Enter deep sleep immediately after screen turns off to save battery</string>
     <string name="gamespace_fps_title">In-game FPS overlay</string>
     <string name="gamespace_fps_summary">Display real-time frame rate during gaming sessions</string>
+
+    <!-- BlazeHouse icon pack picker -->
+    <string name="blaze_icon_pack_title">Icon pack</string>
+    <string name="blaze_icon_pack_summary">Choose BlazeIcons, stock icons or an installed icon pack</string>
+    <string name="blaze_icon_pack_dialog_title">Choose icon pack</string>
+    <string name="blaze_icon_pack_default_label">BlazeIcons (default)</string>
+    <string name="blaze_icon_pack_stock_label">Stock icons (LineageOS)</string>
+    <string name="blaze_icon_pack_get_more">Get more icon packs\u2026</string>
+    <string name="blaze_icon_pack_applied">Icon pack applied</string>
+    <string name="blaze_icon_pack_no_store">No app found to browse icon packs</string>
 </resources>

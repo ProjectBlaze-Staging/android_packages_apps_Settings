@@ -275,6 +275,19 @@
     <string name="blaze_auto_lite_on_battery_saver_summary">Automatically switch to lightweight mode when Battery Saver is active to save power</string>
     <string name="dynamic_bar_cos_island_title">Camera Cutout Wave Expansion</string>
     <string name="dynamic_bar_cos_island_summary">Smoothly expand Dynamic Island directly from the front camera cutout with live audio reactive waveform and media cards</string>
+    <string name="dynamic_bar_alignment_title">Camera Cutout &amp; Position Alignment</string>
+    <string name="dynamic_bar_preview_title">Live Screen Preview</string>
+    <string name="dynamic_bar_preview_summary">Display a live test capsule on screen while adjusting position and scale</string>
+    <string name="dynamic_bar_offset_x_title">Horizontal Position (X Offset)</string>
+    <string name="dynamic_bar_offset_x_summary">Fine-tune horizontal alignment with your camera cutout</string>
+    <string name="dynamic_bar_offset_y_title">Vertical Position (Y Offset)</string>
+    <string name="dynamic_bar_offset_y_summary">Fine-tune vertical distance from top edge of the screen</string>
+    <string name="dynamic_bar_scale_title">Island Size &amp; Scale</string>
+    <string name="dynamic_bar_scale_summary">Scale Dynamic Island capsule to match your camera punch-hole diameter</string>
+    <string name="dynamic_bar_width_scale_title">Capsule Width Scale</string>
+    <string name="dynamic_bar_width_scale_summary">Fine-tune horizontal width of the Dynamic Island capsule</string>
+    <string name="dynamic_bar_height_scale_title">Capsule Height Scale</string>
+    <string name="dynamic_bar_height_scale_summary">Fine-tune vertical thickness of the Dynamic Island capsule</string>
 
     <!-- Power Menu Actions -->
     <string name="power_menu_items_title">Power menu actions</string>

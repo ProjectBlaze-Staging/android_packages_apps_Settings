@@ -32,6 +32,14 @@
             android:summary="@string/blaze_floating_bottom_nav_summary"
             android:defaultValue="true" />
 
+        <Preference
+            android:key="blaze_icon_pack"
+            android:icon="@drawable/ic_settings_system_dashboard_filled"
+            android:title="@string/blaze_icon_pack_title"
+            android:summary="@string/blaze_icon_pack_summary">
+            <intent android:action="com.blaze.house.action.ICON_PACK_PICKER" />
+        </Preference>
+
         <com.blaze.house.preferences.SecureSettingListPreference
             android:key="blaze_animation_engine"
             android:title="@string/blaze_animation_engine_title"
